@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crypto Trading Calculator</title>
+    <title>Calculator</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2394a3b8'%3E%3Cpath d='M19 4H5a2 2 0 00-2 2v12a2 2 0 002 2h14a2 2 0 002-2V6a2 2 0 00-2-2zM5 6h14v10H5V6zm2 2v2h2V8H7zm0 4v2h2v-2H7zm4-4v2h2V8h-2zm0 4v2h2v-2h-2zm4-4v2h2V8h-2zm0 4v2h2v-2h-2z'%3E%3C/path%3E%3C/svg%3E">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { background-color: #0f172a; color: #f8fafc; font-family: 'Inter', sans-serif; }
@@ -22,6 +23,16 @@
             width: 1.25rem; height: 1.25rem;
             accent-color: #3b82f6; cursor: pointer;
         }
+
+        /* Custom Copy Button Style */
+        .copy-btn {
+            opacity: 0.6;
+            transition: opacity 0.2s;
+            cursor: pointer;
+        }
+        .copy-btn:hover {
+            opacity: 1;
+        }
     </style>
 </head>
 <body class="p-2 md:p-6 flex flex-col items-center min-h-screen">
@@ -29,7 +40,7 @@
     <div class="max-w-4xl w-full grid md:grid-cols-2 gap-6">
         
         <div class="bg-slate-800 rounded-2xl shadow-2xl p-5 border border-slate-700 h-fit">
-            <h2 class="text-xl font-bold text-center mb-5 text-blue-400">Trading Calculator</h2>
+            <h2 class="text-xl font-bold text-center mb-5 text-blue-400">Calculator</h2>
 
             <div class="space-y-4">
                 <div class="grid grid-cols-2 gap-3">
@@ -48,7 +59,7 @@
                     <div>
                         <div class="group relative inline-block mb-1 w-full">
                             <label class="flex items-center text-sm text-slate-400 cursor-help">
-                                Cách Liq <span class="ml-1 text-blue-500 text-xs">ℹ️</span>
+                                Khoảng cách tới Liquidity <span class="ml-1 text-blue-500 text-xs">ℹ️</span>
                             </label>
                             <div class="absolute bottom-full left-0 mb-2 hidden group-hover:block w-48 p-2 bg-slate-700 text-xs text-white rounded shadow-lg z-10 border border-slate-600">
                                 Khoảng cách an toàn từ Stop Loss đến Giá Thanh Lý tính bằng %.
@@ -67,20 +78,26 @@
                 </div>
 
                 <div class="grid grid-cols-3 gap-3">
-                    <div class="relative">
+                    <div class="relative group">
                         <label class="block text-sm text-slate-400 mb-1">Entry</label>
                         <input type="number" id="entry" value="71403.16" class="w-full p-2 pr-8 rounded-lg" onfocus="this.select()" oninput="handleInput()">
-                        <button id="btnCopyEntry" onclick="copyValue('entry', 'btnCopyEntry')" class="absolute right-2 bottom-2 text-slate-400 hover:text-white" title="Copy">📋</button>
+                        <button id="btnCopyEntry" onclick="copyValue('entry', 'btnCopyEntry')" class="absolute right-2 bottom-2 text-slate-400 hover:text-white copy-btn" title="Copy (Chuỗi số thô)">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 7.5V6.108c0-1.135.847-2.067 1.96-2.188A27.209 27.209 0 0 1 12 3.75c.864 0 1.71.04 2.54.12 1.113.12 1.96 1.053 1.96 2.188V7.5m-9.75 0h9.75M8.25 7.5v6.75m0 0h9.75M18 14.25v-6.75M18 14.25a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3m12 0v-.75m-6 3h-3" /></svg>
+                        </button>
                     </div>
-                    <div class="relative">
+                    <div class="relative group">
                         <label class="block text-sm text-slate-400 mb-1">Stop Loss</label>
                         <input type="number" id="sl" value="72027.00" class="w-full p-2 pr-8 rounded-lg text-red-400" onfocus="this.select()" oninput="handleInput()">
-                        <button id="btnCopySL" onclick="copyValue('sl', 'btnCopySL')" class="absolute right-2 bottom-2 text-slate-400 hover:text-white" title="Copy">📋</button>
+                        <button id="btnCopySL" onclick="copyValue('sl', 'btnCopySL')" class="absolute right-2 bottom-2 text-slate-400 hover:text-white copy-btn" title="Copy (Chuỗi số thô)">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 7.5V6.108c0-1.135.847-2.067 1.96-2.188A27.209 27.209 0 0 1 12 3.75c.864 0 1.71.04 2.54.12 1.113.12 1.96 1.053 1.96 2.188V7.5m-9.75 0h9.75M8.25 7.5v6.75m0 0h9.75M18 14.25v-6.75M18 14.25a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3m12 0v-.75m-6 3h-3" /></svg>
+                        </button>
                     </div>
-                    <div class="relative">
+                    <div class="relative group">
                         <label class="block text-sm text-slate-400 mb-1">Take Profit</label>
                         <input type="number" id="tp" value="67952.00" class="w-full p-2 pr-8 rounded-lg text-green-400" onfocus="this.select()" oninput="handleInput()">
-                        <button id="btnCopyTP" onclick="copyValue('tp', 'btnCopyTP')" class="absolute right-2 bottom-2 text-slate-400 hover:text-white" title="Copy">📋</button>
+                        <button id="btnCopyTP" onclick="copyValue('tp', 'btnCopyTP')" class="absolute right-2 bottom-2 text-slate-400 hover:text-white copy-btn" title="Copy (Chuỗi số thô)">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 7.5V6.108c0-1.135.847-2.067 1.96-2.188A27.209 27.209 0 0 1 12 3.75c.864 0 1.71.04 2.54.12 1.113.12 1.96 1.053 1.96 2.188V7.5m-9.75 0h9.75M8.25 7.5v6.75m0 0h9.75M18 14.25v-6.75M18 14.25a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3m12 0v-.75m-6 3h-3" /></svg>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -93,11 +110,11 @@
             </div>
             
             <div class="flex justify-between items-center bg-blue-900/20 p-3 rounded-lg border border-blue-900/50 mt-1">
-                <span class="text-blue-300 font-medium">Khối lượng vào (USD):</span>
+                <span class="text-blue-300 font-medium">KL Giao dịch (USD):</span>
                 <span id="out-size-usd" class="text-2xl font-bold text-blue-400">$0.00</span>
             </div>
             <div class="flex justify-between items-center pb-2 border-b border-slate-800 px-3">
-                <span class="text-slate-500 text-sm">Khối lượng vào (Units):</span>
+                <span class="text-slate-500 text-sm">KL Giao dịch (Units):</span>
                 <span id="out-size-units" class="text-md font-medium text-slate-400">0.00</span>
             </div>
 
@@ -128,7 +145,7 @@
                     <span id="out-profit" class="font-bold text-green-400">+$0.00</span>
                 </div>
                 <div class="flex justify-between">
-                    <span class="text-sm text-slate-400">Lợi nhuận / Ký quỹ (ROE):</span>
+                    <span class="text-sm text-slate-400">ROE:</span>
                     <span id="out-roe" class="font-bold text-green-400">0%</span>
                 </div>
             </div>
@@ -136,7 +153,7 @@
     </div>
 
     <div class="max-w-4xl w-full bg-slate-800 rounded-2xl shadow-2xl p-5 border border-slate-700 mt-6 mb-10">
-        <h3 class="text-lg font-bold mb-4 text-slate-300">Bảng Khối Lượng & Ký Quỹ</h3>
+        <h3 class="text-lg font-bold mb-4 text-slate-300">Bảng Khối lượng & Ký quỹ</h3>
         <div class="table-container">
             <table id="referenceTable">
                 <thead>
@@ -157,12 +174,16 @@
     </div>
 
     <script>
+        // Icon SVG cho nút copy và check xanh
+        const copyIconSvg = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 7.5V6.108c0-1.135.847-2.067 1.96-2.188A27.209 27.209 0 0 1 12 3.75c.864 0 1.71.04 2.54.12 1.113.12 1.96 1.053 1.96 2.188V7.5m-9.75 0h9.75M8.25 7.5v6.75m0 0h9.75M18 14.25v-6.75M18 14.25a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3m12 0v-.75m-6 3h-3" /></svg>';
+        const checkIconSvg = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="#22c55e" class="size-4"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>';
+
         // Biến toàn cục để lưu lại Plan đang được tick chọn
         let selectedRiskPlan = null;
 
         // Tải dữ liệu từ LocalStorage khi mở trang
         document.addEventListener('DOMContentLoaded', () => {
-            const savedData = localStorage.getItem('cryptoToolData');
+            const savedData = localStorage.getItem('toolData'); // Tên key đơn giản
             if (savedData) {
                 const data = JSON.parse(savedData);
                 document.getElementById('capital').value = data.capital || 800;
@@ -178,15 +199,27 @@
             calculate();
         });
 
-        // Hàm copy
+        // Hàm copy an toàn: Loại bỏ mọi ký tự định dạng sang chuỗi số thô
         function copyValue(inputId, btnId) {
-            const val = document.getElementById(inputId).value;
+            let val = document.getElementById(inputId).value;
             if(!val) return;
             
-            navigator.clipboard.writeText(val).then(() => {
+            // Sanitize: loại bỏ mọi ký tự không phải số và dấu chấm
+            const sanitizedVal = val.replace(/[^0-9.]/g, '');
+            
+            navigator.clipboard.writeText(sanitizedVal).then(() => {
                 const btn = document.getElementById(btnId);
-                btn.innerText = '✅';
-                setTimeout(() => { btn.innerText = '📋'; }, 1500);
+                btn.innerHTML = checkIconSvg; // Sử dụng icon check xanh
+                setTimeout(() => { btn.innerHTML = copyIconSvg; }, 1500);
+            });
+        }
+
+        // Hàm mới để copy giá trị thô không sanitize (ví dụ: số liệu từ bảng)
+        function copyRawValue(rawValue, btnElement) {
+            navigator.clipboard.writeText(rawValue).then(() => {
+                const originalHtml = btnElement.innerHTML;
+                btnElement.innerHTML = checkIconSvg; // Icon check xanh
+                setTimeout(() => { btnElement.innerHTML = originalHtml; }, 1500);
             });
         }
 
@@ -209,7 +242,7 @@
                 tp: document.getElementById('tp').value,
                 selectedRiskPlan: selectedRiskPlan
             };
-            localStorage.setItem('cryptoToolData', JSON.stringify(data));
+            localStorage.setItem('toolData', JSON.stringify(data));
         }
 
         function handleCheck(riskValue) {
@@ -322,12 +355,15 @@
                     rowClass = 'bg-slate-700/50'; // Đánh dấu mờ dòng đang nhập phía trên
                 }
 
+                // Dữ liệu copy cho KL Giao dịch (USD)
+                let copyBtn = '<button onclick="copyRawValue(\'' + sUsd + '\', this)" class="ml-1 text-slate-400 copy-btn">' + copyIconSvg + '</button>';
+
                 let tr = document.createElement('tr');
                 tr.className = rowClass;
                 tr.innerHTML = `
                     <td class="text-left font-semibold text-slate-300">${r.toFixed(1)}%</td>
                     <td class="text-red-400">$${rAmount.toFixed(2)}</td>
-                    <td class="font-bold text-blue-400">$${sUsd.toFixed(2)}</td>
+                    <td class="font-bold text-blue-400">$${sUsd.toFixed(2)}${copyBtn}</td>
                     <td class="text-slate-300">${leverage}x</td>
                     <td class="text-white">$${margin.toFixed(2)}</td>
                     <td class="text-green-400 font-semibold">+$${prof.toFixed(2)}</td>
