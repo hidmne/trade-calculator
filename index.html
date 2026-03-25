@@ -21,12 +21,12 @@
         .tri-btn { fill: #94a3b8; cursor: pointer; transition: fill 0.2s; }
         .tri-btn:hover { fill: #fff; }
         
-        /* Style cho thanh Visualizer */
-        .vis-container { position: relative; height: 120px; width: 100%; margin-top: 10px; border-radius: 8px; background: linear-gradient(180deg, rgba(30,41,59,0.5) 0%, rgba(15,23,42,0.5) 100%); overflow: hidden; }
-        .vis-line { position: absolute; width: 100%; height: 2px; display: flex; align-items: center; transition: top 0.5s ease-in-out; }
-        .vis-line::before { content: ''; flex-grow: 1; border-top: 2px dashed; opacity: 0.5; }
-        .vis-label { background: #0f172a; padding: 2px 8px; border-radius: 12px; font-size: 10px; font-weight: bold; margin-left: 8px; z-index: 10; border: 1px solid; }
-        .vis-fill { position: absolute; width: 100%; opacity: 0.15; transition: all 0.5s ease-in-out; }
+        /* Style cho thanh Visualizer - Đã Sửa Lỗi */
+        .vis-container { position: relative; height: 160px; width: 100%; margin-top: 10px; border-radius: 8px; background: linear-gradient(180deg, rgba(30,41,59,0.7) 0%, rgba(15,23,42,0.8) 100%); overflow: hidden; border: 1px solid #334155; }
+        .vis-line { position: absolute; width: 100%; display: flex; align-items: center; transition: top 0.4s ease-in-out; transform: translateY(-50%); z-index: 5; }
+        .vis-line::before { content: ''; flex-grow: 1; border-top: 1px dashed currentColor; opacity: 0.5; margin-right: 8px; }
+        .vis-label { background: #0f172a; padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: 700; margin-right: 8px; border: 1px solid currentColor; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.5); white-space: nowrap; }
+        .vis-fill { position: absolute; width: 100%; opacity: 0.15; transition: all 0.4s ease-in-out; z-index: 1; }
         
         /* Modal Lịch sử */
         #historyModal { backdrop-filter: blur(5px); }
@@ -240,9 +240,9 @@
             <div class="vis-container" id="visualizerBox">
                 <div id="vis-fill-sl" class="vis-fill bg-rose-500/20"></div>
                 <div id="vis-fill-tp" class="vis-fill bg-emerald-500/20"></div>
-                <div id="vis-line-sl" class="vis-line border-rose-500 text-rose-500"><span class="vis-label text-rose-400">SL</span></div>
-                <div id="vis-line-entry" class="vis-line border-blue-400 text-blue-400"><span class="vis-label text-blue-300">ENTRY</span></div>
-                <div id="vis-line-tp" class="vis-line border-emerald-500 text-emerald-500"><span class="vis-label text-emerald-400">TP</span></div>
+                <div id="vis-line-sl" class="vis-line text-rose-500"><span id="vis-label-sl" class="vis-label text-rose-400">SL</span></div>
+                <div id="vis-line-entry" class="vis-line text-blue-400"><span id="vis-label-entry" class="vis-label text-blue-300">ENTRY</span></div>
+                <div id="vis-line-tp" class="vis-line text-emerald-500"><span id="vis-label-tp" class="vis-label text-emerald-400">TP</span></div>
             </div>
 
             <div class="grid grid-cols-2 gap-4 pb-2 border-b border-slate-800 mt-2">
@@ -301,22 +301,24 @@
     </div>
 
     <div id="historyModal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-950/80">
-        <div class="bg-slate-800 rounded-2xl border border-slate-700 shadow-2xl max-w-4xl w-full max-h-[80vh] flex flex-col">
+        <div class="bg-slate-800 rounded-2xl border border-slate-700 shadow-2xl max-w-5xl w-full max-h-[80vh] flex flex-col">
             <div class="p-4 border-b border-slate-700 flex justify-between items-center">
                 <h3 class="text-lg font-bold text-slate-200">Nhật ký Lệnh (Lưu cục bộ)</h3>
                 <button onclick="toggleHistory()" class="text-slate-400 hover:text-white font-bold text-xl">&times;</button>
             </div>
             <div class="p-4 overflow-y-auto flex-grow table-container">
-                <table id="historyTable" class="w-full text-left text-sm">
+                <table id="historyTable" class="w-full text-left text-sm whitespace-nowrap">
                     <thead>
                         <tr>
                             <th class="pb-2 text-slate-400 font-normal">Thời gian</th>
                             <th class="pb-2 text-slate-400 font-normal text-center">Lệnh</th>
-                            <th class="pb-2 text-slate-400 font-normal text-right">Entry</th>
+                            <th class="pb-2 text-slate-400 font-normal text-right">Rủi ro</th>
+                            <th class="pb-2 text-slate-400 font-normal text-right">KL (USD)</th>
+                            <th class="pb-2 text-slate-400 font-normal text-right text-green-400">Lãi</th>
+                            <th class="pb-2 text-slate-400 font-normal text-right">Đòn bẩy</th>
+                            <th class="pb-2 text-slate-400 font-normal text-right pl-4">Entry</th>
                             <th class="pb-2 text-slate-400 font-normal text-right text-red-400">SL</th>
                             <th class="pb-2 text-slate-400 font-normal text-right text-green-400">TP</th>
-                            <th class="pb-2 text-slate-400 font-normal text-right">KL (USD)</th>
-                            <th class="pb-2 text-slate-400 font-normal text-right">Đòn bẩy</th>
                         </tr>
                     </thead>
                     <tbody class="text-slate-300" id="historyBody">
@@ -336,7 +338,7 @@
 
         let positionType = 'SHORT'; 
         let selectedRiskPlan = null; 
-        let currentCalculatedData = {}; // Lưu trữ state hiện tại để ghi vào log
+        let currentCalculatedData = {}; // Biến chứa dữ liệu LOG CẬP NHẬT theo dòng
 
         document.addEventListener('DOMContentLoaded', () => {
             const savedData = localStorage.getItem('toolData');
@@ -356,7 +358,6 @@
             calculate();
         });
 
-        // POPOVER EVENT DELEGATION
         document.addEventListener('click', function(e) {
             if (e.target.closest('.popover-trigger')) {
                 e.stopPropagation();
@@ -425,7 +426,6 @@
             }
         }
 
-        // COPY "CHỐNG ĐẠN" CẮT SỐ NGUYÊN CHO MOBILE
         function copyToClipboard(text, btnElement, isRawVal = false) {
             const originalHtml = btnElement.innerHTML;
             const successCallback = () => {
@@ -454,13 +454,13 @@
             if (isMobile) {
                 let numVal = getNum(inputId);
                 if (numVal >= 10) {
-                    textToCopy = Math.trunc(numVal).toString(); // CHỈ LẤY SỐ NGUYÊN
+                    textToCopy = Math.trunc(numVal).toString(); 
                 } else {
-                    textToCopy = val.replace(/,/g, '.'); // Coin cỏ giữ nguyên chấm
+                    textToCopy = val.replace(/,/g, '.'); 
                 }
             } else {
                 let cleanVal = val.replace(/[^0-9.,]/g, '');
-                textToCopy = cleanVal.replace(/\./g, ','); // Laptop đổi phẩy
+                textToCopy = cleanVal.replace(/\./g, ','); 
             }
             const btnElement = document.getElementById(btnId);
             copyToClipboard(textToCopy, btnElement, false);
@@ -492,7 +492,7 @@
             localStorage.setItem('toolData', JSON.stringify(data));
         }
 
-        // LỊCH SỬ LOG
+        // LOGIC LỊCH SỬ MỚI: Lấy DATA của Plan đang Active
         function saveLog(event) {
             if(!currentCalculatedData.entry) return;
             let history = JSON.parse(localStorage.getItem('tradeLogs') || '[]');
@@ -504,14 +504,15 @@
                 entry: currentCalculatedData.entry,
                 sl: currentCalculatedData.sl,
                 tp: currentCalculatedData.tp,
+                risk: currentCalculatedData.risk,
                 sizeUsd: currentCalculatedData.sizeUsd,
+                profit: currentCalculatedData.profit,
                 leverage: currentCalculatedData.leverage
             };
-            history.unshift(logEntry); // Thêm lên đầu
-            if(history.length > 50) history.pop(); // Giữ tối đa 50 lệnh
+            history.unshift(logEntry); 
+            if(history.length > 50) history.pop(); 
             localStorage.setItem('tradeLogs', JSON.stringify(history));
             
-            // Effect nút Lưu
             const btn = event.target;
             const originalText = btn.innerText;
             btn.innerText = "Đã lưu ✓";
@@ -536,6 +537,7 @@
             }
         }
 
+        // HIỂN THỊ CỘT MỚI: Rủi ro và Lãi
         function renderHistory() {
             const history = JSON.parse(localStorage.getItem('tradeLogs') || '[]');
             const tbody = document.getElementById('historyBody');
@@ -555,11 +557,13 @@
                 tr.innerHTML = `
                     <td class="py-3 text-xs text-slate-400">${log.date}</td>
                     <td class="py-3 text-center"><span class="text-[10px] font-bold px-2 py-1 rounded border ${badgeClass}">${log.type}</span></td>
-                    <td class="py-3 text-right font-semibold text-white">${log.entry}</td>
+                    <td class="py-3 text-right font-semibold text-slate-300">${log.risk}%</td>
+                    <td class="py-3 text-right font-bold text-blue-400">$${log.sizeUsd}</td>
+                    <td class="py-3 text-right font-semibold text-green-400">+$${log.profit}</td>
+                    <td class="py-3 text-right text-slate-300">${log.leverage}x</td>
+                    <td class="py-3 text-right font-semibold text-white pl-4">${log.entry}</td>
                     <td class="py-3 text-right font-semibold text-rose-400">${log.sl}</td>
                     <td class="py-3 text-right font-semibold text-emerald-400">${log.tp}</td>
-                    <td class="py-3 text-right font-bold text-blue-400">$${log.sizeUsd}</td>
-                    <td class="py-3 text-right text-slate-300">${log.leverage}x</td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -575,7 +579,7 @@
             calculate(); 
         }
 
-        // TÍNH NĂNG MỚI: Vẽ Biểu đồ R:R Trực quan
+        // TÍNH NĂNG MỚI: VISUALIZER (Đã Fix Toán Học - Căn Lề Chuẩn 15%-85%)
         function updateVisualizer(entry, sl, tp, type) {
             const visBox = document.getElementById('visualizerBox');
             if(!entry || !sl || !tp) {
@@ -590,34 +594,36 @@
 
             if(range === 0) return;
 
-            // Tính % vị trí từ trên xuống (top = 0% là giá cao nhất)
-            const getPos = (price) => ((maxPrice - price) / range) * 100;
+            // FIX: Đệm padding top & bottom 15% để khung đường thẳng không bị lẹm ra ngoài
+            const getPos = (price) => {
+                let pct = ((maxPrice - price) / range); // Tính % thông thường (0 đến 1)
+                return 15 + (pct * 70); // Thu hẹp lại, vẽ trong khoảng 15% -> 85% chiều cao container
+            };
 
             const posEntry = getPos(entry);
             const posSl = getPos(sl);
             const posTp = getPos(tp);
 
-            // Cập nhật vị trí các đường kẻ
             document.getElementById('vis-line-entry').style.top = `${posEntry}%`;
             document.getElementById('vis-line-sl').style.top = `${posSl}%`;
             document.getElementById('vis-line-tp').style.top = `${posTp}%`;
 
-            // Vẽ vùng màu (Fill)
+            // Điền Label cho dễ nhìn
+            document.getElementById('vis-label-entry').innerText = `ENTRY: ${entry}`;
+            document.getElementById('vis-label-sl').innerText = `SL: ${sl}`;
+            document.getElementById('vis-label-tp').innerText = `TP: ${tp}`;
+
             const fillSl = document.getElementById('vis-fill-sl');
             const fillTp = document.getElementById('vis-fill-tp');
 
             if (type === 'LONG') {
-                // Sl ở dưới Entry
                 fillSl.style.top = `${posEntry}%`;
                 fillSl.style.height = `${posSl - posEntry}%`;
-                // TP ở trên Entry
                 fillTp.style.top = `${posTp}%`;
                 fillTp.style.height = `${posEntry - posTp}%`;
             } else {
-                // Short: SL ở trên Entry
                 fillSl.style.top = `${posSl}%`;
                 fillSl.style.height = `${posEntry - posSl}%`;
-                // TP ở dưới Entry
                 fillTp.style.top = `${posEntry}%`;
                 fillTp.style.height = `${posTp - posEntry}%`;
             }
@@ -638,32 +644,37 @@
             if (positionType === "LONG" && (sl >= entry || tp <= entry)) logicError = true;
             if (positionType === "SHORT" && (sl <= entry || tp >= entry)) logicError = true;
 
-            const riskAmount = capital * (riskPct / 100);
             const slDistance = Math.abs(entry - sl);
             const tpDistance = Math.abs(entry - tp);
             const slDistPct = slDistance / entry; 
             const mmr = 0.004; 
 
-            let sizeUnits = slDistance > 0 ? (riskAmount / slDistance) : 0;
-            let sizeUsd = sizeUnits * entry;
-
+            // Tính Đòn Bẩy Chung
             let safeLev = 1;
             if (slDistance > 0) {
                 let maxSafeLeverage = 1 / (slDistPct + (safeBufferPct / 100) + mmr);
                 safeLev = Math.floor(maxSafeLeverage);
             }
-            
             let leverage = Math.max(1, Math.min(safeLev, maxLev));
-            let marginUsd = sizeUsd / leverage;
-            let profit = sizeUnits * tpDistance;
             let rr = slDistance > 0 ? (tpDistance / slDistance) : 0;
 
-            let currentRiskForRoe = selectedRiskPlan !== null ? selectedRiskPlan : riskPct;
-            let roeSizeUnits = slDistance > 0 ? ((capital * (currentRiskForRoe / 100)) / slDistance) : 0;
-            let roeSizeUsd = roeSizeUnits * entry;
-            let roeMarginUsd = roeSizeUsd / leverage;
-            let roeProfit = roeSizeUnits * tpDistance;
-            let roe = roeMarginUsd > 0 ? (roeProfit / roeMarginUsd) * 100 : 0;
+            // XÁC ĐỊNH DATA ACTIVE THEO DÒNG ĐƯỢC TICK (Hoặc mặc định nếu ko tick)
+            let activeRisk = selectedRiskPlan !== null ? selectedRiskPlan : riskPct;
+            let activeRiskAmount = capital * (activeRisk / 100);
+            let activeSizeUnits = slDistance > 0 ? (activeRiskAmount / slDistance) : 0;
+            let activeSizeUsd = activeSizeUnits * entry;
+            let activeMargin = activeSizeUsd / leverage;
+            let activeProfit = activeSizeUnits * tpDistance;
+            let roe = activeMargin > 0 ? (activeProfit / activeMargin) * 100 : 0;
+
+            // LƯU LOG CẬP NHẬT THEO ACTIVE PLAN
+            currentCalculatedData = {
+                entry: entry, sl: sl, tp: tp, 
+                risk: activeRisk.toFixed(2),
+                sizeUsd: activeSizeUsd.toFixed(2), 
+                profit: activeProfit.toFixed(2),
+                leverage: leverage
+            };
 
             let liqPrice = 0;
             let isLiqDangerous = false;
@@ -676,16 +687,23 @@
                 if (liqPrice <= sl) isLiqDangerous = true;
             }
 
-            // Gắn kết quả
-            document.getElementById('out-risk-amount').innerText = '$' + riskAmount.toFixed(2);
-            document.getElementById('out-size-units').innerText = sizeUnits.toFixed(4);
-            document.getElementById('out-size-usd').innerText = '$' + sizeUsd.toFixed(2);
+            // In dữ liệu lên bảng trên (Mặc định vẫn show của ô nhập, hoặc show Active luôn cho đồng bộ? Giữ nguyên logic cũ là show của ô nhập cho đỡ rối)
+            const defaultRiskAmount = capital * (riskPct / 100);
+            const defaultSizeUnits = slDistance > 0 ? (defaultRiskAmount / slDistance) : 0;
+            const defaultSizeUsd = defaultSizeUnits * entry;
+            const defaultMargin = defaultSizeUsd / leverage;
+            const defaultProfit = defaultSizeUnits * tpDistance;
+
+            document.getElementById('out-risk-amount').innerText = '$' + defaultRiskAmount.toFixed(2);
+            document.getElementById('out-size-units').innerText = defaultSizeUnits.toFixed(4);
+            document.getElementById('out-size-usd').innerText = '$' + defaultSizeUsd.toFixed(2);
             document.getElementById('out-leverage').innerText = leverage + 'x';
-            document.getElementById('out-margin').innerText = '$' + marginUsd.toFixed(2);
+            document.getElementById('out-margin').innerText = '$' + defaultMargin.toFixed(2);
             
-            document.getElementById('out-profit').innerText = logicError ? "SAI LOGIC" : '+$' + profit.toFixed(2);
-            document.getElementById('out-rr').innerText = logicError ? "SAI LOGIC" : '1 : ' + rr.toFixed(2);
-            document.getElementById('out-roe').innerText = logicError ? "SAI LOGIC" : roe.toFixed(2) + '%';
+            document.getElementById('out-profit').innerText = logicError ? "SAI" : '+$' + defaultProfit.toFixed(2);
+            document.getElementById('out-rr').innerText = logicError ? "SAI" : '1 : ' + rr.toFixed(2);
+            // ROE Tính theo Active cho chuẩn
+            document.getElementById('out-roe').innerText = logicError ? "SAI" : roe.toFixed(2) + '%';
 
             let liqElement = document.getElementById('out-liq');
             let warnElement = document.getElementById('liq-warning');
@@ -699,18 +717,8 @@
                 warnElement.classList.add('hidden');
             }
 
-            // Gọi hàm vẽ Visualizer nếu không lỗi logic
-            if(!logicError) {
-                updateVisualizer(entry, sl, tp, positionType);
-            } else {
-                document.getElementById('visualizerBox').style.opacity = '0.1';
-            }
-
-            // Lưu state hiện tại để Nhật ký có thể lấy được
-            currentCalculatedData = {
-                entry: entry, sl: sl, tp: tp, 
-                sizeUsd: sizeUsd.toFixed(2), leverage: leverage
-            };
+            if(!logicError) updateVisualizer(entry, sl, tp, positionType);
+            else document.getElementById('visualizerBox').style.opacity = '0.1';
 
             updateReferenceTable(capital, slDistance, entry, leverage, tpDistance);
         }
