@@ -99,7 +99,7 @@
                     <div>
                         <div class="group relative inline-block mb-1 w-full">
                             <label class="flex items-center text-sm text-slate-400 cursor-help">
-                                Khoảng cách tới Liquidity <span class="ml-1 text-blue-500 text-xs">ℹ️</span>
+                                Đệm Liq. <span class="ml-1 text-blue-500 text-xs">ℹ️</span>
                             </label>
                             <div class="absolute bottom-full left-0 mb-2 hidden group-hover:block w-48 p-2 bg-slate-700 text-xs text-white rounded shadow-lg z-10 border border-slate-600">
                                 Khoảng cách an toàn từ Stop Loss đến Giá Thanh Lý tính bằng %.
@@ -115,18 +115,18 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-3 gap-3 pt-2">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2">
                     <div>
                         <label class="block text-sm text-slate-400 mb-1">Entry</label>
                         <div class="relative w-full">
                             <input type="number" id="entry" value="71403.16" class="w-full p-2 pr-[60px] bg-slate-700/50 rounded-lg" onfocus="this.select()" oninput="handleInput()">
                             <div class="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-1">
                                 <button class="icon-action popover-trigger font-bold text-xl p-1" data-popover="pop-entry" title="Điều chỉnh">±</button>
-                                <button id="btnCopyEntry" onclick="copyValue('entry', 'btnCopyEntry')" class="icon-action p-1" title="Copy (Binance VN)">
+                                <button id="btnCopyEntry" onclick="copyValue('entry', 'btnCopyEntry')" class="icon-action p-1" title="Copy">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" /></svg>
                                 </button>
                             </div>
-                            <div id="pop-entry" class="stepper-popover hidden absolute top-full mt-2 left-1/2 -translate-x-1/2 bg-slate-800 border border-slate-600 rounded-lg shadow-2xl z-50 p-2 w-32">
+                            <div id="pop-entry" class="stepper-popover hidden absolute top-full mt-2 left-0 md:left-1/2 md:-translate-x-1/2 bg-slate-800 border border-slate-600 rounded-lg shadow-2xl z-50 p-2 w-32">
                                 <div class="flex justify-between gap-2">
                                     <div class="flex flex-col gap-1 w-1/2">
                                         <button data-adjust="entry, 0.1" class="bg-slate-700 hover:bg-slate-600 rounded text-sm py-1 font-semibold text-slate-200">+0.1</button>
@@ -151,11 +151,11 @@
                             <input type="number" id="sl" value="72027.00" class="w-full p-2 pr-[60px] bg-slate-700/50 rounded-lg text-red-400 font-semibold" onfocus="this.select()" oninput="handleInput()">
                             <div class="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-1">
                                 <button class="icon-action popover-trigger font-bold text-xl p-1" data-popover="pop-sl" title="Điều chỉnh">±</button>
-                                <button id="btnCopySL" onclick="copyValue('sl', 'btnCopySL')" class="icon-action p-1" title="Copy (Binance VN)">
+                                <button id="btnCopySL" onclick="copyValue('sl', 'btnCopySL')" class="icon-action p-1" title="Copy">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" /></svg>
                                 </button>
                             </div>
-                            <div id="pop-sl" class="stepper-popover hidden absolute top-full mt-2 left-1/2 -translate-x-1/2 bg-slate-800 border border-slate-600 rounded-lg shadow-2xl z-50 p-2 w-32">
+                            <div id="pop-sl" class="stepper-popover hidden absolute top-full mt-2 left-0 md:left-1/2 md:-translate-x-1/2 bg-slate-800 border border-slate-600 rounded-lg shadow-2xl z-50 p-2 w-32">
                                 <div class="flex justify-between gap-2">
                                     <div class="flex flex-col gap-1 w-1/2">
                                         <button data-adjust="sl, 0.1" class="bg-slate-700 hover:bg-slate-600 rounded text-sm py-1 font-semibold text-slate-200">+0.1</button>
@@ -180,11 +180,11 @@
                             <input type="number" id="tp" value="67952.00" class="w-full p-2 pr-[60px] bg-slate-700/50 rounded-lg text-green-400 font-semibold" onfocus="this.select()" oninput="handleInput()">
                             <div class="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-1">
                                 <button class="icon-action popover-trigger font-bold text-xl p-1" data-popover="pop-tp" title="Điều chỉnh">±</button>
-                                <button id="btnCopyTP" onclick="copyValue('tp', 'btnCopyTP')" class="icon-action p-1" title="Copy (Binance VN)">
+                                <button id="btnCopyTP" onclick="copyValue('tp', 'btnCopyTP')" class="icon-action p-1" title="Copy">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" /></svg>
                                 </button>
                             </div>
-                            <div id="pop-tp" class="stepper-popover hidden absolute top-full mt-2 left-1/2 -translate-x-1/2 bg-slate-800 border border-slate-600 rounded-lg shadow-2xl z-50 p-2 w-32">
+                            <div id="pop-tp" class="stepper-popover hidden absolute top-full mt-2 right-0 bg-slate-800 border border-slate-600 rounded-lg shadow-2xl z-50 p-2 w-32">
                                 <div class="flex justify-between gap-2">
                                     <div class="flex flex-col gap-1 w-1/2">
                                         <button data-adjust="tp, 0.1" class="bg-slate-700 hover:bg-slate-600 rounded text-sm py-1 font-semibold text-slate-200">+0.1</button>
@@ -277,7 +277,7 @@
     </div>
 
     <script>
-        const checkIcon = '✅';
+        const checkIconSvg = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="#22c55e" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>';
         const clipboardIcon = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" /></svg>';
 
         let positionType = 'SHORT'; 
@@ -301,9 +301,8 @@
             calculate();
         });
 
-        // XỬ LÝ SỰ KIỆN TẬP TRUNG CHO POPOVER
+        // XỬ LÝ SỰ KIỆN TẬP TRUNG
         document.addEventListener('click', function(e) {
-            // Click mở Popover
             if (e.target.closest('.popover-trigger')) {
                 e.stopPropagation();
                 const trigger = e.target.closest('.popover-trigger');
@@ -316,7 +315,6 @@
                 return;
             }
 
-            // Click vào các nút +/- bên trong Popover
             if (e.target.dataset.adjust) {
                 e.stopPropagation(); 
                 const [inputId, amount] = e.target.dataset.adjust.split(', ');
@@ -324,7 +322,6 @@
                 return;
             }
 
-            // Click ra ngoài đóng hết
             if (!e.target.closest('.stepper-popover')) {
                 document.querySelectorAll('.stepper-popover').forEach(el => el.classList.add('hidden'));
             }
@@ -336,7 +333,7 @@
             let newVal = val + amount;
             if (newVal < 0 && !['entry', 'sl', 'tp'].includes(inputId)) newVal = 0;
             
-            // Xóa phần thập phân thừa do lỗi Float của JS (toFixed(4))
+            // Ép kiểu string để tránh số quá dài
             input.value = parseFloat(newVal.toFixed(4)).toString();
             handleInput();
         }
@@ -375,31 +372,57 @@
             }
         }
 
+        // HÀM SAO CHÉP CHUNG CÓ FALLBACK (CHỐNG LỖI IOS/MOBILE APP)
+        function copyToClipboard(text, btnElement, isRawVal = false) {
+            const originalHtml = btnElement.innerHTML;
+            
+            const successCallback = () => {
+                btnElement.innerHTML = checkIconSvg;
+                setTimeout(() => { btnElement.innerHTML = isRawVal ? clipboardIcon : originalHtml; }, 1500);
+            };
+
+            const fallbackCopy = (str) => {
+                const el = document.createElement('textarea');
+                el.value = str;
+                document.body.appendChild(el);
+                el.select();
+                try { document.execCommand('copy'); } catch(e) {}
+                document.body.removeChild(el);
+            };
+
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(text).then(successCallback).catch(() => {
+                    fallbackCopy(text);
+                    successCallback();
+                });
+            } else {
+                fallbackCopy(text);
+                successCallback();
+            }
+        }
+
+        // COPY THÔNG MINH NHẬN DIỆN MOBILE VS LAPTOP
         function copyValue(inputId, btnId) {
             let val = document.getElementById(inputId).value;
             if(!val) return;
-            let formattedVal = val.replace(/[^0-9.]/g, '').replace('.', ',');
             
-            navigator.clipboard.writeText(formattedVal).then(() => {
-                const btn = document.getElementById(btnId);
-                const originalHtml = btn.innerHTML;
-                btn.innerText = checkIcon; 
-                setTimeout(() => { btn.innerHTML = originalHtml; }, 1500); 
-            });
+            let cleanVal = val.replace(/[^0-9.]/g, ''); // Xoá mọi ký tự lạ, giữ lại số và dấu chấm chuẩn
+            
+            // Detect Mobile (App Binance Mobile dùng dấu chấm. Binance Web VN dùng dấu phẩy)
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            let formattedVal = isMobile ? cleanVal : cleanVal.replace('.', ',');
+            
+            const btnElement = document.getElementById(btnId);
+            copyToClipboard(formattedVal, btnElement, false);
         }
 
-        // TÍNH NĂNG MỚI: Copy + Tick chọn cùng lúc
+        // Copy Số lượng từ bảng (Kèm Tick chọn)
         function copyRawValue(rawValue, riskValue, btnElement) {
-            navigator.clipboard.writeText(rawValue.toString()).then(() => {
-                const originalHtml = btnElement.innerHTML;
-                btnElement.innerText = checkIcon;
-                setTimeout(() => { btnElement.innerHTML = clipboardIcon; }, 1500);
-
-                // Tự động tick chọn dòng vừa copy
-                selectedRiskPlan = riskValue;
-                saveData(); 
-                calculate(); 
-            });
+            copyToClipboard(rawValue.toString(), btnElement, true);
+            // Tick chọn dòng
+            selectedRiskPlan = riskValue;
+            saveData(); 
+            calculate(); 
         }
 
         function handleInput() {
