@@ -16,19 +16,24 @@
         th { color: #94a3b8; font-weight: normal; font-size: 0.875rem; }
         td { font-size: 0.95rem; }
         input[type="checkbox"] { width: 1.25rem; height: 1.25rem; accent-color: #3b82f6; cursor: pointer; }
+        
+        /* Chỉnh lại hover không bị ghi đè translate */
         .icon-action { color: #94a3b8; transition: all 0.2s; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        .icon-action:hover { transform: scale(1.1); color: #fff; }
+        .icon-action:hover { transform: scale(1.15); color: #fff; }
         .tri-btn { fill: #94a3b8; cursor: pointer; transition: fill 0.2s; }
         .tri-btn:hover { fill: #fff; }
         
-        /* Style cho thanh Visualizer - Đã Sửa Lỗi */
+        /* Style Visualizer - Đã Thêm Hiệu Ứng Hover Đè Label */
         .vis-container { position: relative; height: 160px; width: 100%; margin-top: 10px; border-radius: 8px; background: linear-gradient(180deg, rgba(30,41,59,0.7) 0%, rgba(15,23,42,0.8) 100%); overflow: hidden; border: 1px solid #334155; }
-        .vis-line { position: absolute; width: 100%; display: flex; align-items: center; transition: top 0.4s ease-in-out; transform: translateY(-50%); z-index: 5; }
+        .vis-line { position: absolute; width: 100%; display: flex; align-items: center; transition: top 0.4s ease-in-out, z-index 0.2s; transform: translateY(-50%); z-index: 5; }
         .vis-line::before { content: ''; flex-grow: 1; border-top: 1px dashed currentColor; opacity: 0.5; margin-right: 8px; }
-        .vis-label { background: #0f172a; padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: 700; margin-right: 8px; border: 1px solid currentColor; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.5); white-space: nowrap; }
+        .vis-label { background: #0f172a; padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: 700; margin-right: 8px; border: 1px solid currentColor; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.5); white-space: nowrap; cursor: default; transition: transform 0.2s; }
         .vis-fill { position: absolute; width: 100%; opacity: 0.15; transition: all 0.4s ease-in-out; z-index: 1; }
         
-        /* Modal Lịch sử */
+        /* Khi Hover đường kẻ -> đẩy Z-index lên 50 và phóng to Label */
+        .vis-line:hover { z-index: 50; }
+        .vis-line:hover .vis-label { transform: scale(1.15); box-shadow: 0 0 10px rgba(0,0,0,0.8); }
+
         #historyModal { backdrop-filter: blur(5px); }
     </style>
 </head>
@@ -56,9 +61,11 @@
                     <div>
                         <label class="block text-sm text-slate-400 mb-1">Vốn ($)</label>
                         <div class="relative w-full">
-                            <input type="text" inputmode="decimal" autocomplete="off" id="capital" value="800" class="w-full p-2 pr-10 bg-slate-700/50 rounded-lg font-semibold text-lg" onfocus="this.select()" oninput="handleInput()">
-                            <button class="icon-action popover-trigger absolute right-2 top-1/2 -translate-y-1/2 font-bold text-xl px-1" data-popover="pop-capital">±</button>
-                            <div id="pop-capital" class="stepper-popover hidden absolute top-full mt-2 left-0 bg-slate-800 border border-slate-600 rounded-lg shadow-2xl z-50 p-2 w-32">
+                            <input type="text" inputmode="decimal" autocomplete="off" id="capital" value="800" class="w-full p-2 pr-[40px] bg-slate-700/50 rounded-lg font-semibold text-lg" onfocus="this.select()" oninput="handleInput()">
+                            <div class="absolute right-1 top-1/2 -translate-y-1/2 flex items-center">
+                                <button class="icon-action popover-trigger font-bold text-xl p-1" data-popover="pop-capital" title="Điều chỉnh">±</button>
+                            </div>
+                            <div id="pop-capital" class="stepper-popover hidden absolute top-full mt-2 right-0 bg-slate-800 border border-slate-600 rounded-lg shadow-2xl z-50 p-2 w-32">
                                 <div class="flex justify-between gap-2">
                                     <div class="flex flex-col gap-1 w-1/2">
                                         <button data-adjust="capital, 10" class="bg-slate-700 hover:bg-slate-600 rounded text-sm py-1 font-semibold text-slate-200">+10</button>
@@ -89,9 +96,11 @@
                     <div>
                         <label class="block text-sm text-slate-400 mb-1">Đòn bẩy Max</label>
                         <div class="relative w-full">
-                            <input type="text" inputmode="decimal" autocomplete="off" id="maxLev" value="100" class="w-full p-2 pr-10 bg-slate-700/50 rounded-lg font-semibold" onfocus="this.select()" oninput="handleInput()">
-                            <button class="icon-action popover-trigger absolute right-2 top-1/2 -translate-y-1/2 font-bold text-xl px-1" data-popover="pop-maxlev">±</button>
-                            <div id="pop-maxlev" class="stepper-popover hidden absolute top-full mt-2 left-0 bg-slate-800 border border-slate-600 rounded-lg shadow-2xl z-50 p-2 w-32">
+                            <input type="text" inputmode="decimal" autocomplete="off" id="maxLev" value="100" class="w-full p-2 pr-[40px] bg-slate-700/50 rounded-lg font-semibold" onfocus="this.select()" oninput="handleInput()">
+                            <div class="absolute right-1 top-1/2 -translate-y-1/2 flex items-center">
+                                <button class="icon-action popover-trigger font-bold text-xl p-1" data-popover="pop-maxlev">±</button>
+                            </div>
+                            <div id="pop-maxlev" class="stepper-popover hidden absolute top-full mt-2 right-0 bg-slate-800 border border-slate-600 rounded-lg shadow-2xl z-50 p-2 w-32">
                                 <div class="flex justify-between gap-2">
                                     <div class="flex flex-col gap-1 w-1/2">
                                         <button data-adjust="maxLev, 1" class="bg-slate-700 hover:bg-slate-600 rounded text-sm py-1 font-semibold text-slate-200">+1</button>
@@ -240,6 +249,7 @@
             <div class="vis-container" id="visualizerBox">
                 <div id="vis-fill-sl" class="vis-fill bg-rose-500/20"></div>
                 <div id="vis-fill-tp" class="vis-fill bg-emerald-500/20"></div>
+                
                 <div id="vis-line-sl" class="vis-line text-rose-500"><span id="vis-label-sl" class="vis-label text-rose-400">SL</span></div>
                 <div id="vis-line-entry" class="vis-line text-blue-400"><span id="vis-label-entry" class="vis-label text-blue-300">ENTRY</span></div>
                 <div id="vis-line-tp" class="vis-line text-emerald-500"><span id="vis-label-tp" class="vis-label text-emerald-400">TP</span></div>
@@ -322,7 +332,7 @@
                         </tr>
                     </thead>
                     <tbody class="text-slate-300" id="historyBody">
-                        </tbody>
+                    </tbody>
                 </table>
                 <div id="emptyHistory" class="text-center text-slate-500 py-8 hidden">Chưa có dữ liệu lịch sử.</div>
             </div>
@@ -338,7 +348,7 @@
 
         let positionType = 'SHORT'; 
         let selectedRiskPlan = null; 
-        let currentCalculatedData = {}; // Biến chứa dữ liệu LOG CẬP NHẬT theo dòng
+        let currentCalculatedData = {};
 
         document.addEventListener('DOMContentLoaded', () => {
             const savedData = localStorage.getItem('toolData');
@@ -492,11 +502,9 @@
             localStorage.setItem('toolData', JSON.stringify(data));
         }
 
-        // LOGIC LỊCH SỬ MỚI: Lấy DATA của Plan đang Active
         function saveLog(event) {
             if(!currentCalculatedData.entry) return;
             let history = JSON.parse(localStorage.getItem('tradeLogs') || '[]');
-            
             const logEntry = {
                 id: Date.now(),
                 date: new Date().toLocaleString('vi-VN', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit' }),
@@ -537,7 +545,6 @@
             }
         }
 
-        // HIỂN THỊ CỘT MỚI: Rủi ro và Lãi
         function renderHistory() {
             const history = JSON.parse(localStorage.getItem('tradeLogs') || '[]');
             const tbody = document.getElementById('historyBody');
@@ -579,7 +586,6 @@
             calculate(); 
         }
 
-        // TÍNH NĂNG MỚI: VISUALIZER (Đã Fix Toán Học - Căn Lề Chuẩn 15%-85%)
         function updateVisualizer(entry, sl, tp, type) {
             const visBox = document.getElementById('visualizerBox');
             if(!entry || !sl || !tp) {
@@ -594,10 +600,9 @@
 
             if(range === 0) return;
 
-            // FIX: Đệm padding top & bottom 15% để khung đường thẳng không bị lẹm ra ngoài
             const getPos = (price) => {
-                let pct = ((maxPrice - price) / range); // Tính % thông thường (0 đến 1)
-                return 15 + (pct * 70); // Thu hẹp lại, vẽ trong khoảng 15% -> 85% chiều cao container
+                let pct = ((maxPrice - price) / range);
+                return 15 + (pct * 70); 
             };
 
             const posEntry = getPos(entry);
@@ -608,7 +613,6 @@
             document.getElementById('vis-line-sl').style.top = `${posSl}%`;
             document.getElementById('vis-line-tp').style.top = `${posTp}%`;
 
-            // Điền Label cho dễ nhìn
             document.getElementById('vis-label-entry').innerText = `ENTRY: ${entry}`;
             document.getElementById('vis-label-sl').innerText = `SL: ${sl}`;
             document.getElementById('vis-label-tp').innerText = `TP: ${tp}`;
@@ -649,7 +653,6 @@
             const slDistPct = slDistance / entry; 
             const mmr = 0.004; 
 
-            // Tính Đòn Bẩy Chung
             let safeLev = 1;
             if (slDistance > 0) {
                 let maxSafeLeverage = 1 / (slDistPct + (safeBufferPct / 100) + mmr);
@@ -658,7 +661,6 @@
             let leverage = Math.max(1, Math.min(safeLev, maxLev));
             let rr = slDistance > 0 ? (tpDistance / slDistance) : 0;
 
-            // XÁC ĐỊNH DATA ACTIVE THEO DÒNG ĐƯỢC TICK (Hoặc mặc định nếu ko tick)
             let activeRisk = selectedRiskPlan !== null ? selectedRiskPlan : riskPct;
             let activeRiskAmount = capital * (activeRisk / 100);
             let activeSizeUnits = slDistance > 0 ? (activeRiskAmount / slDistance) : 0;
@@ -667,7 +669,6 @@
             let activeProfit = activeSizeUnits * tpDistance;
             let roe = activeMargin > 0 ? (activeProfit / activeMargin) * 100 : 0;
 
-            // LƯU LOG CẬP NHẬT THEO ACTIVE PLAN
             currentCalculatedData = {
                 entry: entry, sl: sl, tp: tp, 
                 risk: activeRisk.toFixed(2),
@@ -687,7 +688,6 @@
                 if (liqPrice <= sl) isLiqDangerous = true;
             }
 
-            // In dữ liệu lên bảng trên (Mặc định vẫn show của ô nhập, hoặc show Active luôn cho đồng bộ? Giữ nguyên logic cũ là show của ô nhập cho đỡ rối)
             const defaultRiskAmount = capital * (riskPct / 100);
             const defaultSizeUnits = slDistance > 0 ? (defaultRiskAmount / slDistance) : 0;
             const defaultSizeUsd = defaultSizeUnits * entry;
@@ -702,7 +702,6 @@
             
             document.getElementById('out-profit').innerText = logicError ? "SAI" : '+$' + defaultProfit.toFixed(2);
             document.getElementById('out-rr').innerText = logicError ? "SAI" : '1 : ' + rr.toFixed(2);
-            // ROE Tính theo Active cho chuẩn
             document.getElementById('out-roe').innerText = logicError ? "SAI" : roe.toFixed(2) + '%';
 
             let liqElement = document.getElementById('out-liq');
