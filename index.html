@@ -8,222 +8,773 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { background-color: #0f172a; color: #f8fafc; font-family: 'Inter', sans-serif; }
-        input[type="text"] { background-color: #1e293b; color: #fff; border: 1px solid #334155; transition: border-color 0.2s; }
-        input[type="text"]:focus { outline: none; border-color: #3b82f6; }
+        input { background-color: #1e293b; color: #fff; border: 1px solid #334155; }
+        input:focus { outline: none; border-color: #3b82f6; }
         .table-container { overflow-x: auto; }
         table { width: 100%; text-align: right; border-collapse: collapse; }
         th, td { padding: 12px 8px; border-bottom: 1px solid #334155; }
         th { color: #94a3b8; font-weight: normal; font-size: 0.875rem; }
+        td { font-size: 0.95rem; }
         input[type="checkbox"] { width: 1.25rem; height: 1.25rem; accent-color: #3b82f6; cursor: pointer; }
-        input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; }
-        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 6px; cursor: pointer; background: #334155; border-radius: 3px; }
-        input[type=range]::-webkit-slider-thumb { height: 18px; width: 18px; border-radius: 50%; background: #3b82f6; cursor: pointer; -webkit-appearance: none; margin-top: -6px; box-shadow: 0 0 10px rgba(59, 130, 246, 0.5); }
+        
+        /* Chỉnh lại hover không bị ghi đè translate */
         .icon-action { color: #94a3b8; transition: all 0.2s; cursor: pointer; display: flex; align-items: center; justify-content: center; }
         .icon-action:hover { transform: scale(1.15); color: #fff; }
+        .tri-btn { fill: #94a3b8; cursor: pointer; transition: fill 0.2s; }
+        .tri-btn:hover { fill: #fff; }
+        
+        /* Style Visualizer - Đã Thêm Hiệu Ứng Hover Đè Label */
         .vis-container { position: relative; height: 160px; width: 100%; margin-top: 10px; border-radius: 8px; background: linear-gradient(180deg, rgba(30,41,59,0.7) 0%, rgba(15,23,42,0.8) 100%); overflow: hidden; border: 1px solid #334155; }
-        .vis-line { position: absolute; width: 100%; display: flex; align-items: center; transition: top 0.4s ease-in-out; transform: translateY(-50%); z-index: 5; }
+        .vis-line { position: absolute; width: 100%; display: flex; align-items: center; transition: top 0.4s ease-in-out, z-index 0.2s; transform: translateY(-50%); z-index: 5; }
         .vis-line::before { content: ''; flex-grow: 1; border-top: 1px dashed currentColor; opacity: 0.5; margin-right: 8px; }
-        .vis-label { background: #0f172a; padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: 700; margin-right: 8px; border: 1px solid currentColor; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.5); white-space: nowrap; transition: transform 0.2s; }
+        .vis-label { background: #0f172a; padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: 700; margin-right: 8px; border: 1px solid currentColor; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.5); white-space: nowrap; cursor: default; transition: transform 0.2s; }
         .vis-fill { position: absolute; width: 100%; opacity: 0.15; transition: all 0.4s ease-in-out; z-index: 1; }
+        
+        /* Khi Hover đường kẻ -> đẩy Z-index lên 50 và phóng to Label */
         .vis-line:hover { z-index: 50; }
-        .vis-line:hover .vis-label { transform: scale(1.1); }
+        .vis-line:hover .vis-label { transform: scale(1.15); box-shadow: 0 0 10px rgba(0,0,0,0.8); }
+
         #historyModal { backdrop-filter: blur(5px); }
     </style>
 </head>
-<body class="p-2 md:p-6 flex flex-col items-center min-h-screen">
+<body class="p-2 md:p-6 flex flex-col items-center min-h-screen relative">
+
     <div class="max-w-5xl w-full flex justify-between items-center mb-4 px-2">
         <h2 class="text-2xl font-bold text-blue-400 flex items-center gap-2">🧮 Calculator Pro</h2>
         <button onclick="toggleHistory()" class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4"><path d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg> Nhật ký
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
+            Nhật ký
         </button>
     </div>
 
     <div class="max-w-5xl w-full grid md:grid-cols-2 gap-6 items-stretch relative">
+        
         <div class="bg-slate-800 rounded-2xl shadow-2xl p-5 border border-slate-700 h-full flex flex-col">
-            <div class="space-y-6 flex-grow">
+            
+            <div class="space-y-4 flex-grow">
                 <div class="flex gap-1 bg-slate-900 p-1 rounded-lg border border-slate-700">
-                    <button id="btnLong" onclick="setType('LONG')" class="flex-1 py-2 rounded-md font-bold transition-all">LONG</button>
-                    <button id="btnShort" onclick="setType('SHORT')" class="flex-1 py-2 rounded-md font-bold transition-all">SHORT</button>
+                    <button id="btnLong" onclick="setType('LONG')" class="flex-1 py-2 rounded-md font-bold text-center tracking-wider transition-all duration-200">LONG</button>
+                    <button id="btnShort" onclick="setType('SHORT')" class="flex-1 py-2 rounded-md font-bold text-center tracking-wider transition-all duration-200">SHORT</button>
                 </div>
+
                 <div class="grid grid-cols-2 gap-3">
-                    <div class="relative">
-                        <label class="block text-[11px] uppercase tracking-wider text-slate-500 mb-1">Vốn ($)</label>
-                        <div class="relative flex items-center"><input type="text" inputmode="decimal" id="capital" value="800" class="w-full p-2 pr-8 bg-slate-700/30 rounded-lg font-bold" oninput="handleInput()"><button class="icon-action popover-trigger absolute right-2 top-1/2 -translate-y-1/2 font-bold text-xl p-1" data-popover="pop-capital">±</button></div>
-                        <div id="pop-capital" class="stepper-popover hidden absolute top-full mt-2 right-0 bg-slate-800 border border-slate-600 rounded-lg shadow-2xl z-50 p-2 w-32">
-                            <div class="grid grid-cols-2 gap-1"><button data-adjust="capital, 10" class="bg-slate-700 hover:bg-slate-600 rounded text-xs py-1">+10</button><button data-adjust="capital, -10" class="bg-slate-700 hover:bg-slate-600 rounded text-xs py-1">-10</button><button data-adjust="capital, 50" class="bg-slate-700 hover:bg-slate-600 rounded text-xs py-1">+50</button><button data-adjust="capital, -50" class="bg-slate-700 hover:bg-slate-600 rounded text-xs py-1">-50</button></div>
+                    <div>
+                        <label class="block text-sm text-slate-400 mb-1">Vốn ($)</label>
+                        <div class="relative w-full">
+                            <input type="text" inputmode="decimal" autocomplete="off" id="capital" value="800" class="w-full p-2 pr-[40px] bg-slate-700/50 rounded-lg font-semibold text-lg" onfocus="this.select()" oninput="handleInput()">
+                            <div class="absolute right-1 top-1/2 -translate-y-1/2 flex items-center">
+                                <button class="icon-action popover-trigger font-bold text-xl p-1" data-popover="pop-capital" title="Điều chỉnh">±</button>
+                            </div>
+                            <div id="pop-capital" class="stepper-popover hidden absolute top-full mt-2 right-0 bg-slate-800 border border-slate-600 rounded-lg shadow-2xl z-50 p-2 w-32">
+                                <div class="flex justify-between gap-2">
+                                    <div class="flex flex-col gap-1 w-1/2">
+                                        <button data-adjust="capital, 10" class="bg-slate-700 hover:bg-slate-600 rounded text-sm py-1 font-semibold text-slate-200">+10</button>
+                                        <button data-adjust="capital, 50" class="bg-slate-700 hover:bg-slate-600 rounded text-sm py-1 font-semibold text-slate-200">+50</button>
+                                        <button data-adjust="capital, 100" class="bg-slate-700 hover:bg-slate-600 rounded text-sm py-1 font-semibold text-slate-200">+100</button>
+                                    </div>
+                                    <div class="flex flex-col gap-1 w-1/2">
+                                        <button data-adjust="capital, -10" class="bg-slate-700 hover:bg-slate-600 rounded text-sm py-1 font-semibold text-slate-200">-10</button>
+                                        <button data-adjust="capital, -50" class="bg-slate-700 hover:bg-slate-600 rounded text-sm py-1 font-semibold text-slate-200">-50</button>
+                                        <button data-adjust="capital, -100" class="bg-slate-700 hover:bg-slate-600 rounded text-sm py-1 font-semibold text-slate-200">-100</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="relative">
-                        <label class="block text-[11px] uppercase tracking-wider text-slate-500 mb-1">Đòn bẩy Max</label>
-                        <div class="relative flex items-center"><input type="text" inputmode="decimal" id="maxLev" value="100" class="w-full p-2 pr-8 bg-slate-700/30 rounded-lg font-bold" oninput="handleInput()"><button class="icon-action popover-trigger absolute right-2 top-1/2 -translate-y-1/2 font-bold text-xl p-1" data-popover="pop-maxlev">±</button></div>
-                        <div id="pop-maxlev" class="stepper-popover hidden absolute top-full mt-2 right-0 bg-slate-800 border border-slate-600 rounded-lg shadow-2xl z-50 p-2 w-32">
-                            <div class="grid grid-cols-2 gap-1"><button data-adjust="maxLev, 1" class="bg-slate-700 hover:bg-slate-600 rounded text-xs py-1">+1</button><button data-adjust="maxLev, -1" class="bg-slate-700 hover:bg-slate-600 rounded text-xs py-1">-1</button><button data-adjust="maxLev, 10" class="bg-slate-700 hover:bg-slate-600 rounded text-xs py-1">+10</button><button data-adjust="maxLev, -10" class="bg-slate-700 hover:bg-slate-600 rounded text-xs py-1">-10</button></div>
+                    
+                    <div>
+                        <label class="block text-sm text-slate-400 mb-1">Rủi ro (%)</label>
+                        <div class="relative w-full">
+                            <input type="text" inputmode="decimal" autocomplete="off" id="risk" value="1" class="w-full p-2 pr-8 bg-slate-700/50 rounded-lg font-semibold text-lg" onfocus="this.select()" oninput="handleInput()">
+                            <div class="absolute right-2 top-1/2 -translate-y-1/2 flex flex-col gap-[2px]">
+                                <svg onclick="adjustRisk('risk', 0.25)" class="tri-btn w-3 h-3" viewBox="0 0 24 24"><path d="M24 22h-24l12-20z"/></svg>
+                                <svg onclick="adjustRisk('risk', -0.25)" class="tri-btn w-3 h-3 rotate-180" viewBox="0 0 24 24"><path d="M24 22h-24l12-20z"/></svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm text-slate-400 mb-1">Đòn bẩy Max</label>
+                        <div class="relative w-full">
+                            <input type="text" inputmode="decimal" autocomplete="off" id="maxLev" value="100" class="w-full p-2 pr-[40px] bg-slate-700/50 rounded-lg font-semibold" onfocus="this.select()" oninput="handleInput()">
+                            <div class="absolute right-1 top-1/2 -translate-y-1/2 flex items-center">
+                                <button class="icon-action popover-trigger font-bold text-xl p-1" data-popover="pop-maxlev">±</button>
+                            </div>
+                            <div id="pop-maxlev" class="stepper-popover hidden absolute top-full mt-2 right-0 bg-slate-800 border border-slate-600 rounded-lg shadow-2xl z-50 p-2 w-32">
+                                <div class="flex justify-between gap-2">
+                                    <div class="flex flex-col gap-1 w-1/2">
+                                        <button data-adjust="maxLev, 1" class="bg-slate-700 hover:bg-slate-600 rounded text-sm py-1 font-semibold text-slate-200">+1</button>
+                                        <button data-adjust="maxLev, 5" class="bg-slate-700 hover:bg-slate-600 rounded text-sm py-1 font-semibold text-slate-200">+5</button>
+                                        <button data-adjust="maxLev, 20" class="bg-slate-700 hover:bg-slate-600 rounded text-sm py-1 font-semibold text-slate-200">+20</button>
+                                    </div>
+                                    <div class="flex flex-col gap-1 w-1/2">
+                                        <button data-adjust="maxLev, -1" class="bg-slate-700 hover:bg-slate-600 rounded text-sm py-1 font-semibold text-slate-200">-1</button>
+                                        <button data-adjust="maxLev, -5" class="bg-slate-700 hover:bg-slate-600 rounded text-sm py-1 font-semibold text-slate-200">-5</button>
+                                        <button data-adjust="maxLev, -20" class="bg-slate-700 hover:bg-slate-600 rounded text-sm py-1 font-semibold text-slate-200">-20</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="group relative inline-block mb-1 w-full">
+                            <label class="flex items-center text-sm text-slate-400 cursor-help">
+                                Đệm Liq. <span class="ml-1 text-blue-500 text-xs">ℹ️</span>
+                            </label>
+                            <div class="absolute bottom-full left-0 mb-2 hidden group-hover:block w-48 p-2 bg-slate-700 text-xs text-white rounded shadow-lg z-10 border border-slate-600">
+                                Khoảng cách an toàn từ Stop Loss đến Giá Thanh Lý tính bằng %.
+                            </div>
+                        </div>
+                        <div class="relative w-full">
+                            <input type="text" inputmode="decimal" autocomplete="off" id="safeBuffer" value="0.3" class="w-full p-2 pr-8 bg-slate-700/50 rounded-lg font-semibold" onfocus="this.select()" oninput="handleInput()">
+                            <div class="absolute right-2 top-1/2 -translate-y-1/2 flex flex-col gap-[2px]">
+                                <svg onclick="adjustRisk('safeBuffer', 0.05)" class="tri-btn w-3 h-3" viewBox="0 0 24 24"><path d="M24 22h-24l12-20z"/></svg>
+                                <svg onclick="adjustRisk('safeBuffer', -0.05)" class="tri-btn w-3 h-3 rotate-180" viewBox="0 0 24 24"><path d="M24 22h-24l12-20z"/></svg>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="space-y-4 bg-slate-900/30 p-4 rounded-xl border border-slate-700/50">
-                    <div><div class="flex justify-between mb-2"><label class="text-sm font-semibold text-slate-400">Rủi ro: <span id="riskLabel" class="text-blue-400">1.0%</span></label><span class="text-xs text-slate-500">($<span id="riskDollar">8.00</span>)</span></div><input type="range" id="riskSlider" min="0.5" max="10" step="0.25" value="1" oninput="syncSlider('risk', this.value)"></div>
-                    <div><div class="flex justify-between mb-2"><label class="text-sm font-semibold text-slate-400">Đệm Liq: <span id="liqLabel" class="text-orange-400">0.30%</span></label></div><input type="range" id="liqSlider" min="0.05" max="1" step="0.05" value="0.3" oninput="syncSlider('safeBuffer', this.value)"></div>
-                    <input type="hidden" id="risk" value="1"><input type="hidden" id="safeBuffer" value="0.3">
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-4">
+                    <div>
+                        <label class="block text-sm text-slate-400 mb-1">Entry</label>
+                        <div class="relative w-full">
+                            <input type="text" inputmode="decimal" autocomplete="off" id="entry" value="71403.16" class="w-full p-2 pr-[60px] bg-slate-700/50 rounded-lg text-white font-semibold focus:ring-0 focus:outline-none" onfocus="this.select()" oninput="handleInput()">
+                            <div class="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-1">
+                                <button class="icon-action popover-trigger font-bold text-xl p-1" data-popover="pop-entry">±</button>
+                                <button id="btnCopyEntry" onclick="copyValue('entry', 'btnCopyEntry')" class="icon-action p-1" title="Copy">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" /></svg>
+                                </button>
+                            </div>
+                            <div id="pop-entry" class="stepper-popover hidden absolute top-full mt-2 left-0 md:left-1/2 md:-translate-x-1/2 bg-slate-800 border border-slate-600 rounded-lg shadow-2xl z-50 p-2 w-32">
+                                <div class="flex justify-between gap-2">
+                                    <div class="flex flex-col gap-1 w-1/2">
+                                        <button data-adjust="entry, 0.1" class="bg-slate-700 hover:bg-slate-600 rounded text-sm py-1 font-semibold text-slate-200">+0.1</button>
+                                        <button data-adjust="entry, 1" class="bg-slate-700 hover:bg-slate-600 rounded text-sm py-1 font-semibold text-slate-200">+1</button>
+                                        <button data-adjust="entry, 5" class="bg-slate-700 hover:bg-slate-600 rounded text-sm py-1 font-semibold text-slate-200">+5</button>
+                                        <button data-adjust="entry, 20" class="bg-slate-700 hover:bg-slate-600 rounded text-sm py-1 font-semibold text-slate-200">+20</button>
+                                    </div>
+                                    <div class="flex flex-col gap-1 w-1/2">
+                                        <button data-adjust="entry, -0.1" class="bg-slate-700 hover:bg-slate-600 rounded text-sm py-1 font-semibold text-slate-200">-0.1</button>
+                                        <button data-adjust="entry, -1" class="bg-slate-700 hover:bg-slate-600 rounded text-sm py-1 font-semibold text-slate-200">-1</button>
+                                        <button data-adjust="entry, -5" class="bg-slate-700 hover:bg-slate-600 rounded text-sm py-1 font-semibold text-slate-200">-5</button>
+                                        <button data-adjust="entry, -20" class="bg-slate-700 hover:bg-slate-600 rounded text-sm py-1 font-semibold text-slate-200">-20</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm text-slate-400 mb-1">Stop Loss</label>
+                        <div class="relative w-full">
+                            <input type="text" inputmode="decimal" autocomplete="off" id="sl" value="72027.00" class="w-full p-2 pr-[60px] bg-slate-700/50 rounded-lg text-red-400 font-semibold focus:ring-0 focus:outline-none" onfocus="this.select()" oninput="handleInput()">
+                            <div class="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-1">
+                                <button class="icon-action popover-trigger font-bold text-xl p-1" data-popover="pop-sl">±</button>
+                                <button id="btnCopySL" onclick="copyValue('sl', 'btnCopySL')" class="icon-action p-1" title="Copy">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" /></svg>
+                                </button>
+                            </div>
+                            <div id="pop-sl" class="stepper-popover hidden absolute top-full mt-2 left-0 md:left-1/2 md:-translate-x-1/2 bg-slate-800 border border-slate-600 rounded-lg shadow-2xl z-50 p-2 w-32">
+                                <div class="flex justify-between gap-2">
+                                    <div class="flex flex-col gap-1 w-1/2">
+                                        <button data-adjust="sl, 0.1" class="bg-slate-700 hover:bg-slate-600 rounded text-sm py-1 font-semibold text-slate-200">+0.1</button>
+                                        <button data-adjust="sl, 1" class="bg-slate-700 hover:bg-slate-600 rounded text-sm py-1 font-semibold text-slate-200">+1</button>
+                                        <button data-adjust="sl, 5" class="bg-slate-700 hover:bg-slate-600 rounded text-sm py-1 font-semibold text-slate-200">+5</button>
+                                        <button data-adjust="sl, 20" class="bg-slate-700 hover:bg-slate-600 rounded text-sm py-1 font-semibold text-slate-200">+20</button>
+                                    </div>
+                                    <div class="flex flex-col gap-1 w-1/2">
+                                        <button data-adjust="sl, -0.1" class="bg-slate-700 hover:bg-slate-600 rounded text-sm py-1 font-semibold text-slate-200">-0.1</button>
+                                        <button data-adjust="sl, -1" class="bg-slate-700 hover:bg-slate-600 rounded text-sm py-1 font-semibold text-slate-200">-1</button>
+                                        <button data-adjust="sl, -5" class="bg-slate-700 hover:bg-slate-600 rounded text-sm py-1 font-semibold text-slate-200">-5</button>
+                                        <button data-adjust="sl, -20" class="bg-slate-700 hover:bg-slate-600 rounded text-sm py-1 font-semibold text-slate-200">-20</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm text-slate-400 mb-1">Take Profit</label>
+                        <div class="relative w-full">
+                            <input type="text" inputmode="decimal" autocomplete="off" id="tp" value="67952.00" class="w-full p-2 pr-[60px] bg-slate-700/50 rounded-lg text-green-400 font-semibold focus:ring-0 focus:outline-none" onfocus="this.select()" oninput="handleInput()">
+                            <div class="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-1">
+                                <button class="icon-action popover-trigger font-bold text-xl p-1" data-popover="pop-tp">±</button>
+                                <button id="btnCopyTP" onclick="copyValue('tp', 'btnCopyTP')" class="icon-action p-1" title="Copy">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" /></svg>
+                                </button>
+                            </div>
+                            <div id="pop-tp" class="stepper-popover hidden absolute top-full mt-2 right-0 bg-slate-800 border border-slate-600 rounded-lg shadow-2xl z-50 p-2 w-32">
+                                <div class="flex justify-between gap-2">
+                                    <div class="flex flex-col gap-1 w-1/2">
+                                        <button data-adjust="tp, 0.1" class="bg-slate-700 hover:bg-slate-600 rounded text-sm py-1 font-semibold text-slate-200">+0.1</button>
+                                        <button data-adjust="tp, 1" class="bg-slate-700 hover:bg-slate-600 rounded text-sm py-1 font-semibold text-slate-200">+1</button>
+                                        <button data-adjust="tp, 5" class="bg-slate-700 hover:bg-slate-600 rounded text-sm py-1 font-semibold text-slate-200">+5</button>
+                                        <button data-adjust="tp, 20" class="bg-slate-700 hover:bg-slate-600 rounded text-sm py-1 font-semibold text-slate-200">+20</button>
+                                    </div>
+                                    <div class="flex flex-col gap-1 w-1/2">
+                                        <button data-adjust="tp, -0.1" class="bg-slate-700 hover:bg-slate-600 rounded text-sm py-1 font-semibold text-slate-200">-0.1</button>
+                                        <button data-adjust="tp, -1" class="bg-slate-700 hover:bg-slate-600 rounded text-sm py-1 font-semibold text-slate-200">-1</button>
+                                        <button data-adjust="tp, -5" class="bg-slate-700 hover:bg-slate-600 rounded text-sm py-1 font-semibold text-slate-200">-5</button>
+                                        <button data-adjust="tp, -20" class="bg-slate-700 hover:bg-slate-600 rounded text-sm py-1 font-semibold text-slate-200">-20</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    <div class="relative"><label class="block text-xs font-bold text-slate-500 mb-1">ENTRY</label><div class="relative flex items-center bg-slate-700/50 rounded-lg border border-slate-600"><input type="text" inputmode="decimal" id="entry" value="71403.16" class="w-full bg-transparent p-3 pr-10 font-bold" oninput="handleInput()"><button id="btnCopyEntry" onclick="copyValue('entry', 'btnCopyEntry')" class="icon-action absolute right-2 p-1">📋</button></div></div>
-                    <div class="relative"><label class="block text-xs font-bold text-red-500 mb-1">STOP LOSS</label><div class="relative flex items-center bg-slate-700/50 rounded-lg border border-slate-600"><input type="text" inputmode="decimal" id="sl" value="72027.00" class="w-full bg-transparent p-3 pr-10 font-bold text-red-400" oninput="handleInput()"><button id="btnCopySL" onclick="copyValue('sl', 'btnCopySL')" class="icon-action absolute right-2 p-1">📋</button></div></div>
-                    <div class="relative"><label class="block text-xs font-bold text-emerald-500 mb-1">TAKE PROFIT</label><div class="relative flex items-center bg-slate-700/50 rounded-lg border border-slate-600"><input type="text" inputmode="decimal" id="tp" value="67952.00" class="w-full bg-transparent p-3 pr-10 font-bold text-emerald-400" oninput="handleInput()"><button id="btnCopyTP" onclick="copyValue('tp', 'btnCopyTP')" class="icon-action absolute right-2 p-1">📋</button></div></div>
+
+                <div class="flex justify-end pt-2">
+                    <button onclick="saveLog(event)" class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded-lg text-sm font-bold transition-colors">Lưu vào Lịch sử</button>
                 </div>
-                <div class="flex justify-end"><button onclick="saveLog(event)" class="bg-blue-600 hover:bg-blue-500 text-white px-8 py-3 rounded-xl font-bold transition-all active:scale-95">Lưu nhật ký</button></div>
             </div>
         </div>
 
         <div class="bg-slate-900 rounded-2xl shadow-2xl p-5 border border-slate-700 flex flex-col justify-between h-full space-y-3">
-            <div class="flex justify-between items-center pb-2 border-b border-slate-800"><span class="text-slate-400">Mất tối đa:</span><span id="out-risk-amount" class="text-xl font-bold text-red-400">$8.00</span></div>
-            <div class="flex justify-between items-center bg-blue-900/20 p-4 rounded-xl border border-blue-900/40"><span class="text-blue-300 font-medium">KL Giao dịch:</span><span id="out-size-usd" class="text-2xl font-bold text-blue-400">$0.00</span></div>
+            <div class="flex justify-between items-center pb-2 border-b border-slate-800">
+                <span class="text-slate-400">Mất tối đa (Risk Amount):</span>
+                <span id="out-risk-amount" class="text-xl font-bold text-red-400">$8.00</span>
+            </div>
+            
+            <div class="flex justify-between items-center bg-blue-900/20 p-3 rounded-lg border border-blue-900/50 mt-1 hover:bg-blue-900/30 transition-colors">
+                <span class="text-blue-300 font-medium">KL Giao dịch (USD):</span>
+                <span id="out-size-usd" class="text-2xl font-bold text-blue-400">$0.00</span>
+            </div>
+            <div class="flex justify-between items-center pb-2 border-b border-slate-800 px-3">
+                <span class="text-slate-500 text-sm">KL Giao dịch (Units):</span>
+                <span id="out-size-units" class="text-md font-medium text-slate-400">0.00</span>
+            </div>
+
             <div class="vis-container" id="visualizerBox">
-                <div id="vis-fill-sl" class="vis-fill bg-rose-500/20"></div><div id="vis-fill-tp" class="vis-fill bg-emerald-500/20"></div>
+                <div id="vis-fill-sl" class="vis-fill bg-rose-500/20"></div>
+                <div id="vis-fill-tp" class="vis-fill bg-emerald-500/20"></div>
+                
                 <div id="vis-line-sl" class="vis-line text-rose-500"><span id="vis-label-sl" class="vis-label text-rose-400">SL</span></div>
                 <div id="vis-line-entry" class="vis-line text-blue-400"><span id="vis-label-entry" class="vis-label text-blue-300">ENTRY</span></div>
                 <div id="vis-line-tp" class="vis-line text-emerald-500"><span id="vis-label-tp" class="vis-label text-emerald-400">TP</span></div>
             </div>
-            <div class="grid grid-cols-2 gap-4 mt-2">
-                <div><span class="block text-slate-400 text-sm">Đòn bẩy an toàn:</span><span id="out-leverage" class="text-xl font-bold text-white">1x</span></div>
-                <div class="text-right"><span class="block text-slate-400 text-sm">Margin:</span><span id="out-margin" class="text-xl font-bold text-white">$0.00</span></div>
+
+            <div class="grid grid-cols-2 gap-4 pb-2 border-b border-slate-800 mt-2">
+                <div>
+                    <span class="block text-slate-400 text-sm">Đòn bẩy an toàn:</span>
+                    <span id="out-leverage" class="text-xl font-bold text-white">1x</span>
+                </div>
+                <div class="text-right">
+                    <span class="block text-slate-400 text-sm">Vốn ký quỹ (Margin):</span>
+                    <span id="out-margin" class="text-xl font-bold text-white">$0.00</span>
+                </div>
             </div>
-            <div class="flex justify-between items-center"><span class="text-slate-400">Giá thanh lý:</span><span id="out-liq" class="text-lg font-bold text-orange-400">0.00</span></div>
-            <div id="liq-warning" class="text-xs text-red-500 font-bold hidden text-right animate-pulse">⚠️ Thanh lý trước SL!</div>
-            <div class="bg-slate-800 p-3 rounded-lg border border-slate-700 space-y-1">
-                <div class="flex justify-between"><span class="text-sm text-slate-400">R:R:</span><span id="out-rr" class="font-bold text-white">1 : 0.00</span></div>
-                <div class="flex justify-between"><span class="text-sm text-slate-400">Tiền lãi:</span><span id="out-profit" class="font-bold text-green-400">+$0.00</span></div>
-                <div class="flex justify-between"><span class="text-sm text-slate-400">ROE:</span><span id="out-roe" class="font-bold text-green-400">0%</span></div>
+
+            <div class="flex justify-between items-center pt-1">
+                <span class="text-slate-400">Giá thanh lý:</span>
+                <span id="out-liq" class="text-lg font-bold text-orange-400 hover:text-orange-300 transition-colors">0.00</span>
+            </div>
+            <div id="liq-warning" class="text-xs text-red-500 font-bold hidden text-right animate-pulse">⚠️ DANGER: Thanh lý xảy ra trước Stop Loss!</div>
+
+            <div class="bg-slate-800 p-3 rounded-lg border border-slate-700 mt-2 space-y-1">
+                <div class="flex justify-between">
+                    <span class="text-sm text-slate-400">Tỷ lệ R:R:</span>
+                    <span id="out-rr" class="font-bold text-white">1 : 0.00</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-sm text-slate-400">Tiền lãi dự kiến:</span>
+                    <span id="out-profit" class="font-bold text-green-400">+$0.00</span>
+                </div>
+                <div class="flex justify-between hover:bg-slate-700 rounded p-1 transition-colors">
+                    <span class="text-sm text-slate-400">ROE %:</span>
+                    <span id="out-roe" class="font-bold text-green-400">0%</span>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="max-w-5xl w-full bg-slate-800 rounded-2xl shadow-2xl p-5 border border-slate-700 mt-6 mb-10"><h3 class="text-lg font-bold mb-4 text-slate-300">Bảng Khối lượng & Ký quỹ</h3><div class="table-container"><table id="referenceTable"><thead><tr><th class="text-left">Rủi ro (%)</th><th>Rủi ro ($)</th><th>KL Giao dịch (USD)</th><th>Đòn bẩy</th><th>Margin ($)</th><th>Tiền lãi</th><th>Chọn</th></tr></thead><tbody></tbody></table></div></div>
+    <div class="max-w-5xl w-full bg-slate-800 rounded-2xl shadow-2xl p-5 border border-slate-700 mt-6 mb-10 relative">
+        <h3 class="text-lg font-bold mb-4 text-slate-300">Bảng Khối lượng & Ký quỹ</h3>
+        <div class="table-container">
+            <table id="referenceTable">
+                <thead>
+                    <tr>
+                        <th class="text-left">Rủi ro (%)</th>
+                        <th>Rủi ro ($)</th>
+                        <th>KL Giao dịch (USD)</th>
+                        <th>Đòn bẩy</th>
+                        <th>Ký quỹ ($)</th>
+                        <th>Tiền lãi</th>
+                        <th class="text-center">Chọn</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    </tbody>
+            </table>
+        </div>
+    </div>
 
     <div id="historyModal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-950/80">
         <div class="bg-slate-800 rounded-2xl border border-slate-700 shadow-2xl max-w-5xl w-full max-h-[80vh] flex flex-col">
-            <div class="p-4 border-b border-slate-700 flex justify-between items-center"><h3 class="text-lg font-bold text-slate-200">Nhật ký Lệnh</h3><button onclick="toggleHistory()" class="text-slate-400 hover:text-white font-bold text-xl">&times;</button></div>
-            <div class="p-4 overflow-y-auto flex-grow table-container"><table id="historyTable" class="w-full text-left text-sm whitespace-nowrap"><thead><tr><th>Thời gian</th><th>Lệnh</th><th>Rủi ro</th><th>KL (USD)</th><th>Lãi</th><th>Đòn bẩy</th><th>Entry</th><th>SL</th><th>TP</th></tr></thead><tbody class="text-slate-300" id="historyBody"></tbody></table><div id="emptyHistory" class="text-center text-slate-500 py-8 hidden">Trống.</div></div>
-            <div class="p-4 border-t border-slate-700 flex justify-end"><button onclick="clearHistory()" class="text-red-400 hover:text-red-300 text-sm font-semibold">Xóa sạch</button></div>
+            <div class="p-4 border-b border-slate-700 flex justify-between items-center">
+                <h3 class="text-lg font-bold text-slate-200">Nhật ký Lệnh (Lưu cục bộ)</h3>
+                <button onclick="toggleHistory()" class="text-slate-400 hover:text-white font-bold text-xl">&times;</button>
+            </div>
+            <div class="p-4 overflow-y-auto flex-grow table-container">
+                <table id="historyTable" class="w-full text-left text-sm whitespace-nowrap">
+                    <thead>
+                        <tr>
+                            <th class="pb-2 text-slate-400 font-normal">Thời gian</th>
+                            <th class="pb-2 text-slate-400 font-normal text-center">Lệnh</th>
+                            <th class="pb-2 text-slate-400 font-normal text-right">Rủi ro</th>
+                            <th class="pb-2 text-slate-400 font-normal text-right">KL (USD)</th>
+                            <th class="pb-2 text-slate-400 font-normal text-right text-green-400">Lãi</th>
+                            <th class="pb-2 text-slate-400 font-normal text-right">Đòn bẩy</th>
+                            <th class="pb-2 text-slate-400 font-normal text-right pl-4">Entry</th>
+                            <th class="pb-2 text-slate-400 font-normal text-right text-red-400">SL</th>
+                            <th class="pb-2 text-slate-400 font-normal text-right text-green-400">TP</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-slate-300" id="historyBody">
+                    </tbody>
+                </table>
+                <div id="emptyHistory" class="text-center text-slate-500 py-8 hidden">Chưa có dữ liệu lịch sử.</div>
+            </div>
+            <div class="p-4 border-t border-slate-700 flex justify-end">
+                <button onclick="clearHistory()" class="text-red-400 hover:text-red-300 text-sm font-semibold">Xóa toàn bộ lịch sử</button>
+            </div>
         </div>
     </div>
 
     <script>
-        const checkIco = '✅', clipIco = '📋';
-        let positionType = 'SHORT', selectedRiskPlan = null, curData = {};
+        const checkIconSvg = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="#22c55e" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>';
+        const clipboardIcon = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" /></svg>';
+
+        let positionType = 'SHORT'; 
+        let selectedRiskPlan = null; 
+        let currentCalculatedData = {};
 
         document.addEventListener('DOMContentLoaded', () => {
-            const saved = JSON.parse(localStorage.getItem('toolData') || '{}');
-            if(saved.capital){
-                ['capital','risk','maxLev','safeBuffer','entry','sl','tp'].forEach(id => document.getElementById(id).value = saved[id]);
-                document.getElementById('riskSlider').value = saved.risk;
-                document.getElementById('liqSlider').value = saved.safeBuffer;
-                positionType = saved.type || 'SHORT'; selectedRiskPlan = saved.selectedRiskPlan;
+            const savedData = localStorage.getItem('toolData');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                document.getElementById('capital').value = data.capital || 800;
+                document.getElementById('risk').value = data.risk || 1;
+                document.getElementById('maxLev').value = data.maxLev || 100;
+                document.getElementById('safeBuffer').value = data.safeBuffer || 0.3;
+                positionType = data.type || 'SHORT';
+                document.getElementById('entry').value = data.entry || '';
+                document.getElementById('sl').value = data.sl || '';
+                document.getElementById('tp').value = data.tp || '';
+                selectedRiskPlan = data.selectedRiskPlan || null;
             }
-            setTypeStyle(); calculate();
+            setTypeStyle(); 
+            calculate();
         });
 
-        document.addEventListener('click', (e) => {
+        document.addEventListener('click', function(e) {
             if (e.target.closest('.popover-trigger')) {
-                e.stopPropagation(); const tid = e.target.closest('.popover-trigger').dataset.popover;
-                document.querySelectorAll('.stepper-popover').forEach(p => p.classList.toggle('hidden', p.id !== tid));
-            } else if (e.target.dataset.adjust) {
-                e.stopPropagation(); const [id, amt] = e.target.dataset.adjust.split(', ');
-                const inp = document.getElementById(id); let nv = (parseFloat(inp.value)||0) + parseFloat(amt);
-                if (nv < 0 && !['entry','sl','tp'].includes(id)) nv = 0;
-                inp.value = parseFloat(nv.toFixed(4)); handleInput();
-            } else if (!e.target.closest('.stepper-popover')) {
-                document.querySelectorAll('.stepper-popover').forEach(p => p.classList.add('hidden'));
+                e.stopPropagation();
+                const trigger = e.target.closest('.popover-trigger');
+                const popoverId = trigger.dataset.popover;
+                document.querySelectorAll('.stepper-popover').forEach(p => {
+                    if (p.id !== popoverId) p.classList.add('hidden');
+                });
+                document.getElementById(popoverId).classList.toggle('hidden');
+                return;
+            }
+            if (e.target.dataset.adjust) {
+                e.stopPropagation(); 
+                const [inputId, amount] = e.target.dataset.adjust.split(', ');
+                adjustValue(inputId, parseFloat(amount));
+                return;
+            }
+            if (!e.target.closest('.stepper-popover') && !e.target.closest('#historyModal > div')) {
+                document.querySelectorAll('.stepper-popover').forEach(el => el.classList.add('hidden'));
             }
         });
 
-        function syncSlider(id, val) { 
-            document.getElementById(id).value = val;
-            if(id === 'risk') { 
-                document.getElementById('riskLabel').innerText = parseFloat(val).toFixed(1) + '%';
-                document.getElementById('riskDollar').innerText = (getNum('capital') * val / 100).toFixed(2);
-            } else document.getElementById('liqLabel').innerText = parseFloat(val).toFixed(2) + '%';
-            handleInput(); 
+        function getNum(id) {
+            const val = document.getElementById(id).value;
+            if(!val) return 0;
+            return parseFloat(val.replace(/,/g, '.')) || 0;
         }
 
-        function getNum(id) { return parseFloat(document.getElementById(id).value.replace(/,/g, '.')) || 0; }
-        function setType(t) { positionType = t; setTypeStyle(); handleInput(); }
+        function adjustValue(inputId, amount) {
+            const input = document.getElementById(inputId);
+            let val = getNum(inputId);
+            let newVal = val + amount;
+            if (newVal < 0 && !['entry', 'sl', 'tp'].includes(inputId)) newVal = 0;
+            input.value = parseFloat(newVal.toFixed(4)).toString();
+            handleInput();
+        }
+
+        function adjustRisk(inputId, amount) {
+            const input = document.getElementById(inputId);
+            let val = getNum(inputId);
+            let newVal = val + amount;
+            if(newVal < 0) newVal = 0;
+            input.value = parseFloat(newVal.toFixed(2)).toString();
+            handleInput();
+        }
+
+        function setType(type) {
+            positionType = type;
+            setTypeStyle();
+            handleInput();
+        }
+
         function setTypeStyle() {
-            const bl = document.getElementById('btnLong'), bs = document.getElementById('btnShort');
-            bl.className = positionType === 'LONG' ? "flex-1 py-2 rounded-md font-bold bg-emerald-600 text-white scale-105 shadow-lg" : "flex-1 py-2 rounded-md font-bold bg-transparent text-slate-500";
-            bs.className = positionType === 'SHORT' ? "flex-1 py-2 rounded-md font-bold bg-rose-600 text-white scale-105 shadow-lg" : "flex-1 py-2 rounded-md font-bold bg-transparent text-slate-500";
+            const btnLong = document.getElementById('btnLong');
+            const btnShort = document.getElementById('btnShort');
+            if (positionType === 'LONG') {
+                btnLong.className = "flex-1 py-2 rounded-md font-bold text-center tracking-wider bg-emerald-600 text-white shadow shadow-emerald-900/50 scale-105 transition-all duration-200";
+                btnShort.className = "flex-1 py-2 rounded-md font-bold text-center tracking-wider bg-transparent text-slate-500 hover:text-slate-300 transition-all duration-200 hover:bg-slate-700/50";
+                document.getElementById('out-roe').classList.remove('text-rose-400');
+                document.getElementById('out-roe').classList.add('text-green-400');
+            } else {
+                btnShort.className = "flex-1 py-2 rounded-md font-bold text-center tracking-wider bg-rose-600 text-white shadow shadow-rose-950/50 scale-105 transition-all duration-200";
+                btnLong.className = "flex-1 py-2 rounded-md font-bold text-center tracking-wider bg-transparent text-slate-500 hover:text-slate-300 transition-all duration-200 hover:bg-slate-700/50";
+                document.getElementById('out-roe').classList.remove('text-green-400');
+                document.getElementById('out-roe').classList.add('text-rose-400');
+            }
         }
 
-        function copyValue(id, bid) {
-            let v = document.getElementById(id).value; if(!v) return;
-            const mob = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-            let text = mob ? (getNum(id) >= 10 ? Math.trunc(getNum(id)).toString() : v.replace(/,/g, '.')) : v.replace(/[^0-9.,]/g, '').replace(/\./g, ',');
-            const el = document.getElementById(bid); el.innerText = checkIco;
-            navigator.clipboard.writeText(text).finally(() => setTimeout(() => el.innerText = clipIco, 1500));
+        function copyToClipboard(text, btnElement, isRawVal = false) {
+            const originalHtml = btnElement.innerHTML;
+            const successCallback = () => {
+                btnElement.innerHTML = checkIconSvg;
+                setTimeout(() => { btnElement.innerHTML = isRawVal ? clipboardIcon : originalHtml; }, 1500);
+            };
+            const fallbackCopy = (str, cb) => {
+                const el = document.createElement('textarea');
+                el.value = str; el.setAttribute('readonly', ''); el.style.position = 'absolute'; el.style.left = '-9999px';
+                document.body.appendChild(el); el.select();
+                try { document.execCommand('copy'); cb(); } catch(e) {}
+                document.body.removeChild(el);
+            };
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(text).then(successCallback).catch(() => { fallbackCopy(text, successCallback); });
+            } else {
+                fallbackCopy(text, successCallback);
+            }
         }
 
-        function saveLog(e) {
-            if(!curData.entry) return;
-            let h = JSON.parse(localStorage.getItem('tradeLogs') || '[]');
-            h.unshift({ id: Date.now(), date: new Date().toLocaleString('vi-VN', {hour:'2-digit', minute:'2-digit', day:'2-digit', month:'2-digit'}), type: positionType, ...curData });
-            localStorage.setItem('tradeLogs', JSON.stringify(h.slice(0, 50)));
-            e.target.innerText = "Đã lưu ✓"; setTimeout(() => e.target.innerText = "Ghi nhật ký lệnh", 1500);
+        function copyValue(inputId, btnId) {
+            let val = document.getElementById(inputId).value;
+            if(!val) return;
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            let textToCopy = "";
+            if (isMobile) {
+                let numVal = getNum(inputId);
+                if (numVal >= 10) {
+                    textToCopy = Math.trunc(numVal).toString(); 
+                } else {
+                    textToCopy = val.replace(/,/g, '.'); 
+                }
+            } else {
+                let cleanVal = val.replace(/[^0-9.,]/g, '');
+                textToCopy = cleanVal.replace(/\./g, ','); 
+            }
+            const btnElement = document.getElementById(btnId);
+            copyToClipboard(textToCopy, btnElement, false);
         }
 
-        function toggleHistory() { document.getElementById('historyModal').classList.toggle('hidden'); renderHistory(); }
-        function renderHistory() {
-            const h = JSON.parse(localStorage.getItem('tradeLogs') || '[]'), b = document.getElementById('historyBody');
-            b.innerHTML = h.map(l => `<tr class="border-b border-slate-700/50"><td class="py-3 text-xs text-slate-400">${l.date}</td><td class="py-3 text-center"><span class="px-2 py-1 rounded border text-[10px] ${l.type==='LONG'?'text-emerald-400 border-emerald-700':'text-rose-400 border-rose-700'}">${l.type}</span></td><td class="text-right">${l.risk}%</td><td class="text-right font-bold text-blue-400">$${l.sizeUsd}</td><td class="text-right text-green-400">+$${l.profit}</td><td class="text-right">${l.leverage}x</td><td class="text-right">${l.entry}</td><td class="text-right text-rose-400">${l.sl}</td><td class="text-right text-emerald-400">${l.tp}</td></tr>`).join('');
-            document.getElementById('emptyHistory').classList.toggle('hidden', h.length > 0);
+        function copyRawValue(rawValue, riskValue, btnElement) {
+            copyToClipboard(rawValue.toString(), btnElement, true);
+            selectedRiskPlan = riskValue;
+            saveData(); calculate(); 
         }
-        function clearHistory() { if(confirm("Xóa?")){ localStorage.removeItem('tradeLogs'); renderHistory(); } }
 
         function handleInput() {
-            const d = { capital:getNum('capital'), risk:getNum('risk'), maxLev:getNum('maxLev'), safeBuffer:getNum('safeBuffer'), type:positionType, entry:getNum('entry'), sl:getNum('sl'), tp:getNum('tp'), selectedRiskPlan };
-            localStorage.setItem('toolData', JSON.stringify(d));
+            saveData();
             calculate();
         }
 
-        function calculate() {
-            const cap=getNum('capital'), rk=getNum('risk'), ml=getNum('maxLev'), buf=getNum('safeBuffer'), en=getNum('entry'), sl=getNum('sl'), tp=getNum('tp');
-            if(!cap || !en || !sl) return;
-            const sld=Math.abs(en-sl), tpd=Math.abs(en-tp), safe=Math.floor(1/((sld/en)+(buf/100)+0.004)), lev=Math.max(1, Math.min(safe, ml));
-            const actRk = selectedRiskPlan || rk, actSize = (cap*actRk/100/sld)*en, actProf = (actSize/en)*tpd;
-            curData = { entry:en, sl:sl, tp:tp, risk:actRk, sizeUsd:actSize.toFixed(2), profit:actProf.toFixed(2), leverage:lev };
-            
-            document.getElementById('out-risk-amount').innerText = '$'+(cap*rk/100).toFixed(2);
-            document.getElementById('out-size-usd').innerText = '$'+actSize.toFixed(2);
-            document.getElementById('out-leverage').innerText = lev+'x';
-            document.getElementById('out-margin').innerText = '$'+(actSize/lev).toFixed(2);
-            document.getElementById('out-profit').innerText = '+$'+actProf.toFixed(2);
-            document.getElementById('out-rr').innerText = '1 : '+(tpd/sld).toFixed(2);
-            document.getElementById('out-roe').innerText = ((actProf/(actSize/lev))*100).toFixed(2)+'%';
-            
-            let lp = positionType==='LONG'?en*(1-(1/lev)+0.004):en*(1+(1/lev)-0.004);
-            document.getElementById('out-liq').innerText = lp.toFixed(2);
-            const isD = positionType==='LONG'?lp>=sl:lp<=sl;
-            document.getElementById('out-liq').className = isD ? "text-lg font-bold text-red-500" : "text-lg font-bold text-orange-400";
-            document.getElementById('liq-warning').classList.toggle('hidden', !isD);
-
-            const getP = (p) => 15 + (((Math.max(en,sl,tp)-p)/(Math.max(en,sl,tp)-Math.min(en,sl,tp)))*70);
-            ['entry','sl','tp'].forEach(id => { 
-                document.getElementById('vis-line-'+id).style.top = getP(getNum(id))+'%';
-                document.getElementById('vis-label-'+id).innerText = id.toUpperCase()+': '+getNum(id);
-            });
-            renderTable(cap, sld, en, lev, tpd);
+        function saveData() {
+            const data = {
+                capital: document.getElementById('capital').value,
+                risk: document.getElementById('risk').value,
+                maxLev: document.getElementById('maxLev').value,
+                safeBuffer: document.getElementById('safeBuffer').value,
+                type: positionType,
+                entry: document.getElementById('entry').value,
+                sl: document.getElementById('sl').value,
+                tp: document.getElementById('tp').value,
+                selectedRiskPlan: selectedRiskPlan
+            };
+            localStorage.setItem('toolData', JSON.stringify(data));
         }
 
-        function renderTable(c, sd, e, l, td) {
-            const tb = document.querySelector('#referenceTable tbody'); tb.innerHTML = ''; if(sd<=0) return;
-            for (let r = 1; r <= 10; r += 0.5) {
-                let sUsd = (c*r/100/sd)*e, prof = (sUsd/e)*td, isC = (r === selectedRiskPlan);
-                let row = document.createElement('tr'); row.className = isC ? 'bg-blue-900/30 border-l-4 border-blue-500 font-bold' : 'hover:bg-slate-700/30';
-                row.innerHTML = `<td>${r.toFixed(1)}%</td><td>$${(c*r/100).toFixed(2)}</td><td class="text-blue-400">$${sUsd.toFixed(2)} <button onclick="cRaw(${Math.round(sUsd)},${r},this)" class="icon-action inline ml-1">${clipIco}</button></td><td>${l}x</td><td>$${(sUsd/l).toFixed(2)}</td><td class="text-green-400">+$${prof.toFixed(2)}</td><td><input type="checkbox" ${isC?'checked':''} onclick="hCheck(${r})"></td>`;
-                tb.appendChild(row);
+        function saveLog(event) {
+            if(!currentCalculatedData.entry) return;
+            let history = JSON.parse(localStorage.getItem('tradeLogs') || '[]');
+            const logEntry = {
+                id: Date.now(),
+                date: new Date().toLocaleString('vi-VN', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit' }),
+                type: positionType,
+                entry: currentCalculatedData.entry,
+                sl: currentCalculatedData.sl,
+                tp: currentCalculatedData.tp,
+                risk: currentCalculatedData.risk,
+                sizeUsd: currentCalculatedData.sizeUsd,
+                profit: currentCalculatedData.profit,
+                leverage: currentCalculatedData.leverage
+            };
+            history.unshift(logEntry); 
+            if(history.length > 50) history.pop(); 
+            localStorage.setItem('tradeLogs', JSON.stringify(history));
+            
+            const btn = event.target;
+            const originalText = btn.innerText;
+            btn.innerText = "Đã lưu ✓";
+            btn.classList.add("bg-emerald-600");
+            setTimeout(() => { btn.innerText = originalText; btn.classList.remove("bg-emerald-600"); }, 1500);
+        }
+
+        function toggleHistory() {
+            const modal = document.getElementById('historyModal');
+            if(modal.classList.contains('hidden')) {
+                renderHistory();
+                modal.classList.remove('hidden');
+            } else {
+                modal.classList.add('hidden');
             }
         }
-        function hCheck(r) { selectedRiskPlan = (selectedRiskPlan === r) ? null : r; handleInput(); }
-        function cRaw(v, r, el) { navigator.clipboard.writeText(v.toString()); el.innerText = checkIco; setTimeout(()=>el.innerText=clipIco, 1500); selectedRiskPlan = r; handleInput(); }
+
+        function clearHistory() {
+            if(confirm("Bạn có chắc chắn muốn xóa toàn bộ lịch sử lệnh?")) {
+                localStorage.removeItem('tradeLogs');
+                renderHistory();
+            }
+        }
+
+        function renderHistory() {
+            const history = JSON.parse(localStorage.getItem('tradeLogs') || '[]');
+            const tbody = document.getElementById('historyBody');
+            const emptyState = document.getElementById('emptyHistory');
+            tbody.innerHTML = '';
+            
+            if(history.length === 0) {
+                emptyState.classList.remove('hidden');
+                return;
+            }
+            emptyState.classList.add('hidden');
+            
+            history.forEach(log => {
+                let badgeClass = log.type === 'LONG' ? 'bg-emerald-900/50 text-emerald-400 border-emerald-700' : 'bg-rose-900/50 text-rose-400 border-rose-700';
+                let tr = document.createElement('tr');
+                tr.className = "border-b border-slate-700/50 hover:bg-slate-700/30 transition-colors";
+                tr.innerHTML = `
+                    <td class="py-3 text-xs text-slate-400">${log.date}</td>
+                    <td class="py-3 text-center"><span class="text-[10px] font-bold px-2 py-1 rounded border ${badgeClass}">${log.type}</span></td>
+                    <td class="py-3 text-right font-semibold text-slate-300">${log.risk}%</td>
+                    <td class="py-3 text-right font-bold text-blue-400">$${log.sizeUsd}</td>
+                    <td class="py-3 text-right font-semibold text-green-400">+$${log.profit}</td>
+                    <td class="py-3 text-right text-slate-300">${log.leverage}x</td>
+                    <td class="py-3 text-right font-semibold text-white pl-4">${log.entry}</td>
+                    <td class="py-3 text-right font-semibold text-rose-400">${log.sl}</td>
+                    <td class="py-3 text-right font-semibold text-emerald-400">${log.tp}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function handleCheck(riskValue) {
+            if (selectedRiskPlan === riskValue) {
+                selectedRiskPlan = null; 
+            } else {
+                selectedRiskPlan = riskValue; 
+            }
+            saveData();
+            calculate(); 
+        }
+
+        function updateVisualizer(entry, sl, tp, type) {
+            const visBox = document.getElementById('visualizerBox');
+            if(!entry || !sl || !tp) {
+                visBox.style.opacity = '0.3';
+                return;
+            }
+            visBox.style.opacity = '1';
+
+            const maxPrice = Math.max(entry, sl, tp);
+            const minPrice = Math.min(entry, sl, tp);
+            const range = maxPrice - minPrice;
+
+            if(range === 0) return;
+
+            const getPos = (price) => {
+                let pct = ((maxPrice - price) / range);
+                return 15 + (pct * 70); 
+            };
+
+            const posEntry = getPos(entry);
+            const posSl = getPos(sl);
+            const posTp = getPos(tp);
+
+            document.getElementById('vis-line-entry').style.top = `${posEntry}%`;
+            document.getElementById('vis-line-sl').style.top = `${posSl}%`;
+            document.getElementById('vis-line-tp').style.top = `${posTp}%`;
+
+            document.getElementById('vis-label-entry').innerText = `ENTRY: ${entry}`;
+            document.getElementById('vis-label-sl').innerText = `SL: ${sl}`;
+            document.getElementById('vis-label-tp').innerText = `TP: ${tp}`;
+
+            const fillSl = document.getElementById('vis-fill-sl');
+            const fillTp = document.getElementById('vis-fill-tp');
+
+            if (type === 'LONG') {
+                fillSl.style.top = `${posEntry}%`;
+                fillSl.style.height = `${posSl - posEntry}%`;
+                fillTp.style.top = `${posTp}%`;
+                fillTp.style.height = `${posEntry - posTp}%`;
+            } else {
+                fillSl.style.top = `${posSl}%`;
+                fillSl.style.height = `${posEntry - posSl}%`;
+                fillTp.style.top = `${posEntry}%`;
+                fillTp.style.height = `${posTp - posEntry}%`;
+            }
+        }
+
+        function calculate() {
+            const capital = getNum('capital');
+            const riskPct = getNum('risk');
+            const maxLev = getNum('maxLev');
+            const safeBufferPct = getNum('safeBuffer');
+            const entry = getNum('entry');
+            const sl = getNum('sl');
+            const tp = getNum('tp');
+
+            if(!capital || !entry || !sl) return;
+
+            let logicError = false;
+            if (positionType === "LONG" && (sl >= entry || tp <= entry)) logicError = true;
+            if (positionType === "SHORT" && (sl <= entry || tp >= entry)) logicError = true;
+
+            const slDistance = Math.abs(entry - sl);
+            const tpDistance = Math.abs(entry - tp);
+            const slDistPct = slDistance / entry; 
+            const mmr = 0.004; 
+
+            let safeLev = 1;
+            if (slDistance > 0) {
+                let maxSafeLeverage = 1 / (slDistPct + (safeBufferPct / 100) + mmr);
+                safeLev = Math.floor(maxSafeLeverage);
+            }
+            let leverage = Math.max(1, Math.min(safeLev, maxLev));
+            let rr = slDistance > 0 ? (tpDistance / slDistance) : 0;
+
+            let activeRisk = selectedRiskPlan !== null ? selectedRiskPlan : riskPct;
+            let activeRiskAmount = capital * (activeRisk / 100);
+            let activeSizeUnits = slDistance > 0 ? (activeRiskAmount / slDistance) : 0;
+            let activeSizeUsd = activeSizeUnits * entry;
+            let activeMargin = activeSizeUsd / leverage;
+            let activeProfit = activeSizeUnits * tpDistance;
+            let roe = activeMargin > 0 ? (activeProfit / activeMargin) * 100 : 0;
+
+            currentCalculatedData = {
+                entry: entry, sl: sl, tp: tp, 
+                risk: activeRisk.toFixed(2),
+                sizeUsd: activeSizeUsd.toFixed(2), 
+                profit: activeProfit.toFixed(2),
+                leverage: leverage
+            };
+
+            let liqPrice = 0;
+            let isLiqDangerous = false;
+
+            if (positionType === "LONG") {
+                liqPrice = entry * (1 - (1/leverage) + mmr);
+                if (liqPrice >= sl) isLiqDangerous = true;
+            } else {
+                liqPrice = entry * (1 + (1/leverage) - mmr);
+                if (liqPrice <= sl) isLiqDangerous = true;
+            }
+
+            const defaultRiskAmount = capital * (riskPct / 100);
+            const defaultSizeUnits = slDistance > 0 ? (defaultRiskAmount / slDistance) : 0;
+            const defaultSizeUsd = defaultSizeUnits * entry;
+            const defaultMargin = defaultSizeUsd / leverage;
+            const defaultProfit = defaultSizeUnits * tpDistance;
+
+            document.getElementById('out-risk-amount').innerText = '$' + defaultRiskAmount.toFixed(2);
+            document.getElementById('out-size-units').innerText = defaultSizeUnits.toFixed(4);
+            document.getElementById('out-size-usd').innerText = '$' + defaultSizeUsd.toFixed(2);
+            document.getElementById('out-leverage').innerText = leverage + 'x';
+            document.getElementById('out-margin').innerText = '$' + defaultMargin.toFixed(2);
+            
+            document.getElementById('out-profit').innerText = logicError ? "SAI" : '+$' + defaultProfit.toFixed(2);
+            document.getElementById('out-rr').innerText = logicError ? "SAI" : '1 : ' + rr.toFixed(2);
+            document.getElementById('out-roe').innerText = logicError ? "SAI" : roe.toFixed(2) + '%';
+
+            let liqElement = document.getElementById('out-liq');
+            let warnElement = document.getElementById('liq-warning');
+            liqElement.innerText = liqPrice.toFixed(2);
+            
+            if (isLiqDangerous) {
+                liqElement.classList.replace('text-orange-400', 'text-red-500');
+                warnElement.classList.remove('hidden');
+            } else {
+                liqElement.classList.replace('text-red-500', 'text-orange-400');
+                warnElement.classList.add('hidden');
+            }
+
+            if(!logicError) updateVisualizer(entry, sl, tp, positionType);
+            else document.getElementById('visualizerBox').style.opacity = '0.1';
+
+            updateReferenceTable(capital, slDistance, entry, leverage, tpDistance);
+        }
+
+        function updateReferenceTable(capital, slDistance, entry, leverage, tpDistance) {
+            const tbody = document.querySelector('#referenceTable tbody');
+            tbody.innerHTML = ''; 
+
+            if (slDistance <= 0) return;
+
+            let currentRisk = getNum('risk');
+
+            for (let r = 1; r <= 10; r += 0.5) {
+                let rAmount = capital * (r / 100);
+                let sUnits = rAmount / slDistance;
+                let sUsd = sUnits * entry;
+                let margin = sUsd / leverage;
+                let prof = sUnits * tpDistance;
+
+                let isCurrentInput = (r === currentRisk);
+                let isChecked = (r === selectedRiskPlan);
+                
+                let rowClass = '';
+                let textRiskColor = 'text-red-400/80';
+                if (isChecked) {
+                    rowClass = 'bg-blue-900/30 border-l-4 border-blue-500 font-bold'; 
+                    textRiskColor = 'text-red-400';
+                } else if (isCurrentInput) {
+                    rowClass = 'bg-slate-700/50'; 
+                }
+
+                let roundedUsd = Math.round(sUsd);
+                let copyBtn = `<button onclick="copyRawValue(${roundedUsd}, ${r}, this)" class="icon-action ml-2 flex items-center justify-center" title="Copy (sao chép số nguyên & tick chọn dòng)">${clipboardIcon}</button>`;
+
+                let tr = document.createElement('tr');
+                tr.className = `hover:bg-slate-700/30 transition-colors ${rowClass}`;
+                tr.innerHTML = `
+                    <td class="text-left font-semibold text-slate-300">${r.toFixed(1)}%</td>
+                    <td class="${textRiskColor}">$${rAmount.toFixed(2)}</td>
+                    <td class="font-bold text-blue-400">
+                        <div class="flex items-center justify-end">
+                            <span>$${sUsd.toFixed(2)}</span>
+                            ${copyBtn}
+                        </div>
+                    </td>
+                    <td class="text-slate-300">${leverage}x</td>
+                    <td class="text-white">$${margin.toFixed(2)}</td>
+                    <td class="text-green-400 font-semibold">+$${prof.toFixed(2)}</td>
+                    <td class="text-center p-0">
+                        <div class="flex items-center justify-center w-full h-full pt-1">
+                            <input type="checkbox" ${isChecked ? 'checked' : ''} onclick="handleCheck(${r})">
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            }
+        }
     </script>
 </body>
 </html>
