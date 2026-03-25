@@ -300,6 +300,7 @@
             calculate();
         });
 
+        // XỬ LÝ SỰ KIỆN TẬP TRUNG
         document.addEventListener('click', function(e) {
             if (e.target.closest('.popover-trigger')) {
                 e.stopPropagation();
@@ -322,7 +323,7 @@
             }
         });
 
-        // Hàm hỗ trợ lấy số chuẩn xác (Chuyển phẩy thành chấm nếu gõ bàn phím iOS)
+        // Hàm lấy số chuẩn (Chuyển phẩy thành chấm nếu gõ bàn phím iOS)
         function getNum(id) {
             const val = document.getElementById(id).value;
             if(!val) return 0;
@@ -334,7 +335,6 @@
             let val = getNum(inputId);
             let newVal = val + amount;
             if (newVal < 0 && !['entry', 'sl', 'tp'].includes(inputId)) newVal = 0;
-            // Ép thành string với chấm chuẩn
             input.value = parseFloat(newVal.toFixed(4)).toString();
             handleInput();
         }
@@ -403,17 +403,31 @@
             }
         }
 
+        // COPY THÔNG MINH - CHỈ LẤY SỐ NGUYÊN TRÊN MOBILE THEO YÊU CẦU
         function copyValue(inputId, btnId) {
             let val = document.getElementById(inputId).value;
             if(!val) return;
             
-            // Xóa rác, chỉ giữ lại số và dấu
-            let cleanVal = val.replace(/[^0-9.,]/g, '');
-            // Ép CHUẨN: Chuyển toàn bộ dấu chấm thành phẩy cho Binance VN
-            let formattedVal = cleanVal.replace(/\./g, ',');
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            let textToCopy = "";
+
+            if (isMobile) {
+                // Trên Mobile: Copy cắt bỏ phần thập phân để "lách luật" dán vào Binance App
+                let numVal = getNum(inputId);
+                if (numVal >= 10) {
+                    textToCopy = Math.trunc(numVal).toString(); // Cắt số nguyên
+                } else {
+                    // Nếu trade coin cỏ (< 10$), buộc phải giữ số thập phân và dùng dấu chấm chuẩn
+                    textToCopy = val.replace(/,/g, '.');
+                }
+            } else {
+                // Trên Laptop: Giữ nguyên logic cũ, chuyển chấm thành phẩy cho Binance Web VN
+                let cleanVal = val.replace(/[^0-9.,]/g, '');
+                textToCopy = cleanVal.replace(/\./g, ',');
+            }
             
             const btnElement = document.getElementById(btnId);
-            copyToClipboard(formattedVal, btnElement, false);
+            copyToClipboard(textToCopy, btnElement, false);
         }
 
         function copyRawValue(rawValue, riskValue, btnElement) {
@@ -454,7 +468,6 @@
         }
 
         function calculate() {
-            // Lấy giá trị thông qua hàm getNum (tự động fix dấu phẩy bàn phím iOS)
             const capital = getNum('capital');
             const riskPct = getNum('risk');
             const maxLev = getNum('maxLev');
