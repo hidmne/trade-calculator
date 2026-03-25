@@ -14,7 +14,7 @@
         input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         .table-container { overflow-x: auto; }
         table { width: 100%; text-align: right; border-collapse: collapse; }
-        th, td { padding: 10px 8px; border-bottom: 1px solid #334155; }
+        th, td { padding: 12px 8px; border-bottom: 1px solid #334155; }
         th { color: #94a3b8; font-weight: normal; font-size: 0.875rem; }
         td { font-size: 0.95rem; }
         
@@ -26,12 +26,16 @@
 
         /* Custom Copy Button Style */
         .copy-btn {
-            opacity: 0.6;
-            transition: opacity 0.2s;
+            opacity: 0.5;
+            transition: all 0.2s;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .copy-btn:hover {
             opacity: 1;
+            transform: scale(1.1);
         }
     </style>
 </head>
@@ -78,26 +82,32 @@
                 </div>
 
                 <div class="grid grid-cols-3 gap-3">
-                    <div class="relative group">
+                    <div>
                         <label class="block text-sm text-slate-400 mb-1">Entry</label>
-                        <input type="number" id="entry" value="71403.16" class="w-full p-2 pr-8 rounded-lg" onfocus="this.select()" oninput="handleInput()">
-                        <button id="btnCopyEntry" onclick="copyValue('entry', 'btnCopyEntry')" class="absolute right-2 bottom-2 text-slate-400 hover:text-white copy-btn" title="Copy (Chuỗi số thô)">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 7.5V6.108c0-1.135.847-2.067 1.96-2.188A27.209 27.209 0 0 1 12 3.75c.864 0 1.71.04 2.54.12 1.113.12 1.96 1.053 1.96 2.188V7.5m-9.75 0h9.75M8.25 7.5v6.75m0 0h9.75M18 14.25v-6.75M18 14.25a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3m12 0v-.75m-6 3h-3" /></svg>
-                        </button>
+                        <div class="relative">
+                            <input type="number" id="entry" value="71403.16" class="w-full p-2 pr-10 rounded-lg" onfocus="this.select()" oninput="handleInput()">
+                            <button id="btnCopyEntry" onclick="copyValue('entry', 'btnCopyEntry')" class="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white copy-btn" title="Copy">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" /></svg>
+                            </button>
+                        </div>
                     </div>
-                    <div class="relative group">
+                    <div>
                         <label class="block text-sm text-slate-400 mb-1">Stop Loss</label>
-                        <input type="number" id="sl" value="72027.00" class="w-full p-2 pr-8 rounded-lg text-red-400" onfocus="this.select()" oninput="handleInput()">
-                        <button id="btnCopySL" onclick="copyValue('sl', 'btnCopySL')" class="absolute right-2 bottom-2 text-slate-400 hover:text-white copy-btn" title="Copy (Chuỗi số thô)">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 7.5V6.108c0-1.135.847-2.067 1.96-2.188A27.209 27.209 0 0 1 12 3.75c.864 0 1.71.04 2.54.12 1.113.12 1.96 1.053 1.96 2.188V7.5m-9.75 0h9.75M8.25 7.5v6.75m0 0h9.75M18 14.25v-6.75M18 14.25a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3m12 0v-.75m-6 3h-3" /></svg>
-                        </button>
+                        <div class="relative">
+                            <input type="number" id="sl" value="72027.00" class="w-full p-2 pr-10 rounded-lg text-red-400" onfocus="this.select()" oninput="handleInput()">
+                            <button id="btnCopySL" onclick="copyValue('sl', 'btnCopySL')" class="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white copy-btn" title="Copy">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" /></svg>
+                            </button>
+                        </div>
                     </div>
-                    <div class="relative group">
+                    <div>
                         <label class="block text-sm text-slate-400 mb-1">Take Profit</label>
-                        <input type="number" id="tp" value="67952.00" class="w-full p-2 pr-8 rounded-lg text-green-400" onfocus="this.select()" oninput="handleInput()">
-                        <button id="btnCopyTP" onclick="copyValue('tp', 'btnCopyTP')" class="absolute right-2 bottom-2 text-slate-400 hover:text-white copy-btn" title="Copy (Chuỗi số thô)">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 7.5V6.108c0-1.135.847-2.067 1.96-2.188A27.209 27.209 0 0 1 12 3.75c.864 0 1.71.04 2.54.12 1.113.12 1.96 1.053 1.96 2.188V7.5m-9.75 0h9.75M8.25 7.5v6.75m0 0h9.75M18 14.25v-6.75M18 14.25a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3m12 0v-.75m-6 3h-3" /></svg>
-                        </button>
+                        <div class="relative">
+                            <input type="number" id="tp" value="67952.00" class="w-full p-2 pr-10 rounded-lg text-green-400" onfocus="this.select()" oninput="handleInput()">
+                            <button id="btnCopyTP" onclick="copyValue('tp', 'btnCopyTP')" class="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white copy-btn" title="Copy">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" /></svg>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -174,16 +184,14 @@
     </div>
 
     <script>
-        // Icon SVG cho nút copy và check xanh
-        const copyIconSvg = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 7.5V6.108c0-1.135.847-2.067 1.96-2.188A27.209 27.209 0 0 1 12 3.75c.864 0 1.71.04 2.54.12 1.113.12 1.96 1.053 1.96 2.188V7.5m-9.75 0h9.75M8.25 7.5v6.75m0 0h9.75M18 14.25v-6.75M18 14.25a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3m12 0v-.75m-6 3h-3" /></svg>';
-        const checkIconSvg = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="#22c55e" class="size-4"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>';
+        // Icon chuẩn hóa (To hơn, thẳng nét)
+        const copyIconSvg = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" /></svg>';
+        const checkIconSvg = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="#22c55e" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>';
 
-        // Biến toàn cục để lưu lại Plan đang được tick chọn
         let selectedRiskPlan = null;
 
-        // Tải dữ liệu từ LocalStorage khi mở trang
         document.addEventListener('DOMContentLoaded', () => {
-            const savedData = localStorage.getItem('toolData'); // Tên key đơn giản
+            const savedData = localStorage.getItem('toolData');
             if (savedData) {
                 const data = JSON.parse(savedData);
                 document.getElementById('capital').value = data.capital || 800;
@@ -199,37 +207,32 @@
             calculate();
         });
 
-        // Hàm copy an toàn: Loại bỏ mọi ký tự định dạng sang chuỗi số thô
+        // Copy giá trị Entry, SL, TP (Lấy giá trị gốc, không chỉnh sửa form string)
         function copyValue(inputId, btnId) {
             let val = document.getElementById(inputId).value;
             if(!val) return;
             
-            // Sanitize: loại bỏ mọi ký tự không phải số và dấu chấm
-            const sanitizedVal = val.replace(/[^0-9.]/g, '');
-            
-            navigator.clipboard.writeText(sanitizedVal).then(() => {
+            navigator.clipboard.writeText(val).then(() => {
                 const btn = document.getElementById(btnId);
-                btn.innerHTML = checkIconSvg; // Sử dụng icon check xanh
+                btn.innerHTML = checkIconSvg;
                 setTimeout(() => { btn.innerHTML = copyIconSvg; }, 1500);
             });
         }
 
-        // Hàm mới để copy giá trị thô không sanitize (ví dụ: số liệu từ bảng)
+        // Copy giá trị Khối lượng (Làm tròn số nguyên để paste vào sàn)
         function copyRawValue(rawValue, btnElement) {
-            navigator.clipboard.writeText(rawValue).then(() => {
+            navigator.clipboard.writeText(rawValue.toString()).then(() => {
                 const originalHtml = btnElement.innerHTML;
-                btnElement.innerHTML = checkIconSvg; // Icon check xanh
+                btnElement.innerHTML = checkIconSvg;
                 setTimeout(() => { btnElement.innerHTML = originalHtml; }, 1500);
             });
         }
 
-        // Gọi hàm này mỗi khi có thay đổi nhập liệu
         function handleInput() {
             saveData();
             calculate();
         }
 
-        // Lưu dữ liệu vào LocalStorage
         function saveData() {
             const data = {
                 capital: document.getElementById('capital').value,
@@ -247,9 +250,9 @@
 
         function handleCheck(riskValue) {
             if (selectedRiskPlan === riskValue) {
-                selectedRiskPlan = null; // Bỏ chọn nếu bấm lại
+                selectedRiskPlan = null; 
             } else {
-                selectedRiskPlan = riskValue; // Chọn plan mới
+                selectedRiskPlan = riskValue; 
             }
             saveData();
             calculate();
@@ -303,7 +306,6 @@
                 if (liqPrice <= sl) isLiqDangerous = true;
             }
 
-            // Gắn kết quả
             document.getElementById('out-risk-amount').innerText = '$' + riskAmount.toFixed(2);
             document.getElementById('out-size-units').innerText = sizeUnits.toFixed(4);
             document.getElementById('out-size-usd').innerText = '$' + sizeUsd.toFixed(2);
@@ -325,7 +327,6 @@
                 warnElement.classList.add('hidden');
             }
 
-            // Cập nhật bảng
             updateReferenceTable(capital, slDistance, entry, leverage, tpDistance);
         }
 
@@ -344,26 +345,35 @@
                 let margin = sUsd / leverage;
                 let prof = sUnits * tpDistance;
 
-                // Xử lý logic hiển thị dòng được chọn
                 let isCurrentInput = (r === currentRisk);
                 let isChecked = (r === selectedRiskPlan);
                 
                 let rowClass = '';
                 if (isChecked) {
-                    rowClass = 'bg-blue-900/30 border-l-4 border-blue-500'; // Đánh dấu plan đã chọn
+                    rowClass = 'bg-blue-900/30 border-l-4 border-blue-500'; 
                 } else if (isCurrentInput) {
-                    rowClass = 'bg-slate-700/50'; // Đánh dấu mờ dòng đang nhập phía trên
+                    rowClass = 'bg-slate-700/50'; 
                 }
 
-                // Dữ liệu copy cho KL Giao dịch (USD)
-                let copyBtn = '<button onclick="copyRawValue(\'' + sUsd + '\', this)" class="ml-1 text-slate-400 copy-btn">' + copyIconSvg + '</button>';
+                // LÀM TRÒN SỐ NGUYÊN TRƯỚC KHI COPY
+                let roundedUsd = Math.round(sUsd);
+                let copyBtn = `
+                    <button onclick="copyRawValue(${roundedUsd}, this)" class="text-slate-400 copy-btn hover:text-white" title="Copy (làm tròn số nguyên)">
+                        ${copyIconSvg}
+                    </button>
+                `;
 
                 let tr = document.createElement('tr');
                 tr.className = rowClass;
                 tr.innerHTML = `
                     <td class="text-left font-semibold text-slate-300">${r.toFixed(1)}%</td>
                     <td class="text-red-400">$${rAmount.toFixed(2)}</td>
-                    <td class="font-bold text-blue-400">$${sUsd.toFixed(2)}${copyBtn}</td>
+                    <td class="font-bold text-blue-400">
+                        <div class="flex items-center justify-end gap-2">
+                            <span>$${sUsd.toFixed(2)}</span>
+                            ${copyBtn}
+                        </div>
+                    </td>
                     <td class="text-slate-300">${leverage}x</td>
                     <td class="text-white">$${margin.toFixed(2)}</td>
                     <td class="text-green-400 font-semibold">+$${prof.toFixed(2)}</td>
