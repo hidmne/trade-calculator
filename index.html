@@ -24,7 +24,7 @@
         }
 
         /* Hover states cho icon */
-        .icon-action { opacity: 0.6; transition: all 0.2s; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .icon-action { opacity: 0.6; transition: all 0.2s; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #94a3b8; }
         .icon-action:hover { opacity: 1; transform: scale(1.1); color: #fff; }
         
         .tri-btn { fill: #94a3b8; cursor: pointer; transition: fill 0.2s; }
@@ -33,43 +33,43 @@
 </head>
 <body class="p-2 md:p-6 flex flex-col items-center min-h-screen">
 
-    <div class="max-w-4xl w-full grid md:grid-cols-2 gap-6 items-stretch">
+    <div class="max-w-4xl w-full grid md:grid-cols-2 gap-6 items-stretch relative">
         
         <div class="bg-slate-800 rounded-2xl shadow-2xl p-5 border border-slate-700 h-full relative">
             <h2 class="text-xl font-bold text-center mb-5 text-blue-400">Calculator</h2>
 
-            <div class="space-y-4">
+            <div class="space-y-4 relative">
                 <div class="flex gap-1 bg-slate-900 p-1 rounded-lg border border-slate-700">
                     <button id="btnLong" onclick="setType('LONG')" class="flex-1 py-2 rounded-md font-bold text-center tracking-wider transition-all duration-200">LONG</button>
                     <button id="btnShort" onclick="setType('SHORT')" class="flex-1 py-2 rounded-md font-bold text-center tracking-wider transition-all duration-200">SHORT</button>
                 </div>
 
-                <div class="grid grid-cols-2 gap-3">
+                <div class="grid grid-cols-2 gap-3 relative">
                     <div class="relative">
                         <label class="block text-sm text-slate-400 mb-1">Vốn ($)</label>
-                        <div class="relative flex items-center">
-                            <input type="number" id="capital" value="800" class="w-full p-2 pr-8 rounded-lg font-semibold text-lg" onfocus="this.select()" oninput="handleInput()">
-                            <button onclick="togglePopover('pop-capital', event)" class="absolute right-2 icon-action font-bold text-lg" title="Điều chỉnh">±</button>
+                        <div class="relative flex items-center bg-slate-700/50 rounded-lg pr-1">
+                            <input type="number" id="capital" value="800" class="flex-grow bg-transparent p-2 rounded-lg font-semibold text-lg focus:ring-0 focus:outline-none pr-0" onfocus="this.select()" oninput="handleInput()">
+                            <button class="icon-action font-bold text-xl popover-trigger p-1" data-popover="pop-capital" title="Điều chỉnh">±</button>
                         </div>
-                        <div id="pop-capital" class="stepper-popover hidden absolute top-[70px] right-0 bg-slate-700 border border-slate-600 rounded-lg shadow-xl z-50 p-2 flex gap-2 w-32">
+                        <div id="pop-capital" class="stepper-popover hidden absolute top-[105%] right-0 bg-slate-700 border border-slate-600 rounded-lg shadow-xl z-50 p-2 flex gap-2 w-32">
                             <div class="flex flex-col gap-1 w-1/2">
-                                <button onclick="adjustValue('capital', 10)" class="hover:bg-slate-600 rounded text-sm py-1">+10</button>
-                                <button onclick="adjustValue('capital', 50)" class="hover:bg-slate-600 rounded text-sm py-1">+50</button>
-                                <button onclick="adjustValue('capital', 100)" class="hover:bg-slate-600 rounded text-sm py-1">+100</button>
+                                <button data-adjust="capital, 10" class="hover:bg-slate-600 rounded text-sm py-1">+10</button>
+                                <button data-adjust="capital, 50" class="hover:bg-slate-600 rounded text-sm py-1">+50</button>
+                                <button data-adjust="capital, 100" class="hover:bg-slate-600 rounded text-sm py-1">+100</button>
                             </div>
                             <div class="flex flex-col gap-1 w-1/2">
-                                <button onclick="adjustValue('capital', -10)" class="hover:bg-slate-600 rounded text-sm py-1">-10</button>
-                                <button onclick="adjustValue('capital', -50)" class="hover:bg-slate-600 rounded text-sm py-1">-50</button>
-                                <button onclick="adjustValue('capital', -100)" class="hover:bg-slate-600 rounded text-sm py-1">-100</button>
+                                <button data-adjust="capital, -10" class="hover:bg-slate-600 rounded text-sm py-1">-10</button>
+                                <button data-adjust="capital, -50" class="hover:bg-slate-600 rounded text-sm py-1">-50</button>
+                                <button data-adjust="capital, -100" class="hover:bg-slate-600 rounded text-sm py-1">-100</button>
                             </div>
                         </div>
                     </div>
                     
                     <div class="relative">
                         <label class="block text-sm text-slate-400 mb-1">Rủi ro (%)</label>
-                        <div class="relative flex items-center">
-                            <input type="number" id="risk" value="1" step="0.25" class="w-full p-2 pr-8 rounded-lg font-semibold text-lg" onfocus="this.select()" oninput="handleInput()">
-                            <div class="absolute right-2 flex flex-col gap-[2px]">
+                        <div class="relative flex items-center bg-slate-700/50 rounded-lg pr-1">
+                            <input type="number" id="risk" value="1" step="0.25" class="flex-grow bg-transparent p-2 rounded-lg font-semibold text-lg focus:ring-0 focus:outline-none pr-0" onfocus="this.select()" oninput="handleInput()">
+                            <div class="flex flex-col gap-[2px] p-1">
                                 <svg onclick="adjustRisk('risk', 0.25)" class="tri-btn w-3 h-3" viewBox="0 0 24 24"><path d="M24 22h-24l12-20z"/></svg>
                                 <svg onclick="adjustRisk('risk', -0.25)" class="tri-btn w-3 h-3 rotate-180" viewBox="0 0 24 24"><path d="M24 22h-24l12-20z"/></svg>
                             </div>
@@ -78,20 +78,20 @@
 
                     <div class="relative">
                         <label class="block text-sm text-slate-400 mb-1">Đòn bẩy Max</label>
-                        <div class="relative flex items-center">
-                            <input type="number" id="maxLev" value="100" class="w-full p-2 pr-8 rounded-lg font-semibold" onfocus="this.select()" oninput="handleInput()">
-                            <button onclick="togglePopover('pop-maxlev', event)" class="absolute right-2 icon-action font-bold text-lg" title="Điều chỉnh">±</button>
+                        <div class="relative flex items-center bg-slate-700/50 rounded-lg pr-1">
+                            <input type="number" id="maxLev" value="100" class="flex-grow bg-transparent p-2 rounded-lg font-semibold focus:ring-0 focus:outline-none pr-0" onfocus="this.select()" oninput="handleInput()">
+                            <button class="icon-action font-bold text-xl popover-trigger p-1" data-popover="pop-maxlev" title="Điều chỉnh">±</button>
                         </div>
-                        <div id="pop-maxlev" class="stepper-popover hidden absolute top-[70px] right-0 bg-slate-700 border border-slate-600 rounded-lg shadow-xl z-50 p-2 flex gap-2 w-32">
+                        <div id="pop-maxlev" class="stepper-popover hidden absolute top-[105%] right-0 bg-slate-700 border border-slate-600 rounded-lg shadow-xl z-50 p-2 flex gap-2 w-32">
                             <div class="flex flex-col gap-1 w-1/2">
-                                <button onclick="adjustValue('maxLev', 1)" class="hover:bg-slate-600 rounded text-sm py-1">+1</button>
-                                <button onclick="adjustValue('maxLev', 5)" class="hover:bg-slate-600 rounded text-sm py-1">+5</button>
-                                <button onclick="adjustValue('maxLev', 10)" class="hover:bg-slate-600 rounded text-sm py-1">+10</button>
+                                <button data-adjust="maxLev, 1" class="hover:bg-slate-600 rounded text-sm py-1">+1</button>
+                                <button data-adjust="maxLev, 5" class="hover:bg-slate-600 rounded text-sm py-1">+5</button>
+                                <button data-adjust="maxLev, 10" class="hover:bg-slate-600 rounded text-sm py-1">+10</button>
                             </div>
                             <div class="flex flex-col gap-1 w-1/2">
-                                <button onclick="adjustValue('maxLev', -1)" class="hover:bg-slate-600 rounded text-sm py-1">-1</button>
-                                <button onclick="adjustValue('maxLev', -5)" class="hover:bg-slate-600 rounded text-sm py-1">-5</button>
-                                <button onclick="adjustValue('maxLev', -10)" class="hover:bg-slate-600 rounded text-sm py-1">-10</button>
+                                <button data-adjust="maxLev, -1" class="hover:bg-slate-600 rounded text-sm py-1">-1</button>
+                                <button data-adjust="maxLev, -5" class="hover:bg-slate-600 rounded text-sm py-1">-5</button>
+                                <button data-adjust="maxLev, -10" class="hover:bg-slate-600 rounded text-sm py-1">-10</button>
                             </div>
                         </div>
                     </div>
@@ -99,15 +99,15 @@
                     <div class="relative">
                         <div class="group relative inline-block mb-1 w-full">
                             <label class="flex items-center text-sm text-slate-400 cursor-help">
-                                Cách Liquidity <span class="ml-1 text-blue-500 text-xs">ℹ️</span>
+                                Khoảng cách tới Liquidity <span class="ml-1 text-blue-500 text-xs">ℹ️</span>
                             </label>
                             <div class="absolute bottom-full left-0 mb-2 hidden group-hover:block w-48 p-2 bg-slate-700 text-xs text-white rounded shadow-lg z-10 border border-slate-600">
                                 Khoảng cách an toàn từ Stop Loss đến Giá Thanh Lý tính bằng %.
                             </div>
                         </div>
-                        <div class="relative flex items-center">
-                            <input type="number" id="safeBuffer" value="0.3" step="0.05" class="w-full p-2 pr-8 rounded-lg font-semibold" onfocus="this.select()" oninput="handleInput()">
-                            <div class="absolute right-2 flex flex-col gap-[2px]">
+                        <div class="relative flex items-center bg-slate-700/50 rounded-lg pr-1">
+                            <input type="number" id="safeBuffer" value="0.3" step="0.05" class="flex-grow bg-transparent p-2 rounded-lg font-semibold focus:ring-0 focus:outline-none pr-0" onfocus="this.select()" oninput="handleInput()">
+                            <div class="flex flex-col gap-[2px] p-1">
                                 <svg onclick="adjustRisk('safeBuffer', 0.05)" class="tri-btn w-3 h-3" viewBox="0 0 24 24"><path d="M24 22h-24l12-20z"/></svg>
                                 <svg onclick="adjustRisk('safeBuffer', -0.05)" class="tri-btn w-3 h-3 rotate-180" viewBox="0 0 24 24"><path d="M24 22h-24l12-20z"/></svg>
                             </div>
@@ -115,78 +115,78 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-3 gap-3 pt-2">
+                <div class="grid grid-cols-3 gap-3 pt-2relative">
                     <div class="relative">
                         <label class="block text-sm text-slate-400 mb-1">Entry</label>
-                        <div class="relative flex items-center">
-                            <input type="number" id="entry" value="71403.16" class="w-full p-2 pr-14 rounded-lg" onfocus="this.select()" oninput="handleInput()">
-                            <div class="absolute right-2 flex items-center gap-2 text-slate-400">
-                                <button onclick="togglePopover('pop-entry', event)" class="icon-action font-bold text-lg" title="Điều chỉnh">±</button>
-                                <button id="btnCopyEntry" onclick="copyValue('entry', 'btnCopyEntry')" class="icon-action text-slate-400" title="Copy">
+                        <div class="relative flex items-center bg-slate-700/50 rounded-lg pr-2">
+                            <input type="number" id="entry" value="71403.16" class="flex-grow bg-transparent p-2 rounded-lg focus:ring-0 focus:outline-none pr-0" onfocus="this.select()" oninput="handleInput()">
+                            <div class="flex items-center gap-1">
+                                <button class="icon-action font-bold text-xl popover-trigger p-1" data-popover="pop-entry" title="Điều chỉnh">±</button>
+                                <button id="btnCopyEntry" onclick="copyValue('entry', 'btnCopyEntry')" class="icon-action" title="Copy (Binance VN)">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" /></svg>
                                 </button>
                             </div>
                         </div>
-                        <div id="pop-entry" class="stepper-popover hidden absolute top-[70px] left-0 bg-slate-700 border border-slate-600 rounded-lg shadow-xl z-50 p-2 flex gap-2 w-[120px]">
+                        <div id="pop-entry" class="stepper-popover hidden absolute top-[105%] left-0 bg-slate-700 border border-slate-600 rounded-lg shadow-xl z-50 p-2 flex gap-2 w-[120px]">
                             <div class="flex flex-col gap-1 w-1/2">
-                                <button onclick="adjustValue('entry', 1)" class="hover:bg-slate-600 rounded text-sm py-1">+1</button>
-                                <button onclick="adjustValue('entry', 10)" class="hover:bg-slate-600 rounded text-sm py-1">+10</button>
-                                <button onclick="adjustValue('entry', 100)" class="hover:bg-slate-600 rounded text-sm py-1">+100</button>
+                                <button data-adjust="entry, 1" class="hover:bg-slate-600 rounded text-sm py-1">+1</button>
+                                <button data-adjust="entry, 10" class="hover:bg-slate-600 rounded text-sm py-1">+10</button>
+                                <button data-adjust="entry, 100" class="hover:bg-slate-600 rounded text-sm py-1">+100</button>
                             </div>
                             <div class="flex flex-col gap-1 w-1/2">
-                                <button onclick="adjustValue('entry', -1)" class="hover:bg-slate-600 rounded text-sm py-1">-1</button>
-                                <button onclick="adjustValue('entry', -10)" class="hover:bg-slate-600 rounded text-sm py-1">-10</button>
-                                <button onclick="adjustValue('entry', -100)" class="hover:bg-slate-600 rounded text-sm py-1">-100</button>
+                                <button data-adjust="entry, -1" class="hover:bg-slate-600 rounded text-sm py-1">-1</button>
+                                <button data-adjust="entry, -10" class="hover:bg-slate-600 rounded text-sm py-1">-10</button>
+                                <button data-adjust="entry, -100" class="hover:bg-slate-600 rounded text-sm py-1">-100</button>
                             </div>
                         </div>
                     </div>
 
                     <div class="relative">
                         <label class="block text-sm text-slate-400 mb-1">Stop Loss</label>
-                        <div class="relative flex items-center">
-                            <input type="number" id="sl" value="72027.00" class="w-full p-2 pr-14 rounded-lg text-red-400 font-semibold" onfocus="this.select()" oninput="handleInput()">
-                            <div class="absolute right-2 flex items-center gap-2 text-slate-400">
-                                <button onclick="togglePopover('pop-sl', event)" class="icon-action font-bold text-lg" title="Điều chỉnh">±</button>
-                                <button id="btnCopySL" onclick="copyValue('sl', 'btnCopySL')" class="icon-action text-slate-400" title="Copy">
+                        <div class="relative flex items-center bg-slate-700/50 rounded-lg pr-2">
+                            <input type="number" id="sl" value="72027.00" class="flex-grow bg-transparent p-2 rounded-lg focus:ring-0 focus:outline-none text-red-400 font-semibold pr-0" onfocus="this.select()" oninput="handleInput()">
+                            <div class="flex items-center gap-1">
+                                <button class="icon-action font-bold text-xl popover-trigger p-1" data-popover="pop-sl" title="Điều chỉnh">±</button>
+                                <button id="btnCopySL" onclick="copyValue('sl', 'btnCopySL')" class="icon-action" title="Copy (Binance VN)">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" /></svg>
                                 </button>
                             </div>
                         </div>
-                        <div id="pop-sl" class="stepper-popover hidden absolute top-[70px] left-1/2 -translate-x-1/2 bg-slate-700 border border-slate-600 rounded-lg shadow-xl z-50 p-2 flex gap-2 w-[120px]">
+                        <div id="pop-sl" class="stepper-popover hidden absolute top-[105%] left-1/2 -translate-x-1/2 bg-slate-700 border border-slate-600 rounded-lg shadow-xl z-50 p-2 flex gap-2 w-[120px]">
                             <div class="flex flex-col gap-1 w-1/2">
-                                <button onclick="adjustValue('sl', 1)" class="hover:bg-slate-600 rounded text-sm py-1">+1</button>
-                                <button onclick="adjustValue('sl', 10)" class="hover:bg-slate-600 rounded text-sm py-1">+10</button>
-                                <button onclick="adjustValue('sl', 100)" class="hover:bg-slate-600 rounded text-sm py-1">+100</button>
+                                <button data-adjust="sl, 1" class="hover:bg-slate-600 rounded text-sm py-1">+1</button>
+                                <button data-adjust="sl, 10" class="hover:bg-slate-600 rounded text-sm py-1">+10</button>
+                                <button data-adjust="sl, 100" class="hover:bg-slate-600 rounded text-sm py-1">+100</button>
                             </div>
                             <div class="flex flex-col gap-1 w-1/2">
-                                <button onclick="adjustValue('sl', -1)" class="hover:bg-slate-600 rounded text-sm py-1">-1</button>
-                                <button onclick="adjustValue('sl', -10)" class="hover:bg-slate-600 rounded text-sm py-1">-10</button>
-                                <button onclick="adjustValue('sl', -100)" class="hover:bg-slate-600 rounded text-sm py-1">-100</button>
+                                <button data-adjust="sl, -1" class="hover:bg-slate-600 rounded text-sm py-1">-1</button>
+                                <button data-adjust="sl, -10" class="hover:bg-slate-600 rounded text-sm py-1">-10</button>
+                                <button data-adjust="sl, -100" class="hover:bg-slate-600 rounded text-sm py-1">-100</button>
                             </div>
                         </div>
                     </div>
 
                     <div class="relative">
                         <label class="block text-sm text-slate-400 mb-1">Take Profit</label>
-                        <div class="relative flex items-center">
-                            <input type="number" id="tp" value="67952.00" class="w-full p-2 pr-14 rounded-lg text-green-400 font-semibold" onfocus="this.select()" oninput="handleInput()">
-                            <div class="absolute right-2 flex items-center gap-2 text-slate-400">
-                                <button onclick="togglePopover('pop-tp', event)" class="icon-action font-bold text-lg" title="Điều chỉnh">±</button>
-                                <button id="btnCopyTP" onclick="copyValue('tp', 'btnCopyTP')" class="icon-action text-slate-400" title="Copy">
+                        <div class="relative flex items-center bg-slate-700/50 rounded-lg pr-2">
+                            <input type="number" id="tp" value="67952.00" class="flex-grow bg-transparent p-2 rounded-lg focus:ring-0 focus:outline-none text-green-400 font-semibold pr-0" onfocus="this.select()" oninput="handleInput()">
+                            <div class="flex items-center gap-1">
+                                <button class="icon-action font-bold text-xl popover-trigger p-1" data-popover="pop-tp" title="Điều chỉnh">±</button>
+                                <button id="btnCopyTP" onclick="copyValue('tp', 'btnCopyTP')" class="icon-action" title="Copy (Binance VN)">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" /></svg>
                                 </button>
                             </div>
                         </div>
-                        <div id="pop-tp" class="stepper-popover hidden absolute top-[70px] right-0 bg-slate-700 border border-slate-600 rounded-lg shadow-xl z-50 p-2 flex gap-2 w-[120px]">
+                        <div id="pop-tp" class="stepper-popover hidden absolute top-[105%] right-0 bg-slate-700 border border-slate-600 rounded-lg shadow-xl z-50 p-2 flex gap-2 w-[120px]">
                             <div class="flex flex-col gap-1 w-1/2">
-                                <button onclick="adjustValue('tp', 1)" class="hover:bg-slate-600 rounded text-sm py-1">+1</button>
-                                <button onclick="adjustValue('tp', 10)" class="hover:bg-slate-600 rounded text-sm py-1">+10</button>
-                                <button onclick="adjustValue('tp', 100)" class="hover:bg-slate-600 rounded text-sm py-1">+100</button>
+                                <button data-adjust="tp, 1" class="hover:bg-slate-600 rounded text-sm py-1">+1</button>
+                                <button data-adjust="tp, 10" class="hover:bg-slate-600 rounded text-sm py-1">+10</button>
+                                <button data-adjust="tp, 100" class="hover:bg-slate-600 rounded text-sm py-1">+100</button>
                             </div>
                             <div class="flex flex-col gap-1 w-1/2">
-                                <button onclick="adjustValue('tp', -1)" class="hover:bg-slate-600 rounded text-sm py-1">-1</button>
-                                <button onclick="adjustValue('tp', -10)" class="hover:bg-slate-600 rounded text-sm py-1">-10</button>
-                                <button onclick="adjustValue('tp', -100)" class="hover:bg-slate-600 rounded text-sm py-1">-100</button>
+                                <button data-adjust="tp, -1" class="hover:bg-slate-600 rounded text-sm py-1">-1</button>
+                                <button data-adjust="tp, -10" class="hover:bg-slate-600 rounded text-sm py-1">-10</button>
+                                <button data-adjust="tp, -100" class="hover:bg-slate-600 rounded text-sm py-1">-100</button>
                             </div>
                         </div>
                     </div>
@@ -194,13 +194,13 @@
             </div>
         </div>
 
-        <div class="bg-slate-900 rounded-2xl shadow-2xl p-5 border border-slate-700 flex flex-col justify-between h-full">
+        <div class="bg-slate-900 rounded-2xl shadow-2xl p-5 border border-slate-700 flex flex-col justify-between h-full space-y-3">
             <div class="flex justify-between items-center pb-2 border-b border-slate-800">
                 <span class="text-slate-400">Mất tối đa (Risk Amount):</span>
                 <span id="out-risk-amount" class="text-xl font-bold text-red-400">$8.00</span>
             </div>
             
-            <div class="flex justify-between items-center bg-blue-900/20 p-3 rounded-lg border border-blue-900/50 mt-1">
+            <div class="flex justify-between items-center bg-blue-900/20 p-3 rounded-lg border border-blue-900/50 mt-1 hover:bg-blue-900/30 transition-colors">
                 <span class="text-blue-300 font-medium">KL Giao dịch (USD):</span>
                 <span id="out-size-usd" class="text-2xl font-bold text-blue-400">$0.00</span>
             </div>
@@ -222,9 +222,9 @@
 
             <div class="flex justify-between items-center pt-1">
                 <span class="text-slate-400">Giá thanh lý:</span>
-                <span id="out-liq" class="text-lg font-bold text-orange-400">0.00</span>
+                <span id="out-liq" class="text-lg font-bold text-orange-400 hover:text-orange-300 transition-colors">0.00</span>
             </div>
-            <div id="liq-warning" class="text-xs text-red-500 font-bold hidden text-right">⚠️ DANGER: Thanh lý xảy ra trước Stop Loss!</div>
+            <div id="liq-warning" class="text-xs text-red-500 font-bold hidden text-right animate-pulse">⚠️ DANGER: Thanh lý xảy ra trước Stop Loss!</div>
 
             <div class="bg-slate-800 p-3 rounded-lg border border-slate-700 mt-2 space-y-1">
                 <div class="flex justify-between">
@@ -235,15 +235,15 @@
                     <span class="text-sm text-slate-400">Tiền lãi dự kiến:</span>
                     <span id="out-profit" class="font-bold text-green-400">+$0.00</span>
                 </div>
-                <div class="flex justify-between">
-                    <span class="text-sm text-slate-400">ROE:</span>
+                <div class="flex justify-between hover:bg-slate-700 rounded p-1 transition-colors">
+                    <span class="text-sm text-slate-400">ROE %:</span>
                     <span id="out-roe" class="font-bold text-green-400">0%</span>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="max-w-4xl w-full bg-slate-800 rounded-2xl shadow-2xl p-5 border border-slate-700 mt-6 mb-10">
+    <div class="max-w-4xl w-full bg-slate-800 rounded-2xl shadow-2xl p-5 border border-slate-700 mt-6 mb-10 relative">
         <h3 class="text-lg font-bold mb-4 text-slate-300">Bảng Khối lượng & Ký quỹ</h3>
         <div class="table-container">
             <table id="referenceTable">
@@ -265,11 +265,12 @@
     </div>
 
     <script>
-        const copyIconSvg = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" /></svg>';
-        const checkIconSvg = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="#22c55e" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>';
+        // Icon chuẩn hóa, mỏng, thanh lịch (Lucide icon style)
+        const checkIcon = '✅';
+        const clipboardIcon = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" /></svg>';
 
-        let positionType = 'SHORT'; 
-        let selectedRiskPlan = null;
+        let positionType = 'SHORT'; // Mặc định
+        let selectedRiskPlan = null; // Plan rủi ro đang được tick chọn trong bảng
 
         document.addEventListener('DOMContentLoaded', () => {
             const savedData = localStorage.getItem('toolData');
@@ -289,35 +290,50 @@
             calculate();
         });
 
-        // Xử lý đóng Popover an toàn
-        document.addEventListener('click', function(event) {
-            if (!event.target.closest('.stepper-popover') && !event.target.closest('.icon-action')) {
+        // HỆ THỐNG XỬ LÝ SỰ KIỆN TẬP TRUNG (EVENT DELEGATION) - GIẢI QUYẾT LỖI ± TRIỆT ĐỂ
+        document.addEventListener('click', function(e) {
+            // 1. Xử lý click đóng mở Popover ±
+            if (e.target.closest('.popover-trigger')) {
+                e.stopPropagation(); // Ngăn click lan ra ngoài làm đóng popover ngay
+                const trigger = e.target.closest('.popover-trigger');
+                const popoverId = trigger.dataset.popover;
+                
+                // Đóng tất cả popover khác trước
+                document.querySelectorAll('.stepper-popover').forEach(p => {
+                    if (p.id !== popoverId) p.classList.add('hidden');
+                });
+                // Toggle popover hiện tại
+                document.getElementById(popoverId).classList.toggle('hidden');
+                return;
+            }
+
+            // 2. Click vào các nút +/- BÊN TRONG Popover
+            if (e.target.dataset.adjust) {
+                e.stopPropagation(); // Ngăn click làm đóng popover ngay
+                const [inputId, amount] = e.target.dataset.adjust.split(', ');
+                adjustValue(inputId, parseFloat(amount));
+                // Cố ý không đóng popover để user bấm được nhiều lần (như Binance)
+                return;
+            }
+
+            // 3. Click ra NGOÀI bất kỳ popover nào -> Đóng hết
+            if (!e.target.closest('.stepper-popover')) {
                 document.querySelectorAll('.stepper-popover').forEach(el => el.classList.add('hidden'));
             }
         });
 
-        function togglePopover(id, event) {
-            event.preventDefault();
-            event.stopPropagation();
-            document.querySelectorAll('.stepper-popover').forEach(el => {
-                if(el.id !== id) el.classList.add('hidden');
-            });
-            document.getElementById(id).classList.toggle('hidden');
-        }
-
-        // Tăng giảm Giá/Vốn/Đòn bẩy
+        // Hàm tăng giảm số: Giá trị Giá ko thể âm, Giá trị vốn/lev ko thể âm
         function adjustValue(inputId, amount) {
             const input = document.getElementById(inputId);
             let val = parseFloat(input.value) || 0;
             let newVal = val + amount;
-            if(newVal < 0 && inputId !== 'entry' && inputId !== 'sl' && inputId !== 'tp') newVal = 0;
+            if (newVal < 0 && !['entry', 'sl', 'tp'].includes(inputId)) newVal = 0;
             
-            // Xóa phần thập phân thừa do lỗi Float của JS
-            input.value = parseFloat(newVal.toFixed(4));
+            // Xóa phần thập phân thừa do lỗi Float của JS (toFixed(4))
+            input.value = parseFloat(newVal.toFixed(4)).toString();
             handleInput();
         }
 
-        // Tăng giảm Tam giác (%)
         function adjustRisk(inputId, amount) {
             const input = document.getElementById(inputId);
             let val = parseFloat(input.value) || 0;
@@ -327,23 +343,34 @@
             handleInput();
         }
 
+        // Chuyển đổi LONG/SHORT
         function setType(type) {
             positionType = type;
             setTypeStyle();
             handleInput();
         }
 
-        // Tone màu trầm chuẩn UI Trading (Sử dụng Emerald và Rose của Tailwind)
+        // Cập nhật giao diện nút Long/Short theo phong cách Emerald & Rose (Trầm, Chuyên nghiệp, Kín đáo)
         function setTypeStyle() {
             const btnLong = document.getElementById('btnLong');
             const btnShort = document.getElementById('btnShort');
 
             if (positionType === 'LONG') {
-                btnLong.className = "flex-1 py-2 rounded-md font-bold text-center tracking-wider bg-emerald-600 text-white shadow transition-all duration-200";
-                btnShort.className = "flex-1 py-2 rounded-md font-bold text-center tracking-wider bg-transparent text-slate-500 hover:bg-slate-800 transition-all duration-200";
+                // Long Emerald
+                btnLong.className = "flex-1 py-2 rounded-md font-bold text-center tracking-wider bg-emerald-600 text-white shadow shadow-emerald-900/50 scale-105 transition-all duration-200";
+                btnShort.className = "flex-1 py-2 rounded-md font-bold text-center tracking-wider bg-slate-800 text-slate-500 hover:text-slate-300 transition-all duration-200 hover:bg-slate-700/50";
+                
+                // Cập nhật màu cảnh báo ROE ở cột phải
+                document.getElementById('out-roe').classList.remove('text-rose-400');
+                document.getElementById('out-roe').classList.add('text-green-400');
             } else {
-                btnShort.className = "flex-1 py-2 rounded-md font-bold text-center tracking-wider bg-rose-600 text-white shadow transition-all duration-200";
-                btnLong.className = "flex-1 py-2 rounded-md font-bold text-center tracking-wider bg-transparent text-slate-500 hover:bg-slate-800 transition-all duration-200";
+                // Short Rose
+                btnShort.className = "flex-1 py-2 rounded-md font-bold text-center tracking-wider bg-rose-600 text-white shadow shadow-rose-950/50 scale-105 transition-all duration-200";
+                btnLong.className = "flex-1 py-2 rounded-md font-bold text-center tracking-wider bg-slate-800 text-slate-500 hover:text-slate-300 transition-all duration-200 hover:bg-slate-700/50";
+                
+                // Cập nhật màu cảnh báo ROE ở cột phải
+                document.getElementById('out-roe').classList.remove('text-green-400');
+                document.getElementById('out-roe').classList.add('text-rose-400');
             }
         }
 
@@ -351,21 +378,29 @@
         function copyValue(inputId, btnId) {
             let val = document.getElementById(inputId).value;
             if(!val) return;
+            // Chuyển dấu chấm thành dấu phẩy để tương thích Binance VN
             let formattedVal = val.replace(/[^0-9.]/g, '').replace('.', ',');
             
             navigator.clipboard.writeText(formattedVal).then(() => {
                 const btn = document.getElementById(btnId);
-                btn.innerHTML = checkIconSvg;
-                setTimeout(() => { btn.innerHTML = copyIconSvg; }, 1500);
+                const originalHtml = btn.innerHTML;
+                btn.innerText = checkIcon; // Hiện ✅
+                setTimeout(() => { btn.innerHTML = originalHtml; }, 1500); // Trả lại icon cũ
             });
         }
 
-        // Copy Số lượng nguyên từ bảng
-        function copyRawValue(rawValue, btnElement) {
+        // Copy Số lượng nguyên từ bảng -> CẬP NHẬT: TICK CHỌN DÒNG LUÔN
+        function copyRawValue(rawValue, riskValue, btnElement) {
             navigator.clipboard.writeText(rawValue.toString()).then(() => {
-                const originalHtml = copyIconSvg;
-                btnElement.innerHTML = checkIconSvg;
-                setTimeout(() => { btnElement.innerHTML = originalHtml; }, 1500);
+                // Phản hồi copy thành công
+                const originalHtml = btnElement.innerHTML;
+                btnElement.innerText = checkIcon;
+                setTimeout(() => { btnElement.innerHTML = clipboardIcon; }, 1500);
+
+                // THỰC HIỆN TICK CHỌN DÒNG NÀY LUÔN (ĐỠ 1 THAO TÁC)
+                selectedRiskPlan = riskValue;
+                saveData(); // Lưu trạng thái
+                calculate(); // Tính toán lại để highlight dòng và ROE
             });
         }
 
@@ -391,12 +426,12 @@
 
         function handleCheck(riskValue) {
             if (selectedRiskPlan === riskValue) {
-                selectedRiskPlan = null; 
+                selectedRiskPlan = null; // Bỏ chọn nếu bấm lại
             } else {
-                selectedRiskPlan = riskValue; 
+                selectedRiskPlan = riskValue; // Chọn plan mới
             }
             saveData();
-            calculate();
+            calculate(); // Tính toán lại để cập nhật màu sắc dòng được chọn
         }
 
         function calculate() {
@@ -418,22 +453,32 @@
             const slDistance = Math.abs(entry - sl);
             const tpDistance = Math.abs(entry - tp);
             const slDistPct = slDistance / entry; 
-            const mmr = 0.004; 
+            const mmr = 0.004; // Maintenance Margin mặc định của sàn
 
             let sizeUnits = slDistance > 0 ? (riskAmount / slDistance) : 0;
             let sizeUsd = sizeUnits * entry;
 
+            // Tính toán Đòn bẩy an toàn thực tế
             let safeLev = 1;
             if (slDistance > 0) {
+                // leverage <= 1 / ( (sl_dist / entry) + (buffer / 100) + mmr )
                 let maxSafeLeverage = 1 / (slDistPct + (safeBufferPct / 100) + mmr);
                 safeLev = Math.floor(maxSafeLeverage);
             }
             
+            // Ép đòn bẩy vào giới hạn Max và ko dưới 1
             let leverage = Math.max(1, Math.min(safeLev, maxLev));
             let marginUsd = sizeUsd / leverage;
             let profit = sizeUnits * tpDistance;
-            let roe = marginUsd > 0 ? (profit / marginUsd) * 100 : 0;
             let rr = slDistance > 0 ? (tpDistance / slDistance) : 0;
+
+            // ROE% (Tính dựa trên plan rủi ro được chọn ở bảng dưới, nếu ko chọn thì tính dựa trên plan mặc định phía trên)
+            let currentRiskForRoe = selectedRiskPlan !== null ? selectedRiskPlan : riskPct;
+            let roeSizeUnits = slDistance > 0 ? ((capital * (currentRiskForRoe / 100)) / slDistance) : 0;
+            let roeSizeUsd = roeSizeUnits * entry;
+            let roeMarginUsd = roeSizeUsd / leverage;
+            let roeProfit = roeSizeUnits * tpDistance;
+            let roe = roeMarginUsd > 0 ? (roeProfit / roeMarginUsd) * 100 : 0;
 
             let liqPrice = 0;
             let isLiqDangerous = false;
@@ -446,27 +491,32 @@
                 if (liqPrice <= sl) isLiqDangerous = true;
             }
 
+            // --- GẮN KẾT QUẢ VÀO UI ---
             document.getElementById('out-risk-amount').innerText = '$' + riskAmount.toFixed(2);
             document.getElementById('out-size-units').innerText = sizeUnits.toFixed(4);
             document.getElementById('out-size-usd').innerText = '$' + sizeUsd.toFixed(2);
             document.getElementById('out-leverage').innerText = leverage + 'x';
             document.getElementById('out-margin').innerText = '$' + marginUsd.toFixed(2);
+            
+            // Nếu sai logic, hiện cảnh báo
             document.getElementById('out-profit').innerText = logicError ? "SAI LOGIC" : '+$' + profit.toFixed(2);
-            document.getElementById('out-roe').innerText = logicError ? "SAI LOGIC" : roe.toFixed(2) + '%';
             document.getElementById('out-rr').innerText = logicError ? "SAI LOGIC" : '1 : ' + rr.toFixed(2);
+            document.getElementById('out-roe').innerText = logicError ? "SAI LOGIC" : roe.toFixed(2) + '%';
 
             let liqElement = document.getElementById('out-liq');
             let warnElement = document.getElementById('liq-warning');
             liqElement.innerText = liqPrice.toFixed(2);
             
+            // Highlight màu đỏ nếu Liq xảy ra trước SL
             if (isLiqDangerous) {
-                liqElement.classList.replace('text-orange-400', 'text-red-600');
+                liqElement.classList.replace('text-orange-400', 'text-red-500');
                 warnElement.classList.remove('hidden');
             } else {
-                liqElement.classList.replace('text-red-600', 'text-orange-400');
+                liqElement.classList.replace('text-red-500', 'text-orange-400');
                 warnElement.classList.add('hidden');
             }
 
+            // Cập nhật dữ liệu bảng tham khảo
             updateReferenceTable(capital, slDistance, entry, leverage, tpDistance);
         }
 
@@ -478,6 +528,7 @@
 
             let currentRisk = parseFloat(document.getElementById('risk').value);
 
+            // Chạy vòng lặp tạo dữ liệu từ rủi ro 1% -> 10%
             for (let r = 1; r <= 10; r += 0.5) {
                 let rAmount = capital * (r / 100);
                 let sUnits = rAmount / slDistance;
@@ -485,25 +536,28 @@
                 let margin = sUsd / leverage;
                 let prof = sUnits * tpDistance;
 
+                // Logic hiển thị màu dòng được chọn hoặc trùng với rủi ro đang nhập
                 let isCurrentInput = (r === currentRisk);
                 let isChecked = (r === selectedRiskPlan);
                 
                 let rowClass = '';
+                let textRiskColor = 'text-red-400/80';
                 if (isChecked) {
-                    rowClass = 'bg-blue-900/30 border-l-4 border-blue-500'; 
+                    rowClass = 'bg-blue-900/30 border-l-4 border-blue-500 font-bold'; // Highlight plan đã tick chọn
+                    textRiskColor = 'text-red-400';
                 } else if (isCurrentInput) {
-                    rowClass = 'bg-slate-700/50'; 
+                    rowClass = 'bg-slate-700/50'; // Highlight dòng trùng với ô nhập phía trên
                 }
 
-                // Truyền trực tiếp tham số số nguyên vào hàm
+                // Dữ liệu copy cho KL Giao dịch (Làm tròn số nguyên cho mượt Binance VN)
                 let roundedUsd = Math.round(sUsd);
-                let copyBtn = `<button onclick="copyRawValue(${roundedUsd}, this)" class="icon-action ml-2" title="Copy (làm tròn số nguyên)">${copyIconSvg}</button>`;
+                let copyBtn = `<button onclick="copyRawValue(${roundedUsd}, ${r}, this)" class="icon-action ml-2 flex items-center justify-center" title="Copy (sao chép số nguyên & tick chọn dòng)">${clipboardIcon}</button>`;
 
                 let tr = document.createElement('tr');
-                tr.className = rowClass;
+                tr.className = `hover:bg-slate-700/30 transition-colors ${rowClass}`;
                 tr.innerHTML = `
                     <td class="text-left font-semibold text-slate-300">${r.toFixed(1)}%</td>
-                    <td class="text-red-400">$${rAmount.toFixed(2)}</td>
+                    <td class="${textRiskColor}">$${rAmount.toFixed(2)}</td>
                     <td class="font-bold text-blue-400">
                         <div class="flex items-center justify-end">
                             <span>$${sUsd.toFixed(2)}</span>
@@ -513,8 +567,10 @@
                     <td class="text-slate-300">${leverage}x</td>
                     <td class="text-white">$${margin.toFixed(2)}</td>
                     <td class="text-green-400 font-semibold">+$${prof.toFixed(2)}</td>
-                    <td class="text-center">
-                        <input type="checkbox" ${isChecked ? 'checked' : ''} onclick="handleCheck(${r})">
+                    <td class="text-center p-0">
+                        <div class="flex items-center justify-center w-full h-full pt-1">
+                            <input type="checkbox" ${isChecked ? 'checked' : ''} onclick="handleCheck(${r})">
+                        </div>
                     </td>
                 `;
                 tbody.appendChild(tr);
