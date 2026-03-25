@@ -8,10 +8,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { background-color: #0f172a; color: #f8fafc; font-family: 'Inter', sans-serif; }
-        input[type="number"] { background-color: #1e293b; color: #fff; border: 1px solid #334155; }
-        input[type="number"]:focus { outline: none; border-color: #3b82f6; }
-        input[type=number]::-webkit-inner-spin-button, 
-        input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        input { background-color: #1e293b; color: #fff; border: 1px solid #334155; }
+        input:focus { outline: none; border-color: #3b82f6; }
+        
         .table-container { overflow-x: auto; }
         table { width: 100%; text-align: right; border-collapse: collapse; }
         th, td { padding: 12px 8px; border-bottom: 1px solid #334155; }
@@ -44,7 +43,7 @@
                     <div>
                         <label class="block text-sm text-slate-400 mb-1">Vốn ($)</label>
                         <div class="relative w-full">
-                            <input type="number" id="capital" value="800" class="w-full p-2 pr-10 bg-slate-700/50 rounded-lg font-semibold text-lg" onfocus="this.select()" oninput="handleInput()">
+                            <input type="text" inputmode="decimal" autocomplete="off" id="capital" value="800" class="w-full p-2 pr-10 bg-slate-700/50 rounded-lg font-semibold text-lg" onfocus="this.select()" oninput="handleInput()">
                             <button class="icon-action popover-trigger absolute right-2 top-1/2 -translate-y-1/2 font-bold text-xl px-1" data-popover="pop-capital" title="Điều chỉnh">±</button>
                             <div id="pop-capital" class="stepper-popover hidden absolute top-full mt-2 left-0 bg-slate-800 border border-slate-600 rounded-lg shadow-2xl z-50 p-2 w-32">
                                 <div class="flex justify-between gap-2">
@@ -66,7 +65,7 @@
                     <div>
                         <label class="block text-sm text-slate-400 mb-1">Rủi ro (%)</label>
                         <div class="relative w-full">
-                            <input type="number" id="risk" value="1" step="0.25" class="w-full p-2 pr-8 bg-slate-700/50 rounded-lg font-semibold text-lg" onfocus="this.select()" oninput="handleInput()">
+                            <input type="text" inputmode="decimal" autocomplete="off" id="risk" value="1" class="w-full p-2 pr-8 bg-slate-700/50 rounded-lg font-semibold text-lg" onfocus="this.select()" oninput="handleInput()">
                             <div class="absolute right-2 top-1/2 -translate-y-1/2 flex flex-col gap-[2px]">
                                 <svg onclick="adjustRisk('risk', 0.25)" class="tri-btn w-3 h-3" viewBox="0 0 24 24"><path d="M24 22h-24l12-20z"/></svg>
                                 <svg onclick="adjustRisk('risk', -0.25)" class="tri-btn w-3 h-3 rotate-180" viewBox="0 0 24 24"><path d="M24 22h-24l12-20z"/></svg>
@@ -77,7 +76,7 @@
                     <div>
                         <label class="block text-sm text-slate-400 mb-1">Đòn bẩy Max</label>
                         <div class="relative w-full">
-                            <input type="number" id="maxLev" value="100" class="w-full p-2 pr-10 bg-slate-700/50 rounded-lg font-semibold" onfocus="this.select()" oninput="handleInput()">
+                            <input type="text" inputmode="decimal" autocomplete="off" id="maxLev" value="100" class="w-full p-2 pr-10 bg-slate-700/50 rounded-lg font-semibold" onfocus="this.select()" oninput="handleInput()">
                             <button class="icon-action popover-trigger absolute right-2 top-1/2 -translate-y-1/2 font-bold text-xl px-1" data-popover="pop-maxlev" title="Điều chỉnh">±</button>
                             <div id="pop-maxlev" class="stepper-popover hidden absolute top-full mt-2 left-0 bg-slate-800 border border-slate-600 rounded-lg shadow-2xl z-50 p-2 w-32">
                                 <div class="flex justify-between gap-2">
@@ -106,7 +105,7 @@
                             </div>
                         </div>
                         <div class="relative w-full">
-                            <input type="number" id="safeBuffer" value="0.3" step="0.05" class="w-full p-2 pr-8 bg-slate-700/50 rounded-lg font-semibold" onfocus="this.select()" oninput="handleInput()">
+                            <input type="text" inputmode="decimal" autocomplete="off" id="safeBuffer" value="0.3" class="w-full p-2 pr-8 bg-slate-700/50 rounded-lg font-semibold" onfocus="this.select()" oninput="handleInput()">
                             <div class="absolute right-2 top-1/2 -translate-y-1/2 flex flex-col gap-[2px]">
                                 <svg onclick="adjustRisk('safeBuffer', 0.05)" class="tri-btn w-3 h-3" viewBox="0 0 24 24"><path d="M24 22h-24l12-20z"/></svg>
                                 <svg onclick="adjustRisk('safeBuffer', -0.05)" class="tri-btn w-3 h-3 rotate-180" viewBox="0 0 24 24"><path d="M24 22h-24l12-20z"/></svg>
@@ -119,7 +118,7 @@
                     <div>
                         <label class="block text-sm text-slate-400 mb-1">Entry</label>
                         <div class="relative w-full">
-                            <input type="number" id="entry" value="71403.16" class="w-full p-2 pr-[60px] bg-slate-700/50 rounded-lg" onfocus="this.select()" oninput="handleInput()">
+                            <input type="text" inputmode="decimal" autocomplete="off" id="entry" value="71403.16" class="w-full p-2 pr-[60px] bg-slate-700/50 rounded-lg text-white font-semibold focus:ring-0 focus:outline-none" onfocus="this.select()" oninput="handleInput()">
                             <div class="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-1">
                                 <button class="icon-action popover-trigger font-bold text-xl p-1" data-popover="pop-entry" title="Điều chỉnh">±</button>
                                 <button id="btnCopyEntry" onclick="copyValue('entry', 'btnCopyEntry')" class="icon-action p-1" title="Copy">
@@ -148,7 +147,7 @@
                     <div>
                         <label class="block text-sm text-slate-400 mb-1">Stop Loss</label>
                         <div class="relative w-full">
-                            <input type="number" id="sl" value="72027.00" class="w-full p-2 pr-[60px] bg-slate-700/50 rounded-lg text-red-400 font-semibold" onfocus="this.select()" oninput="handleInput()">
+                            <input type="text" inputmode="decimal" autocomplete="off" id="sl" value="72027.00" class="w-full p-2 pr-[60px] bg-slate-700/50 rounded-lg text-red-400 font-semibold focus:ring-0 focus:outline-none" onfocus="this.select()" oninput="handleInput()">
                             <div class="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-1">
                                 <button class="icon-action popover-trigger font-bold text-xl p-1" data-popover="pop-sl" title="Điều chỉnh">±</button>
                                 <button id="btnCopySL" onclick="copyValue('sl', 'btnCopySL')" class="icon-action p-1" title="Copy">
@@ -177,7 +176,7 @@
                     <div>
                         <label class="block text-sm text-slate-400 mb-1">Take Profit</label>
                         <div class="relative w-full">
-                            <input type="number" id="tp" value="67952.00" class="w-full p-2 pr-[60px] bg-slate-700/50 rounded-lg text-green-400 font-semibold" onfocus="this.select()" oninput="handleInput()">
+                            <input type="text" inputmode="decimal" autocomplete="off" id="tp" value="67952.00" class="w-full p-2 pr-[60px] bg-slate-700/50 rounded-lg text-green-400 font-semibold focus:ring-0 focus:outline-none" onfocus="this.select()" oninput="handleInput()">
                             <div class="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-1">
                                 <button class="icon-action popover-trigger font-bold text-xl p-1" data-popover="pop-tp" title="Điều chỉnh">±</button>
                                 <button id="btnCopyTP" onclick="copyValue('tp', 'btnCopyTP')" class="icon-action p-1" title="Copy">
@@ -301,49 +300,51 @@
             calculate();
         });
 
-        // XỬ LÝ SỰ KIỆN TẬP TRUNG
         document.addEventListener('click', function(e) {
             if (e.target.closest('.popover-trigger')) {
                 e.stopPropagation();
                 const trigger = e.target.closest('.popover-trigger');
                 const popoverId = trigger.dataset.popover;
-                
                 document.querySelectorAll('.stepper-popover').forEach(p => {
                     if (p.id !== popoverId) p.classList.add('hidden');
                 });
                 document.getElementById(popoverId).classList.toggle('hidden');
                 return;
             }
-
             if (e.target.dataset.adjust) {
                 e.stopPropagation(); 
                 const [inputId, amount] = e.target.dataset.adjust.split(', ');
                 adjustValue(inputId, parseFloat(amount));
                 return;
             }
-
             if (!e.target.closest('.stepper-popover')) {
                 document.querySelectorAll('.stepper-popover').forEach(el => el.classList.add('hidden'));
             }
         });
 
+        // Hàm hỗ trợ lấy số chuẩn xác (Chuyển phẩy thành chấm nếu gõ bàn phím iOS)
+        function getNum(id) {
+            const val = document.getElementById(id).value;
+            if(!val) return 0;
+            return parseFloat(val.replace(/,/g, '.')) || 0;
+        }
+
         function adjustValue(inputId, amount) {
             const input = document.getElementById(inputId);
-            let val = parseFloat(input.value) || 0;
+            let val = getNum(inputId);
             let newVal = val + amount;
             if (newVal < 0 && !['entry', 'sl', 'tp'].includes(inputId)) newVal = 0;
-            
-            // Ép kiểu string để tránh số quá dài
+            // Ép thành string với chấm chuẩn
             input.value = parseFloat(newVal.toFixed(4)).toString();
             handleInput();
         }
 
         function adjustRisk(inputId, amount) {
             const input = document.getElementById(inputId);
-            let val = parseFloat(input.value) || 0;
+            let val = getNum(inputId);
             let newVal = val + amount;
             if(newVal < 0) newVal = 0;
-            input.value = newVal.toFixed(2);
+            input.value = parseFloat(newVal.toFixed(2)).toString();
             handleInput();
         }
 
@@ -360,66 +361,63 @@
             if (positionType === 'LONG') {
                 btnLong.className = "flex-1 py-2 rounded-md font-bold text-center tracking-wider bg-emerald-600 text-white shadow shadow-emerald-900/50 scale-105 transition-all duration-200";
                 btnShort.className = "flex-1 py-2 rounded-md font-bold text-center tracking-wider bg-transparent text-slate-500 hover:text-slate-300 transition-all duration-200 hover:bg-slate-700/50";
-                
                 document.getElementById('out-roe').classList.remove('text-rose-400');
                 document.getElementById('out-roe').classList.add('text-green-400');
             } else {
                 btnShort.className = "flex-1 py-2 rounded-md font-bold text-center tracking-wider bg-rose-600 text-white shadow shadow-rose-950/50 scale-105 transition-all duration-200";
                 btnLong.className = "flex-1 py-2 rounded-md font-bold text-center tracking-wider bg-transparent text-slate-500 hover:text-slate-300 transition-all duration-200 hover:bg-slate-700/50";
-                
                 document.getElementById('out-roe').classList.remove('text-green-400');
                 document.getElementById('out-roe').classList.add('text-rose-400');
             }
         }
 
-        // HÀM SAO CHÉP CHUNG CÓ FALLBACK (CHỐNG LỖI IOS/MOBILE APP)
+        // HÀM COPY "CHỐNG ĐẠN" DÀNH CHO SAFARI VÀ APP MOBILE
         function copyToClipboard(text, btnElement, isRawVal = false) {
             const originalHtml = btnElement.innerHTML;
-            
             const successCallback = () => {
                 btnElement.innerHTML = checkIconSvg;
                 setTimeout(() => { btnElement.innerHTML = isRawVal ? clipboardIcon : originalHtml; }, 1500);
             };
 
-            const fallbackCopy = (str) => {
+            const fallbackCopy = (str, cb) => {
                 const el = document.createElement('textarea');
                 el.value = str;
+                el.setAttribute('readonly', '');
+                el.style.position = 'absolute';
+                el.style.left = '-9999px';
                 document.body.appendChild(el);
                 el.select();
-                try { document.execCommand('copy'); } catch(e) {}
+                try { 
+                    document.execCommand('copy'); 
+                    cb();
+                } catch(e) {}
                 document.body.removeChild(el);
             };
 
             if (navigator.clipboard && window.isSecureContext) {
                 navigator.clipboard.writeText(text).then(successCallback).catch(() => {
-                    fallbackCopy(text);
-                    successCallback();
+                    fallbackCopy(text, successCallback);
                 });
             } else {
-                fallbackCopy(text);
-                successCallback();
+                fallbackCopy(text, successCallback);
             }
         }
 
-        // COPY THÔNG MINH NHẬN DIỆN MOBILE VS LAPTOP
         function copyValue(inputId, btnId) {
             let val = document.getElementById(inputId).value;
             if(!val) return;
             
-            let cleanVal = val.replace(/[^0-9.]/g, ''); // Xoá mọi ký tự lạ, giữ lại số và dấu chấm chuẩn
-            
-            // Detect Mobile (App Binance Mobile dùng dấu chấm. Binance Web VN dùng dấu phẩy)
-            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-            let formattedVal = isMobile ? cleanVal : cleanVal.replace('.', ',');
+            // Xóa rác, chỉ giữ lại số và dấu
+            let cleanVal = val.replace(/[^0-9.,]/g, '');
+            // Ép CHUẨN: Chuyển toàn bộ dấu chấm thành phẩy cho Binance VN
+            let formattedVal = cleanVal.replace(/\./g, ',');
             
             const btnElement = document.getElementById(btnId);
             copyToClipboard(formattedVal, btnElement, false);
         }
 
-        // Copy Số lượng từ bảng (Kèm Tick chọn)
         function copyRawValue(rawValue, riskValue, btnElement) {
             copyToClipboard(rawValue.toString(), btnElement, true);
-            // Tick chọn dòng
             selectedRiskPlan = riskValue;
             saveData(); 
             calculate(); 
@@ -456,13 +454,14 @@
         }
 
         function calculate() {
-            const capital = parseFloat(document.getElementById('capital').value);
-            const riskPct = parseFloat(document.getElementById('risk').value);
-            const maxLev = parseFloat(document.getElementById('maxLev').value);
-            const safeBufferPct = parseFloat(document.getElementById('safeBuffer').value);
-            const entry = parseFloat(document.getElementById('entry').value);
-            const sl = parseFloat(document.getElementById('sl').value);
-            const tp = parseFloat(document.getElementById('tp').value);
+            // Lấy giá trị thông qua hàm getNum (tự động fix dấu phẩy bàn phím iOS)
+            const capital = getNum('capital');
+            const riskPct = getNum('risk');
+            const maxLev = getNum('maxLev');
+            const safeBufferPct = getNum('safeBuffer');
+            const entry = getNum('entry');
+            const sl = getNum('sl');
+            const tp = getNum('tp');
 
             if(!capital || !entry || !sl) return;
 
@@ -539,7 +538,7 @@
 
             if (slDistance <= 0) return;
 
-            let currentRisk = parseFloat(document.getElementById('risk').value);
+            let currentRisk = getNum('risk');
 
             for (let r = 1; r <= 10; r += 0.5) {
                 let rAmount = capital * (r / 100);
