@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Công Cụ Quản Trị Rủi Ro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #0f172a; color: #f8fafc; font-family: 'Inter', sans-serif; }
+        input[type="number"] { background-color: #1e293b; color: #fff; border: 1px solid #334155; }
+        input[type="number"]:focus { outline: none; border-color: #3b82f6; }
+        /* Ẩn mũi tên tăng giảm mặc định của trình duyệt để nhìn gọn hơn */
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    </style>
+</head>
+<body class="p-4 md:p-8 flex justify-center items-center min-h-screen">
+
+    <div class="max-w-md w-full bg-slate-800 rounded-2xl shadow-2xl p-6 border border-slate-700">
+        <h2 class="text-2xl font-bold text-center mb-6 text-blue-400">Trading Calculator</h2>
+
+        <div class="space-y-4">
+            <div class="flex gap-4">
+                <div class="flex-1">
+                    <label class="block text-sm text-slate-400 mb-1">Vốn ($)</label>
+                    <input type="number" id="capital" value="800" class="w-full p-3 rounded-lg text-lg font-semibold" oninput="calculate()">
+                </div>
+                <div class="flex-1">
+                    <label class="block text-sm text-slate-400 mb-1">Rủi ro (%)</label>
+                    <input type="number" id="risk" value="1" step="0.5" class="w-full p-3 rounded-lg text-lg font-semibold" oninput="calculate()">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm text-slate-400 mb-1">Vị thế</label>
+                <select id="type" class="w-full p-3 rounded-lg bg-slate-700 text-white font-bold border border-slate-600 focus:outline-none focus:border-blue-500" onchange="calculate()">
+                    <option value="LONG">LONG 📈</option>
+                    <option value="SHORT" selected>SHORT 📉</option>
+                </select>
+            </div>
+
+            <div class="grid grid-cols-3 gap-3">
+                <div>
+                    <label class="block text-sm text-slate-400 mb-1">Entry</label>
+                    <input type="number" id="entry" value="2173.40" class="w-full p-2 rounded-lg" oninput="calculate()">
+                </div>
+                <div>
+                    <label class="block text-sm text-slate-400 mb-1">Stop Loss</label>
+                    <input type="number" id="sl" value="2199.80" class="w-full p-2 rounded-lg text-red-400" oninput="calculate()">
+                </div>
+                <div>
+                    <label class="block text-sm text-slate-400 mb-1">Take Profit</label>
+                    <input type="number" id="tp" value="2078.10" class="w-full p-2 rounded-lg text-green-400" oninput="calculate()">
+                </div>
+            </div>
+        </div>
+
+        <div class="my-6 border-t border-slate-700"></div>
+
+        <div class="bg-slate-900 rounded-xl p-4 space-y-3 border border-slate-700">
+            <div class="flex justify-between items-center">
+                <span class="text-slate-400">Mất tối đa (Risk Amount):</span>
+                <span id="out-risk-amount" class="text-xl font-bold text-red-400">$8.00</span>
+            </div>
+            <div class="flex justify-between items-center">
+                <span class="text-slate-400">Tỷ lệ R:R:</span>
+                <span id="out-rr" class="text-lg font-semibold text-white">1 : 0.00</span>
+            </div>
+            <div class="flex justify-between items-center bg-blue-900/30 p-3 rounded-lg border border-blue-800/50 mt-2">
+                <span class="text-blue-300 font-medium">Khối lượng vào (Size):</span>
+                <span id="out-size" class="text-2xl font-bold text-blue-400">0.00</span>
+            </div>
+            <div class="flex justify-between items-center mt-2">
+                <span class="text-slate-400">Lãi dự kiến (Profit):</span>
+                <span id="out-profit" class="text-lg font-bold text-green-400">+$0.00</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function calculate() {
+            // 1. Lấy dữ liệu từ ô nhập
+            const capital = parseFloat(document.getElementById('capital').value);
+            const riskPct = parseFloat(document.getElementById('risk').value);
+            const type = document.getElementById('type').value;
+            const entry = parseFloat(document.getElementById('entry').value);
+            const sl = parseFloat(document.getElementById('sl').value);
+            const tp = parseFloat(document.getElementById('tp').value);
+
+            // Kiểm tra nếu dữ liệu trống hoặc lỗi
+            if(!capital || !riskPct || !entry || !sl || !tp) return;
+
+            // 2. Tính toán logic
+            const riskAmount = capital * (riskPct / 100);
+            
+            // Tính khoảng cách SL và TP
+            let slDistance = Math.abs(entry - sl);
+            let tpDistance = Math.abs(entry - tp);
+            
+            // Tính khối lượng (Position Size)
+            let positionSize = 0;
+            if (slDistance > 0) {
+                positionSize = riskAmount / slDistance;
+            }
+
+            // Tính R:R và Profit
+            let rr = slDistance > 0 ? (tpDistance / slDistance) : 0;
+            let profit = positionSize * tpDistance;
+
+            // 3. Hiển thị ra màn hình và làm tròn số
+            document.getElementById('out-risk-amount').innerText = '$' + riskAmount.toFixed(2);
+            document.getElementById('out-size').innerText = positionSize.toFixed(4); // Khối lượng crypto thường có phần thập phân
+            document.getElementById('out-rr').innerText = '1 : ' + rr.toFixed(2);
+            document.getElementById('out-profit').innerText = '+$' + profit.toFixed(2);
+        }
+
+        // Chạy tính toán ngay lần đầu mở web
+        calculate();
+    </script>
+</body>
+</html>
