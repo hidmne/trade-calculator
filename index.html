@@ -13,8 +13,9 @@
         input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         .table-container { overflow-x: auto; }
         table { width: 100%; text-align: right; border-collapse: collapse; }
-        th, td { padding: 8px; border-bottom: 1px solid #334155; }
+        th, td { padding: 10px 8px; border-bottom: 1px solid #334155; }
         th { color: #94a3b8; font-weight: normal; font-size: 0.875rem; }
+        td { font-size: 0.95rem; }
     </style>
 </head>
 <body class="p-2 md:p-6 flex flex-col items-center min-h-screen">
@@ -25,18 +26,22 @@
             <h2 class="text-xl font-bold text-center mb-5 text-blue-400">Trading Calculator</h2>
 
             <div class="space-y-4">
-                <div class="grid grid-cols-3 gap-3">
+                <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block text-sm text-slate-400 mb-1">Vốn ($)</label>
-                        <input type="number" id="capital" value="800" class="w-full p-2 rounded-lg font-semibold" onfocus="this.select()" oninput="calculate()">
+                        <input type="number" id="capital" value="800" class="w-full p-2 rounded-lg font-semibold text-lg" onfocus="this.select()" oninput="calculate()">
                     </div>
                     <div>
                         <label class="block text-sm text-slate-400 mb-1">Rủi ro (%)</label>
-                        <input type="number" id="risk" value="1" step="0.5" class="w-full p-2 rounded-lg font-semibold" onfocus="this.select()" oninput="calculate()">
+                        <input type="number" id="risk" value="1" step="0.5" class="w-full p-2 rounded-lg font-semibold text-lg" onfocus="this.select()" oninput="calculate()">
                     </div>
                     <div>
                         <label class="block text-sm text-slate-400 mb-1">Đòn bẩy Max</label>
                         <input type="number" id="maxLev" value="100" class="w-full p-2 rounded-lg font-semibold" onfocus="this.select()" oninput="calculate()">
+                    </div>
+                    <div>
+                        <label class="block text-sm text-slate-400 mb-1" title="Khoảng cách an toàn từ Stop Loss đến Giá Thanh Lý">Cách Liq (%) ℹ️</label>
+                        <input type="number" id="safeBuffer" value="0.3" step="0.1" class="w-full p-2 rounded-lg font-semibold" onfocus="this.select()" oninput="calculate()">
                     </div>
                 </div>
 
@@ -68,26 +73,26 @@
         <div class="bg-slate-900 rounded-2xl shadow-2xl p-5 border border-slate-700 flex flex-col justify-center space-y-3">
             <div class="flex justify-between items-center pb-2 border-b border-slate-800">
                 <span class="text-slate-400">Mất tối đa (Risk Amount):</span>
-                <span id="out-risk-amount" class="text-lg font-bold text-red-400">$8.00</span>
+                <span id="out-risk-amount" class="text-xl font-bold text-red-400">$8.00</span>
             </div>
             
-            <div class="flex justify-between items-center">
-                <span class="text-slate-400">Khối lượng vào (Units):</span>
-                <span id="out-size-units" class="text-xl font-bold text-white">0.00</span>
+            <div class="flex justify-between items-center bg-blue-900/20 p-3 rounded-lg border border-blue-900/50 mt-1">
+                <span class="text-blue-300 font-medium">Khối lượng vào (USD):</span>
+                <span id="out-size-usd" class="text-2xl font-bold text-blue-400">$0.00</span>
             </div>
-            <div class="flex justify-between items-center pb-2 border-b border-slate-800">
-                <span class="text-slate-400">Khối lượng vào (USD):</span>
-                <span id="out-size-usd" class="text-lg font-medium text-slate-300">$0.00</span>
+            <div class="flex justify-between items-center pb-2 border-b border-slate-800 px-3">
+                <span class="text-slate-500 text-sm">Khối lượng vào (Units):</span>
+                <span id="out-size-units" class="text-md font-medium text-slate-400">0.00</span>
             </div>
 
-            <div class="grid grid-cols-2 gap-4 pb-2 border-b border-slate-800">
+            <div class="grid grid-cols-2 gap-4 pb-2 border-b border-slate-800 mt-2">
                 <div>
-                    <span class="block text-slate-400 text-sm">Đòn bẩy khuyên dùng:</span>
-                    <span id="out-leverage" class="text-xl font-bold text-blue-400">1x</span>
+                    <span class="block text-slate-400 text-sm">Đòn bẩy an toàn:</span>
+                    <span id="out-leverage" class="text-xl font-bold text-white">1x</span>
                 </div>
                 <div class="text-right">
                     <span class="block text-slate-400 text-sm">Vốn ký quỹ (Margin):</span>
-                    <span id="out-margin" class="text-lg font-bold text-white">$0.00</span>
+                    <span id="out-margin" class="text-xl font-bold text-white">$0.00</span>
                 </div>
             </div>
 
@@ -115,15 +120,17 @@
     </div>
 
     <div class="max-w-4xl w-full bg-slate-800 rounded-2xl shadow-2xl p-5 border border-slate-700 mt-6 mb-10">
-        <h3 class="text-lg font-bold mb-4 text-slate-300">Bảng Khối Lượng Tham Khảo Nhanh</h3>
+        <h3 class="text-lg font-bold mb-4 text-slate-300">Bảng Khối Lượng & Ký Quỹ</h3>
         <div class="table-container">
             <table id="referenceTable">
                 <thead>
                     <tr>
                         <th class="text-left">Rủi ro (%)</th>
                         <th>Rủi ro ($)</th>
-                        <th>Size (Units)</th>
-                        <th>Size (USD)</th>
+                        <th>KL Giao dịch (USD)</th>
+                        <th>Đòn bẩy</th>
+                        <th>Ký quỹ ($)</th>
+                        <th>Tiền lãi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -137,6 +144,7 @@
             const capital = parseFloat(document.getElementById('capital').value);
             const riskPct = parseFloat(document.getElementById('risk').value);
             const maxLev = parseFloat(document.getElementById('maxLev').value);
+            const safeBufferPct = parseFloat(document.getElementById('safeBuffer').value);
             const type = document.getElementById('type').value;
             const entry = parseFloat(document.getElementById('entry').value);
             const sl = parseFloat(document.getElementById('sl').value);
@@ -152,14 +160,25 @@
             const riskAmount = capital * (riskPct / 100);
             const slDistance = Math.abs(entry - sl);
             const tpDistance = Math.abs(entry - tp);
+            const slDistPct = slDistance / entry; // Khoảng cách SL tính bằng %
+            const mmr = 0.004; // Maintenance Margin 0.4%
 
             // 1. Tính toán Khối lượng
             let sizeUnits = slDistance > 0 ? (riskAmount / slDistance) : 0;
             let sizeUsd = sizeUnits * entry;
 
-            // 2. Tính toán Đòn bẩy tối ưu (Sử dụng hệ số 0.72 như file excel của bạn để tạo khoảng cách an toàn)
-            let safeLev = slDistance > 0 ? Math.floor(0.72 * entry / slDistance) : 1;
-            // Ép vào giới hạn đòn bẩy
+            // 2. TÍNH ĐÒN BẨY AN TOÀN
+            // Công thức để đảm bảo Khoảng cách Thanh lý >= Khoảng cách SL + Vùng đệm an toàn
+            let safeLev = 1;
+            if (slDistance > 0) {
+                // LiqDistancePct = (1 / Leverage) - MMR
+                // Ta cần: (1 / Leverage) - MMR >= slDistPct + (safeBufferPct / 100)
+                // => Leverage <= 1 / (slDistPct + (safeBufferPct / 100) + MMR)
+                let maxSafeLeverage = 1 / (slDistPct + (safeBufferPct / 100) + mmr);
+                safeLev = Math.floor(maxSafeLeverage);
+            }
+            
+            // Đảm bảo đòn bẩy không dưới 1 và không vượt quá Max
             let leverage = Math.max(1, Math.min(safeLev, maxLev));
 
             // 3. Tính toán Ký quỹ (Margin)
@@ -172,8 +191,7 @@
             // 5. R:R
             let rr = slDistance > 0 ? (tpDistance / slDistance) : 0;
 
-            // 6. Tính Giá thanh lý (Giả định Maintenance Margin = 0.4%)
-            const mmr = 0.004; 
+            // 6. Tính Giá thanh lý thực tế
             let liqPrice = 0;
             let isLiqDangerous = false;
 
@@ -209,12 +227,12 @@
             }
 
             // --- TẠO BẢNG THAM KHẢO ---
-            updateReferenceTable(capital, slDistance, entry);
+            updateReferenceTable(capital, slDistance, entry, leverage, tpDistance);
         }
 
-        function updateReferenceTable(capital, slDistance, entry) {
+        function updateReferenceTable(capital, slDistance, entry, leverage, tpDistance) {
             const tbody = document.querySelector('#referenceTable tbody');
-            tbody.innerHTML = ''; // Xóa dữ liệu cũ
+            tbody.innerHTML = ''; 
 
             if (slDistance <= 0) return;
 
@@ -222,18 +240,22 @@
                 let rAmount = capital * (r / 100);
                 let sUnits = rAmount / slDistance;
                 let sUsd = sUnits * entry;
+                let margin = sUsd / leverage;
+                let prof = sUnits * tpDistance;
 
-                // Highlight dòng trùng với Rủi ro đang nhập
+                // Highlight dòng hiện tại
                 let currentRisk = parseFloat(document.getElementById('risk').value);
-                let rowClass = (r === currentRisk) ? 'bg-slate-700/50 text-blue-300 font-bold' : '';
+                let rowClass = (r === currentRisk) ? 'bg-slate-700/80 border-l-4 border-blue-500' : '';
 
                 let tr = document.createElement('tr');
                 tr.className = rowClass;
                 tr.innerHTML = `
-                    <td class="text-left">${r.toFixed(1)}%</td>
-                    <td>$${rAmount.toFixed(2)}</td>
-                    <td>${sUnits.toFixed(4)}</td>
-                    <td>$${sUsd.toFixed(2)}</td>
+                    <td class="text-left font-semibold text-slate-300">${r.toFixed(1)}%</td>
+                    <td class="text-red-400">$${rAmount.toFixed(2)}</td>
+                    <td class="font-bold text-blue-400">$${sUsd.toFixed(2)}</td>
+                    <td class="text-slate-300">${leverage}x</td>
+                    <td class="text-white">$${margin.toFixed(2)}</td>
+                    <td class="text-green-400 font-semibold">+$${prof.toFixed(2)}</td>
                 `;
                 tbody.appendChild(tr);
             }
