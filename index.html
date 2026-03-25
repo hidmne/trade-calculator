@@ -16,6 +16,12 @@
         th, td { padding: 10px 8px; border-bottom: 1px solid #334155; }
         th { color: #94a3b8; font-weight: normal; font-size: 0.875rem; }
         td { font-size: 0.95rem; }
+        
+        /* Custom Checkbox */
+        input[type="checkbox"] {
+            width: 1.25rem; height: 1.25rem;
+            accent-color: #3b82f6; cursor: pointer;
+        }
     </style>
 </head>
 <body class="p-2 md:p-6 flex flex-col items-center min-h-screen">
@@ -29,42 +35,52 @@
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block text-sm text-slate-400 mb-1">Vốn ($)</label>
-                        <input type="number" id="capital" value="800" class="w-full p-2 rounded-lg font-semibold text-lg" onfocus="this.select()" oninput="calculate()">
+                        <input type="number" id="capital" value="800" class="w-full p-2 rounded-lg font-semibold text-lg" onfocus="this.select()" oninput="handleInput()">
                     </div>
                     <div>
                         <label class="block text-sm text-slate-400 mb-1">Rủi ro (%)</label>
-                        <input type="number" id="risk" value="1" step="0.5" class="w-full p-2 rounded-lg font-semibold text-lg" onfocus="this.select()" oninput="calculate()">
+                        <input type="number" id="risk" value="1" step="0.5" class="w-full p-2 rounded-lg font-semibold text-lg" onfocus="this.select()" oninput="handleInput()">
                     </div>
                     <div>
                         <label class="block text-sm text-slate-400 mb-1">Đòn bẩy Max</label>
-                        <input type="number" id="maxLev" value="100" class="w-full p-2 rounded-lg font-semibold" onfocus="this.select()" oninput="calculate()">
+                        <input type="number" id="maxLev" value="100" class="w-full p-2 rounded-lg font-semibold" onfocus="this.select()" oninput="handleInput()">
                     </div>
                     <div>
-                        <label class="block text-sm text-slate-400 mb-1" title="Khoảng cách an toàn từ Stop Loss đến Giá Thanh Lý">Cách Liq (%) ℹ️</label>
-                        <input type="number" id="safeBuffer" value="0.3" step="0.1" class="w-full p-2 rounded-lg font-semibold" onfocus="this.select()" oninput="calculate()">
+                        <div class="group relative inline-block mb-1 w-full">
+                            <label class="flex items-center text-sm text-slate-400 cursor-help">
+                                Cách Liq <span class="ml-1 text-blue-500 text-xs">ℹ️</span>
+                            </label>
+                            <div class="absolute bottom-full left-0 mb-2 hidden group-hover:block w-48 p-2 bg-slate-700 text-xs text-white rounded shadow-lg z-10 border border-slate-600">
+                                Khoảng cách an toàn từ Stop Loss đến Giá Thanh Lý tính bằng %.
+                            </div>
+                        </div>
+                        <input type="number" id="safeBuffer" value="0.3" step="0.1" class="w-full p-2 rounded-lg font-semibold" onfocus="this.select()" oninput="handleInput()">
                     </div>
                 </div>
 
                 <div>
                     <label class="block text-sm text-slate-400 mb-1">Vị thế</label>
-                    <select id="type" class="w-full p-2 rounded-lg bg-slate-700 text-white font-bold border border-slate-600 focus:outline-none focus:border-blue-500" onchange="calculate()">
+                    <select id="type" class="w-full p-2 rounded-lg bg-slate-700 text-white font-bold border border-slate-600 focus:outline-none focus:border-blue-500" onchange="handleInput()">
                         <option value="LONG">LONG 📈</option>
                         <option value="SHORT" selected>SHORT 📉</option>
                     </select>
                 </div>
 
                 <div class="grid grid-cols-3 gap-3">
-                    <div>
+                    <div class="relative">
                         <label class="block text-sm text-slate-400 mb-1">Entry</label>
-                        <input type="number" id="entry" value="71403.16" class="w-full p-2 rounded-lg" onfocus="this.select()" oninput="calculate()">
+                        <input type="number" id="entry" value="71403.16" class="w-full p-2 pr-8 rounded-lg" onfocus="this.select()" oninput="handleInput()">
+                        <button id="btnCopyEntry" onclick="copyValue('entry', 'btnCopyEntry')" class="absolute right-2 bottom-2 text-slate-400 hover:text-white" title="Copy">📋</button>
                     </div>
-                    <div>
+                    <div class="relative">
                         <label class="block text-sm text-slate-400 mb-1">Stop Loss</label>
-                        <input type="number" id="sl" value="72027.00" class="w-full p-2 rounded-lg text-red-400" onfocus="this.select()" oninput="calculate()">
+                        <input type="number" id="sl" value="72027.00" class="w-full p-2 pr-8 rounded-lg text-red-400" onfocus="this.select()" oninput="handleInput()">
+                        <button id="btnCopySL" onclick="copyValue('sl', 'btnCopySL')" class="absolute right-2 bottom-2 text-slate-400 hover:text-white" title="Copy">📋</button>
                     </div>
-                    <div>
+                    <div class="relative">
                         <label class="block text-sm text-slate-400 mb-1">Take Profit</label>
-                        <input type="number" id="tp" value="67952.00" class="w-full p-2 rounded-lg text-green-400" onfocus="this.select()" oninput="calculate()">
+                        <input type="number" id="tp" value="67952.00" class="w-full p-2 pr-8 rounded-lg text-green-400" onfocus="this.select()" oninput="handleInput()">
+                        <button id="btnCopyTP" onclick="copyValue('tp', 'btnCopyTP')" class="absolute right-2 bottom-2 text-slate-400 hover:text-white" title="Copy">📋</button>
                     </div>
                 </div>
             </div>
@@ -131,6 +147,7 @@
                         <th>Đòn bẩy</th>
                         <th>Ký quỹ ($)</th>
                         <th>Tiền lãi</th>
+                        <th class="text-center">Chọn</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -140,6 +157,71 @@
     </div>
 
     <script>
+        // Biến toàn cục để lưu lại Plan đang được tick chọn
+        let selectedRiskPlan = null;
+
+        // Tải dữ liệu từ LocalStorage khi mở trang
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedData = localStorage.getItem('cryptoToolData');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                document.getElementById('capital').value = data.capital || 800;
+                document.getElementById('risk').value = data.risk || 1;
+                document.getElementById('maxLev').value = data.maxLev || 100;
+                document.getElementById('safeBuffer').value = data.safeBuffer || 0.3;
+                document.getElementById('type').value = data.type || 'SHORT';
+                document.getElementById('entry').value = data.entry || '';
+                document.getElementById('sl').value = data.sl || '';
+                document.getElementById('tp').value = data.tp || '';
+                selectedRiskPlan = data.selectedRiskPlan || null;
+            }
+            calculate();
+        });
+
+        // Hàm copy
+        function copyValue(inputId, btnId) {
+            const val = document.getElementById(inputId).value;
+            if(!val) return;
+            
+            navigator.clipboard.writeText(val).then(() => {
+                const btn = document.getElementById(btnId);
+                btn.innerText = '✅';
+                setTimeout(() => { btn.innerText = '📋'; }, 1500);
+            });
+        }
+
+        // Gọi hàm này mỗi khi có thay đổi nhập liệu
+        function handleInput() {
+            saveData();
+            calculate();
+        }
+
+        // Lưu dữ liệu vào LocalStorage
+        function saveData() {
+            const data = {
+                capital: document.getElementById('capital').value,
+                risk: document.getElementById('risk').value,
+                maxLev: document.getElementById('maxLev').value,
+                safeBuffer: document.getElementById('safeBuffer').value,
+                type: document.getElementById('type').value,
+                entry: document.getElementById('entry').value,
+                sl: document.getElementById('sl').value,
+                tp: document.getElementById('tp').value,
+                selectedRiskPlan: selectedRiskPlan
+            };
+            localStorage.setItem('cryptoToolData', JSON.stringify(data));
+        }
+
+        function handleCheck(riskValue) {
+            if (selectedRiskPlan === riskValue) {
+                selectedRiskPlan = null; // Bỏ chọn nếu bấm lại
+            } else {
+                selectedRiskPlan = riskValue; // Chọn plan mới
+            }
+            saveData();
+            calculate();
+        }
+
         function calculate() {
             const capital = parseFloat(document.getElementById('capital').value);
             const riskPct = parseFloat(document.getElementById('risk').value);
@@ -152,7 +234,6 @@
 
             if(!capital || !entry || !sl) return;
 
-            // Kiểm tra logic lệnh
             let logicError = false;
             if (type === "LONG" && (sl >= entry || tp <= entry)) logicError = true;
             if (type === "SHORT" && (sl <= entry || tp >= entry)) logicError = true;
@@ -160,38 +241,24 @@
             const riskAmount = capital * (riskPct / 100);
             const slDistance = Math.abs(entry - sl);
             const tpDistance = Math.abs(entry - tp);
-            const slDistPct = slDistance / entry; // Khoảng cách SL tính bằng %
-            const mmr = 0.004; // Maintenance Margin 0.4%
+            const slDistPct = slDistance / entry; 
+            const mmr = 0.004; 
 
-            // 1. Tính toán Khối lượng
             let sizeUnits = slDistance > 0 ? (riskAmount / slDistance) : 0;
             let sizeUsd = sizeUnits * entry;
 
-            // 2. TÍNH ĐÒN BẨY AN TOÀN
-            // Công thức để đảm bảo Khoảng cách Thanh lý >= Khoảng cách SL + Vùng đệm an toàn
             let safeLev = 1;
             if (slDistance > 0) {
-                // LiqDistancePct = (1 / Leverage) - MMR
-                // Ta cần: (1 / Leverage) - MMR >= slDistPct + (safeBufferPct / 100)
-                // => Leverage <= 1 / (slDistPct + (safeBufferPct / 100) + MMR)
                 let maxSafeLeverage = 1 / (slDistPct + (safeBufferPct / 100) + mmr);
                 safeLev = Math.floor(maxSafeLeverage);
             }
             
-            // Đảm bảo đòn bẩy không dưới 1 và không vượt quá Max
             let leverage = Math.max(1, Math.min(safeLev, maxLev));
-
-            // 3. Tính toán Ký quỹ (Margin)
             let marginUsd = sizeUsd / leverage;
-            
-            // 4. Tính toán Lợi nhuận & ROE
             let profit = sizeUnits * tpDistance;
             let roe = marginUsd > 0 ? (profit / marginUsd) * 100 : 0;
-
-            // 5. R:R
             let rr = slDistance > 0 ? (tpDistance / slDistance) : 0;
 
-            // 6. Tính Giá thanh lý thực tế
             let liqPrice = 0;
             let isLiqDangerous = false;
 
@@ -203,13 +270,12 @@
                 if (liqPrice <= sl) isLiqDangerous = true;
             }
 
-            // --- HIỂN THỊ KẾT QUẢ ---
+            // Gắn kết quả
             document.getElementById('out-risk-amount').innerText = '$' + riskAmount.toFixed(2);
             document.getElementById('out-size-units').innerText = sizeUnits.toFixed(4);
             document.getElementById('out-size-usd').innerText = '$' + sizeUsd.toFixed(2);
             document.getElementById('out-leverage').innerText = leverage + 'x';
             document.getElementById('out-margin').innerText = '$' + marginUsd.toFixed(2);
-            
             document.getElementById('out-profit').innerText = logicError ? "SAI LOGIC" : '+$' + profit.toFixed(2);
             document.getElementById('out-roe').innerText = logicError ? "SAI LOGIC" : roe.toFixed(2) + '%';
             document.getElementById('out-rr').innerText = logicError ? "SAI LOGIC" : '1 : ' + rr.toFixed(2);
@@ -226,7 +292,7 @@
                 warnElement.classList.add('hidden');
             }
 
-            // --- TẠO BẢNG THAM KHẢO ---
+            // Cập nhật bảng
             updateReferenceTable(capital, slDistance, entry, leverage, tpDistance);
         }
 
@@ -236,6 +302,8 @@
 
             if (slDistance <= 0) return;
 
+            let currentRisk = parseFloat(document.getElementById('risk').value);
+
             for (let r = 1; r <= 10; r += 0.5) {
                 let rAmount = capital * (r / 100);
                 let sUnits = rAmount / slDistance;
@@ -243,9 +311,16 @@
                 let margin = sUsd / leverage;
                 let prof = sUnits * tpDistance;
 
-                // Highlight dòng hiện tại
-                let currentRisk = parseFloat(document.getElementById('risk').value);
-                let rowClass = (r === currentRisk) ? 'bg-slate-700/80 border-l-4 border-blue-500' : '';
+                // Xử lý logic hiển thị dòng được chọn
+                let isCurrentInput = (r === currentRisk);
+                let isChecked = (r === selectedRiskPlan);
+                
+                let rowClass = '';
+                if (isChecked) {
+                    rowClass = 'bg-blue-900/30 border-l-4 border-blue-500'; // Đánh dấu plan đã chọn
+                } else if (isCurrentInput) {
+                    rowClass = 'bg-slate-700/50'; // Đánh dấu mờ dòng đang nhập phía trên
+                }
 
                 let tr = document.createElement('tr');
                 tr.className = rowClass;
@@ -256,12 +331,13 @@
                     <td class="text-slate-300">${leverage}x</td>
                     <td class="text-white">$${margin.toFixed(2)}</td>
                     <td class="text-green-400 font-semibold">+$${prof.toFixed(2)}</td>
+                    <td class="text-center">
+                        <input type="checkbox" ${isChecked ? 'checked' : ''} onclick="handleCheck(${r})">
+                    </td>
                 `;
                 tbody.appendChild(tr);
             }
         }
-
-        calculate();
     </script>
 </body>
 </html>
