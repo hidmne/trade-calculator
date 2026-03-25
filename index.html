@@ -3,37 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculator</title>
+    <title>Calculator Pro</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧮</text></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { background-color: #0f172a; color: #f8fafc; font-family: 'Inter', sans-serif; }
         input { background-color: #1e293b; color: #fff; border: 1px solid #334155; }
         input:focus { outline: none; border-color: #3b82f6; }
-        
         .table-container { overflow-x: auto; }
         table { width: 100%; text-align: right; border-collapse: collapse; }
         th, td { padding: 12px 8px; border-bottom: 1px solid #334155; }
         th { color: #94a3b8; font-weight: normal; font-size: 0.875rem; }
         td { font-size: 0.95rem; }
-        
         input[type="checkbox"] { width: 1.25rem; height: 1.25rem; accent-color: #3b82f6; cursor: pointer; }
-
         .icon-action { color: #94a3b8; transition: all 0.2s; cursor: pointer; display: flex; align-items: center; justify-content: center; }
         .icon-action:hover { transform: scale(1.1); color: #fff; }
-        
         .tri-btn { fill: #94a3b8; cursor: pointer; transition: fill 0.2s; }
         .tri-btn:hover { fill: #fff; }
+        
+        /* Style cho thanh Visualizer */
+        .vis-container { position: relative; height: 120px; width: 100%; margin-top: 10px; border-radius: 8px; background: linear-gradient(180deg, rgba(30,41,59,0.5) 0%, rgba(15,23,42,0.5) 100%); overflow: hidden; }
+        .vis-line { position: absolute; width: 100%; height: 2px; display: flex; align-items: center; transition: top 0.5s ease-in-out; }
+        .vis-line::before { content: ''; flex-grow: 1; border-top: 2px dashed; opacity: 0.5; }
+        .vis-label { background: #0f172a; padding: 2px 8px; border-radius: 12px; font-size: 10px; font-weight: bold; margin-left: 8px; z-index: 10; border: 1px solid; }
+        .vis-fill { position: absolute; width: 100%; opacity: 0.15; transition: all 0.5s ease-in-out; }
+        
+        /* Modal Lịch sử */
+        #historyModal { backdrop-filter: blur(5px); }
     </style>
 </head>
-<body class="p-2 md:p-6 flex flex-col items-center min-h-screen">
+<body class="p-2 md:p-6 flex flex-col items-center min-h-screen relative">
+
+    <div class="max-w-5xl w-full flex justify-between items-center mb-4 px-2">
+        <h2 class="text-2xl font-bold text-blue-400 flex items-center gap-2">🧮 Calculator Pro</h2>
+        <button onclick="toggleHistory()" class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
+            Nhật ký
+        </button>
+    </div>
 
     <div class="max-w-5xl w-full grid md:grid-cols-2 gap-6 items-stretch relative">
         
-        <div class="bg-slate-800 rounded-2xl shadow-2xl p-5 border border-slate-700 h-full">
-            <h2 class="text-xl font-bold text-center mb-5 text-blue-400">Calculator</h2>
-
-            <div class="space-y-4">
+        <div class="bg-slate-800 rounded-2xl shadow-2xl p-5 border border-slate-700 h-full flex flex-col">
+            
+            <div class="space-y-4 flex-grow">
                 <div class="flex gap-1 bg-slate-900 p-1 rounded-lg border border-slate-700">
                     <button id="btnLong" onclick="setType('LONG')" class="flex-1 py-2 rounded-md font-bold text-center tracking-wider transition-all duration-200">LONG</button>
                     <button id="btnShort" onclick="setType('SHORT')" class="flex-1 py-2 rounded-md font-bold text-center tracking-wider transition-all duration-200">SHORT</button>
@@ -44,7 +57,7 @@
                         <label class="block text-sm text-slate-400 mb-1">Vốn ($)</label>
                         <div class="relative w-full">
                             <input type="text" inputmode="decimal" autocomplete="off" id="capital" value="800" class="w-full p-2 pr-10 bg-slate-700/50 rounded-lg font-semibold text-lg" onfocus="this.select()" oninput="handleInput()">
-                            <button class="icon-action popover-trigger absolute right-2 top-1/2 -translate-y-1/2 font-bold text-xl px-1" data-popover="pop-capital" title="Điều chỉnh">±</button>
+                            <button class="icon-action popover-trigger absolute right-2 top-1/2 -translate-y-1/2 font-bold text-xl px-1" data-popover="pop-capital">±</button>
                             <div id="pop-capital" class="stepper-popover hidden absolute top-full mt-2 left-0 bg-slate-800 border border-slate-600 rounded-lg shadow-2xl z-50 p-2 w-32">
                                 <div class="flex justify-between gap-2">
                                     <div class="flex flex-col gap-1 w-1/2">
@@ -77,7 +90,7 @@
                         <label class="block text-sm text-slate-400 mb-1">Đòn bẩy Max</label>
                         <div class="relative w-full">
                             <input type="text" inputmode="decimal" autocomplete="off" id="maxLev" value="100" class="w-full p-2 pr-10 bg-slate-700/50 rounded-lg font-semibold" onfocus="this.select()" oninput="handleInput()">
-                            <button class="icon-action popover-trigger absolute right-2 top-1/2 -translate-y-1/2 font-bold text-xl px-1" data-popover="pop-maxlev" title="Điều chỉnh">±</button>
+                            <button class="icon-action popover-trigger absolute right-2 top-1/2 -translate-y-1/2 font-bold text-xl px-1" data-popover="pop-maxlev">±</button>
                             <div id="pop-maxlev" class="stepper-popover hidden absolute top-full mt-2 left-0 bg-slate-800 border border-slate-600 rounded-lg shadow-2xl z-50 p-2 w-32">
                                 <div class="flex justify-between gap-2">
                                     <div class="flex flex-col gap-1 w-1/2">
@@ -114,13 +127,13 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-4">
                     <div>
                         <label class="block text-sm text-slate-400 mb-1">Entry</label>
                         <div class="relative w-full">
                             <input type="text" inputmode="decimal" autocomplete="off" id="entry" value="71403.16" class="w-full p-2 pr-[60px] bg-slate-700/50 rounded-lg text-white font-semibold focus:ring-0 focus:outline-none" onfocus="this.select()" oninput="handleInput()">
                             <div class="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-1">
-                                <button class="icon-action popover-trigger font-bold text-xl p-1" data-popover="pop-entry" title="Điều chỉnh">±</button>
+                                <button class="icon-action popover-trigger font-bold text-xl p-1" data-popover="pop-entry">±</button>
                                 <button id="btnCopyEntry" onclick="copyValue('entry', 'btnCopyEntry')" class="icon-action p-1" title="Copy">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" /></svg>
                                 </button>
@@ -149,7 +162,7 @@
                         <div class="relative w-full">
                             <input type="text" inputmode="decimal" autocomplete="off" id="sl" value="72027.00" class="w-full p-2 pr-[60px] bg-slate-700/50 rounded-lg text-red-400 font-semibold focus:ring-0 focus:outline-none" onfocus="this.select()" oninput="handleInput()">
                             <div class="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-1">
-                                <button class="icon-action popover-trigger font-bold text-xl p-1" data-popover="pop-sl" title="Điều chỉnh">±</button>
+                                <button class="icon-action popover-trigger font-bold text-xl p-1" data-popover="pop-sl">±</button>
                                 <button id="btnCopySL" onclick="copyValue('sl', 'btnCopySL')" class="icon-action p-1" title="Copy">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" /></svg>
                                 </button>
@@ -178,7 +191,7 @@
                         <div class="relative w-full">
                             <input type="text" inputmode="decimal" autocomplete="off" id="tp" value="67952.00" class="w-full p-2 pr-[60px] bg-slate-700/50 rounded-lg text-green-400 font-semibold focus:ring-0 focus:outline-none" onfocus="this.select()" oninput="handleInput()">
                             <div class="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-1">
-                                <button class="icon-action popover-trigger font-bold text-xl p-1" data-popover="pop-tp" title="Điều chỉnh">±</button>
+                                <button class="icon-action popover-trigger font-bold text-xl p-1" data-popover="pop-tp">±</button>
                                 <button id="btnCopyTP" onclick="copyValue('tp', 'btnCopyTP')" class="icon-action p-1" title="Copy">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" /></svg>
                                 </button>
@@ -202,6 +215,10 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="flex justify-end pt-2">
+                    <button onclick="saveLog(event)" class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded-lg text-sm font-bold transition-colors">Lưu vào Lịch sử</button>
+                </div>
             </div>
         </div>
 
@@ -218,6 +235,14 @@
             <div class="flex justify-between items-center pb-2 border-b border-slate-800 px-3">
                 <span class="text-slate-500 text-sm">KL Giao dịch (Units):</span>
                 <span id="out-size-units" class="text-md font-medium text-slate-400">0.00</span>
+            </div>
+
+            <div class="vis-container" id="visualizerBox">
+                <div id="vis-fill-sl" class="vis-fill bg-rose-500/20"></div>
+                <div id="vis-fill-tp" class="vis-fill bg-emerald-500/20"></div>
+                <div id="vis-line-sl" class="vis-line border-rose-500 text-rose-500"><span class="vis-label text-rose-400">SL</span></div>
+                <div id="vis-line-entry" class="vis-line border-blue-400 text-blue-400"><span class="vis-label text-blue-300">ENTRY</span></div>
+                <div id="vis-line-tp" class="vis-line border-emerald-500 text-emerald-500"><span class="vis-label text-emerald-400">TP</span></div>
             </div>
 
             <div class="grid grid-cols-2 gap-4 pb-2 border-b border-slate-800 mt-2">
@@ -275,12 +300,43 @@
         </div>
     </div>
 
+    <div id="historyModal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-950/80">
+        <div class="bg-slate-800 rounded-2xl border border-slate-700 shadow-2xl max-w-4xl w-full max-h-[80vh] flex flex-col">
+            <div class="p-4 border-b border-slate-700 flex justify-between items-center">
+                <h3 class="text-lg font-bold text-slate-200">Nhật ký Lệnh (Lưu cục bộ)</h3>
+                <button onclick="toggleHistory()" class="text-slate-400 hover:text-white font-bold text-xl">&times;</button>
+            </div>
+            <div class="p-4 overflow-y-auto flex-grow table-container">
+                <table id="historyTable" class="w-full text-left text-sm">
+                    <thead>
+                        <tr>
+                            <th class="pb-2 text-slate-400 font-normal">Thời gian</th>
+                            <th class="pb-2 text-slate-400 font-normal text-center">Lệnh</th>
+                            <th class="pb-2 text-slate-400 font-normal text-right">Entry</th>
+                            <th class="pb-2 text-slate-400 font-normal text-right text-red-400">SL</th>
+                            <th class="pb-2 text-slate-400 font-normal text-right text-green-400">TP</th>
+                            <th class="pb-2 text-slate-400 font-normal text-right">KL (USD)</th>
+                            <th class="pb-2 text-slate-400 font-normal text-right">Đòn bẩy</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-slate-300" id="historyBody">
+                        </tbody>
+                </table>
+                <div id="emptyHistory" class="text-center text-slate-500 py-8 hidden">Chưa có dữ liệu lịch sử.</div>
+            </div>
+            <div class="p-4 border-t border-slate-700 flex justify-end">
+                <button onclick="clearHistory()" class="text-red-400 hover:text-red-300 text-sm font-semibold">Xóa toàn bộ lịch sử</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         const checkIconSvg = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="#22c55e" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>';
         const clipboardIcon = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" /></svg>';
 
         let positionType = 'SHORT'; 
         let selectedRiskPlan = null; 
+        let currentCalculatedData = {}; // Lưu trữ state hiện tại để ghi vào log
 
         document.addEventListener('DOMContentLoaded', () => {
             const savedData = localStorage.getItem('toolData');
@@ -300,7 +356,7 @@
             calculate();
         });
 
-        // XỬ LÝ SỰ KIỆN TẬP TRUNG
+        // POPOVER EVENT DELEGATION
         document.addEventListener('click', function(e) {
             if (e.target.closest('.popover-trigger')) {
                 e.stopPropagation();
@@ -318,12 +374,11 @@
                 adjustValue(inputId, parseFloat(amount));
                 return;
             }
-            if (!e.target.closest('.stepper-popover')) {
+            if (!e.target.closest('.stepper-popover') && !e.target.closest('#historyModal > div')) {
                 document.querySelectorAll('.stepper-popover').forEach(el => el.classList.add('hidden'));
             }
         });
 
-        // Hàm lấy số chuẩn (Chuyển phẩy thành chấm nếu gõ bàn phím iOS)
         function getNum(id) {
             const val = document.getElementById(id).value;
             if(!val) return 0;
@@ -357,7 +412,6 @@
         function setTypeStyle() {
             const btnLong = document.getElementById('btnLong');
             const btnShort = document.getElementById('btnShort');
-
             if (positionType === 'LONG') {
                 btnLong.className = "flex-1 py-2 rounded-md font-bold text-center tracking-wider bg-emerald-600 text-white shadow shadow-emerald-900/50 scale-105 transition-all duration-200";
                 btnShort.className = "flex-1 py-2 rounded-md font-bold text-center tracking-wider bg-transparent text-slate-500 hover:text-slate-300 transition-all duration-200 hover:bg-slate-700/50";
@@ -371,61 +425,43 @@
             }
         }
 
-        // HÀM COPY "CHỐNG ĐẠN" DÀNH CHO SAFARI VÀ APP MOBILE
+        // COPY "CHỐNG ĐẠN" CẮT SỐ NGUYÊN CHO MOBILE
         function copyToClipboard(text, btnElement, isRawVal = false) {
             const originalHtml = btnElement.innerHTML;
             const successCallback = () => {
                 btnElement.innerHTML = checkIconSvg;
                 setTimeout(() => { btnElement.innerHTML = isRawVal ? clipboardIcon : originalHtml; }, 1500);
             };
-
             const fallbackCopy = (str, cb) => {
                 const el = document.createElement('textarea');
-                el.value = str;
-                el.setAttribute('readonly', '');
-                el.style.position = 'absolute';
-                el.style.left = '-9999px';
-                document.body.appendChild(el);
-                el.select();
-                try { 
-                    document.execCommand('copy'); 
-                    cb();
-                } catch(e) {}
+                el.value = str; el.setAttribute('readonly', ''); el.style.position = 'absolute'; el.style.left = '-9999px';
+                document.body.appendChild(el); el.select();
+                try { document.execCommand('copy'); cb(); } catch(e) {}
                 document.body.removeChild(el);
             };
-
             if (navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText(text).then(successCallback).catch(() => {
-                    fallbackCopy(text, successCallback);
-                });
+                navigator.clipboard.writeText(text).then(successCallback).catch(() => { fallbackCopy(text, successCallback); });
             } else {
                 fallbackCopy(text, successCallback);
             }
         }
 
-        // COPY THÔNG MINH - CHỈ LẤY SỐ NGUYÊN TRÊN MOBILE THEO YÊU CẦU
         function copyValue(inputId, btnId) {
             let val = document.getElementById(inputId).value;
             if(!val) return;
-            
             const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
             let textToCopy = "";
-
             if (isMobile) {
-                // Trên Mobile: Copy cắt bỏ phần thập phân để "lách luật" dán vào Binance App
                 let numVal = getNum(inputId);
                 if (numVal >= 10) {
-                    textToCopy = Math.trunc(numVal).toString(); // Cắt số nguyên
+                    textToCopy = Math.trunc(numVal).toString(); // CHỈ LẤY SỐ NGUYÊN
                 } else {
-                    // Nếu trade coin cỏ (< 10$), buộc phải giữ số thập phân và dùng dấu chấm chuẩn
-                    textToCopy = val.replace(/,/g, '.');
+                    textToCopy = val.replace(/,/g, '.'); // Coin cỏ giữ nguyên chấm
                 }
             } else {
-                // Trên Laptop: Giữ nguyên logic cũ, chuyển chấm thành phẩy cho Binance Web VN
                 let cleanVal = val.replace(/[^0-9.,]/g, '');
-                textToCopy = cleanVal.replace(/\./g, ',');
+                textToCopy = cleanVal.replace(/\./g, ','); // Laptop đổi phẩy
             }
-            
             const btnElement = document.getElementById(btnId);
             copyToClipboard(textToCopy, btnElement, false);
         }
@@ -433,8 +469,7 @@
         function copyRawValue(rawValue, riskValue, btnElement) {
             copyToClipboard(rawValue.toString(), btnElement, true);
             selectedRiskPlan = riskValue;
-            saveData(); 
-            calculate(); 
+            saveData(); calculate(); 
         }
 
         function handleInput() {
@@ -457,6 +492,79 @@
             localStorage.setItem('toolData', JSON.stringify(data));
         }
 
+        // LỊCH SỬ LOG
+        function saveLog(event) {
+            if(!currentCalculatedData.entry) return;
+            let history = JSON.parse(localStorage.getItem('tradeLogs') || '[]');
+            
+            const logEntry = {
+                id: Date.now(),
+                date: new Date().toLocaleString('vi-VN', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit' }),
+                type: positionType,
+                entry: currentCalculatedData.entry,
+                sl: currentCalculatedData.sl,
+                tp: currentCalculatedData.tp,
+                sizeUsd: currentCalculatedData.sizeUsd,
+                leverage: currentCalculatedData.leverage
+            };
+            history.unshift(logEntry); // Thêm lên đầu
+            if(history.length > 50) history.pop(); // Giữ tối đa 50 lệnh
+            localStorage.setItem('tradeLogs', JSON.stringify(history));
+            
+            // Effect nút Lưu
+            const btn = event.target;
+            const originalText = btn.innerText;
+            btn.innerText = "Đã lưu ✓";
+            btn.classList.add("bg-emerald-600");
+            setTimeout(() => { btn.innerText = originalText; btn.classList.remove("bg-emerald-600"); }, 1500);
+        }
+
+        function toggleHistory() {
+            const modal = document.getElementById('historyModal');
+            if(modal.classList.contains('hidden')) {
+                renderHistory();
+                modal.classList.remove('hidden');
+            } else {
+                modal.classList.add('hidden');
+            }
+        }
+
+        function clearHistory() {
+            if(confirm("Bạn có chắc chắn muốn xóa toàn bộ lịch sử lệnh?")) {
+                localStorage.removeItem('tradeLogs');
+                renderHistory();
+            }
+        }
+
+        function renderHistory() {
+            const history = JSON.parse(localStorage.getItem('tradeLogs') || '[]');
+            const tbody = document.getElementById('historyBody');
+            const emptyState = document.getElementById('emptyHistory');
+            tbody.innerHTML = '';
+            
+            if(history.length === 0) {
+                emptyState.classList.remove('hidden');
+                return;
+            }
+            emptyState.classList.add('hidden');
+            
+            history.forEach(log => {
+                let badgeClass = log.type === 'LONG' ? 'bg-emerald-900/50 text-emerald-400 border-emerald-700' : 'bg-rose-900/50 text-rose-400 border-rose-700';
+                let tr = document.createElement('tr');
+                tr.className = "border-b border-slate-700/50 hover:bg-slate-700/30 transition-colors";
+                tr.innerHTML = `
+                    <td class="py-3 text-xs text-slate-400">${log.date}</td>
+                    <td class="py-3 text-center"><span class="text-[10px] font-bold px-2 py-1 rounded border ${badgeClass}">${log.type}</span></td>
+                    <td class="py-3 text-right font-semibold text-white">${log.entry}</td>
+                    <td class="py-3 text-right font-semibold text-rose-400">${log.sl}</td>
+                    <td class="py-3 text-right font-semibold text-emerald-400">${log.tp}</td>
+                    <td class="py-3 text-right font-bold text-blue-400">$${log.sizeUsd}</td>
+                    <td class="py-3 text-right text-slate-300">${log.leverage}x</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
         function handleCheck(riskValue) {
             if (selectedRiskPlan === riskValue) {
                 selectedRiskPlan = null; 
@@ -465,6 +573,54 @@
             }
             saveData();
             calculate(); 
+        }
+
+        // TÍNH NĂNG MỚI: Vẽ Biểu đồ R:R Trực quan
+        function updateVisualizer(entry, sl, tp, type) {
+            const visBox = document.getElementById('visualizerBox');
+            if(!entry || !sl || !tp) {
+                visBox.style.opacity = '0.3';
+                return;
+            }
+            visBox.style.opacity = '1';
+
+            const maxPrice = Math.max(entry, sl, tp);
+            const minPrice = Math.min(entry, sl, tp);
+            const range = maxPrice - minPrice;
+
+            if(range === 0) return;
+
+            // Tính % vị trí từ trên xuống (top = 0% là giá cao nhất)
+            const getPos = (price) => ((maxPrice - price) / range) * 100;
+
+            const posEntry = getPos(entry);
+            const posSl = getPos(sl);
+            const posTp = getPos(tp);
+
+            // Cập nhật vị trí các đường kẻ
+            document.getElementById('vis-line-entry').style.top = `${posEntry}%`;
+            document.getElementById('vis-line-sl').style.top = `${posSl}%`;
+            document.getElementById('vis-line-tp').style.top = `${posTp}%`;
+
+            // Vẽ vùng màu (Fill)
+            const fillSl = document.getElementById('vis-fill-sl');
+            const fillTp = document.getElementById('vis-fill-tp');
+
+            if (type === 'LONG') {
+                // Sl ở dưới Entry
+                fillSl.style.top = `${posEntry}%`;
+                fillSl.style.height = `${posSl - posEntry}%`;
+                // TP ở trên Entry
+                fillTp.style.top = `${posTp}%`;
+                fillTp.style.height = `${posEntry - posTp}%`;
+            } else {
+                // Short: SL ở trên Entry
+                fillSl.style.top = `${posSl}%`;
+                fillSl.style.height = `${posEntry - posSl}%`;
+                // TP ở dưới Entry
+                fillTp.style.top = `${posEntry}%`;
+                fillTp.style.height = `${posTp - posEntry}%`;
+            }
         }
 
         function calculate() {
@@ -520,6 +676,7 @@
                 if (liqPrice <= sl) isLiqDangerous = true;
             }
 
+            // Gắn kết quả
             document.getElementById('out-risk-amount').innerText = '$' + riskAmount.toFixed(2);
             document.getElementById('out-size-units').innerText = sizeUnits.toFixed(4);
             document.getElementById('out-size-usd').innerText = '$' + sizeUsd.toFixed(2);
@@ -541,6 +698,19 @@
                 liqElement.classList.replace('text-red-500', 'text-orange-400');
                 warnElement.classList.add('hidden');
             }
+
+            // Gọi hàm vẽ Visualizer nếu không lỗi logic
+            if(!logicError) {
+                updateVisualizer(entry, sl, tp, positionType);
+            } else {
+                document.getElementById('visualizerBox').style.opacity = '0.1';
+            }
+
+            // Lưu state hiện tại để Nhật ký có thể lấy được
+            currentCalculatedData = {
+                entry: entry, sl: sl, tp: tp, 
+                sizeUsd: sizeUsd.toFixed(2), leverage: leverage
+            };
 
             updateReferenceTable(capital, slDistance, entry, leverage, tpDistance);
         }
