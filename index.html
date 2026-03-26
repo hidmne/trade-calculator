@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculator Pro v3.3</title>
+    <title>Calculator Pro v3.4</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧮</text></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -50,7 +50,7 @@
         <option value="SOLUSDT"></option>
         <option value="BNBUSDT"></option>
         <option value="XRPUSDT"></option>
-        <option value="ADAUSDT"></option>
+        <option value="XAUUSDT"></option> <option value="XAGUSDT"></option> <option value="ADAUSDT"></option>
         <option value="DOGEUSDT"></option>
         <option value="AVAXUSDT"></option>
         <option value="LINKUSDT"></option>
@@ -58,7 +58,7 @@
     </datalist>
 
     <div class="max-w-5xl w-full flex justify-between items-center mb-4 px-2">
-        <h2 class="text-2xl font-bold text-blue-400 flex items-center gap-2">🧮 Calculator Pro <span class="text-xs bg-blue-600 text-white px-2 py-0.5 rounded-full ml-2">v3.3</span></h2>
+        <h2 class="text-2xl font-bold text-blue-400 flex items-center gap-2">🧮 Calculator Pro <span class="text-xs bg-blue-600 text-white px-2 py-0.5 rounded-full ml-2">v3.4</span></h2>
         <button onclick="toggleHistory()" class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-colors">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z" /></svg>
             Nhật ký & Thống kê
@@ -72,11 +72,11 @@
             <div class="flex gap-3 mb-6 items-end">
                 <div class="w-1/3">
                     <label class="block text-xs text-slate-400 mb-1 ml-1 uppercase font-bold tracking-wider">Mã Giao Dịch</label>
-                    <input type="text" id="symbol" list="crypto-pairs" placeholder="VD: BTCUSDT" class="w-full p-2 bg-slate-900 rounded-lg font-bold text-blue-300 border focus:border-blue-500 uppercase transition-colors" oninput="handleInput()">
+                    <input type="text" id="symbol" list="crypto-pairs" placeholder="VD: BTCUSDT" class="w-full p-2 bg-slate-900 rounded-lg font-bold text-blue-300 border focus:border-blue-500 uppercase transition-colors" onfocus="this.select()" oninput="handleInput()">
                 </div>
                 <div class="flex-1 flex gap-1 bg-slate-900 p-1 rounded-lg border border-slate-700 h-[42px]">
-                    <button id="btnLong" onclick="setType('LONG')" class="flex-1 rounded-md font-bold text-center tracking-wider transition-all duration-200">LONG</button>
-                    <button id="btnShort" onclick="setType('SHORT')" class="flex-1 rounded-md font-bold text-center tracking-wider transition-all duration-200">SHORT</button>
+                    <button id="btnLong" onclick="setType('LONG')" class="flex-1 flex items-center justify-center h-full rounded-md font-bold tracking-wider transition-all duration-200">LONG</button>
+                    <button id="btnShort" onclick="setType('SHORT')" class="flex-1 flex items-center justify-center h-full rounded-md font-bold tracking-wider transition-all duration-200">SHORT</button>
                 </div>
             </div>
 
@@ -443,8 +443,8 @@
                     </button>
                 </div>
                 <div class="flex gap-2">
-                    <button onclick="document.getElementById('importFile').click()" class="text-slate-300 hover:text-white px-4 py-2 bg-slate-700 rounded text-sm font-semibold transition-colors" title="Khôi phục dữ liệu từ máy khác">Phục Hồi (Import JSON)</button>
-                    <button onclick="exportBackupJSON()" class="text-slate-300 hover:text-white px-4 py-2 bg-slate-700 rounded text-sm font-semibold transition-colors" title="Tải file dữ liệu gốc để chuyển máy">Sao Lưu (Backup JSON)</button>
+                    <button onclick="document.getElementById('importFile').click()" class="text-slate-300 hover:text-white px-4 py-2 bg-slate-700 rounded text-sm font-semibold transition-colors" title="Khôi phục dữ liệu từ máy khác">Import JSON</button>
+                    <button onclick="exportBackupJSON()" class="text-slate-300 hover:text-white px-4 py-2 bg-slate-700 rounded text-sm font-semibold transition-colors" title="Tải file dữ liệu gốc để chuyển máy">Export JSON</button>
                     <button onclick="clearHistory()" class="text-rose-500 hover:text-rose-400 px-4 py-2 bg-rose-950/30 rounded text-sm font-semibold transition-colors ml-4">Xóa dữ liệu</button>
                 </div>
             </div>
@@ -461,7 +461,7 @@
                 <div class="grid grid-cols-2 gap-4">
                     <div class="col-span-2 md:col-span-1">
                         <label class="block text-sm text-slate-400 mb-1">Mã (Symbol)</label>
-                        <input type="text" id="man-symbol" list="crypto-pairs" class="w-full p-2 bg-slate-900 rounded font-semibold border border-slate-700 focus:border-blue-500 uppercase" placeholder="VD: BTCUSDT">
+                        <input type="text" id="man-symbol" list="crypto-pairs" class="w-full p-2 bg-slate-900 rounded font-semibold border border-slate-700 focus:border-blue-500 uppercase" placeholder="VD: BTCUSDT" onfocus="this.select()">
                     </div>
                     <div class="col-span-2 md:col-span-1">
                         <label class="block text-sm text-slate-400 mb-1">Loại Lệnh</label>
@@ -605,13 +605,13 @@
             const btnLong = document.getElementById('btnLong');
             const btnShort = document.getElementById('btnShort');
             if (positionType === 'LONG') {
-                btnLong.className = "flex-1 py-2 rounded-md font-bold text-center tracking-wider bg-emerald-600 text-white shadow-md shadow-emerald-900/50 scale-105 transition-all duration-200 z-10 relative";
-                btnShort.className = "flex-1 py-2 rounded-md font-bold text-center tracking-wider bg-transparent text-slate-500 hover:text-slate-300 transition-all duration-200 hover:bg-slate-800";
+                btnLong.className = "flex-1 flex items-center justify-center h-full rounded-md font-bold tracking-wider bg-emerald-600 text-white shadow-md shadow-emerald-900/50 scale-105 transition-all duration-200 z-10 relative";
+                btnShort.className = "flex-1 flex items-center justify-center h-full rounded-md font-bold tracking-wider bg-transparent text-slate-500 hover:text-slate-300 transition-all duration-200 hover:bg-slate-800";
                 document.getElementById('out-roe').classList.remove('text-rose-400');
                 document.getElementById('out-roe').classList.add('text-green-400');
             } else {
-                btnShort.className = "flex-1 py-2 rounded-md font-bold text-center tracking-wider bg-rose-600 text-white shadow-md shadow-rose-900/50 scale-105 transition-all duration-200 z-10 relative";
-                btnLong.className = "flex-1 py-2 rounded-md font-bold text-center tracking-wider bg-transparent text-slate-500 hover:text-slate-300 transition-all duration-200 hover:bg-slate-800";
+                btnShort.className = "flex-1 flex items-center justify-center h-full rounded-md font-bold tracking-wider bg-rose-600 text-white shadow-md shadow-rose-900/50 scale-105 transition-all duration-200 z-10 relative";
+                btnLong.className = "flex-1 flex items-center justify-center h-full rounded-md font-bold tracking-wider bg-transparent text-slate-500 hover:text-slate-300 transition-all duration-200 hover:bg-slate-800";
                 document.getElementById('out-roe').classList.remove('text-green-400');
                 document.getElementById('out-roe').classList.add('text-rose-400');
             }
@@ -715,7 +715,7 @@
                 status: 'pending'
             };
             history.unshift(logEntry); 
-            if(history.length > 200) history.pop(); // Tăng giới hạn lưu lên 200 lệnh
+            if(history.length > 200) history.pop(); // Tăng giới hạn lưu
             localStorage.setItem('tradeLogs', JSON.stringify(history));
             
             const btn = event.target;
@@ -736,7 +736,7 @@
         }
 
         function clearHistory() {
-            if(confirm("Bạn có chắc chắn muốn xóa TOÀN BỘ lịch sử lệnh không?\nHãy cân nhắc xuất file Backup trước khi xóa!")) {
+            if(confirm("Bạn có chắc chắn muốn xóa TOÀN BỘ lịch sử lệnh không?\nHãy cân nhắc xuất file Export JSON trước khi xóa!")) {
                 localStorage.removeItem('tradeLogs');
                 renderHistory();
             }
@@ -773,7 +773,7 @@
                 }
             };
             reader.readAsText(file);
-            event.target.value = ''; // Reset input
+            event.target.value = ''; 
         }
 
         function exportCSV() {
@@ -803,23 +803,35 @@
             a.click();
             URL.revokeObjectURL(url);
         }
-        // --- END BACKUP ---
+
+        // Cập nhật giá trị Mã trực tiếp từ bảng
+        function updateLogSymbol(id, val) {
+            let history = JSON.parse(localStorage.getItem('tradeLogs') || '[]');
+            let itemIndex = history.findIndex(h => h.id === id);
+            if(itemIndex !== -1) {
+                history[itemIndex].symbol = val.toUpperCase();
+                localStorage.setItem('tradeLogs', JSON.stringify(history));
+            }
+        }
 
         function updateLogStatus(id, selectElement) {
             let history = JSON.parse(localStorage.getItem('tradeLogs') || '[]');
             let itemIndex = history.findIndex(h => h.id === id);
             
             if(itemIndex !== -1) {
-                if (selectElement.value === 'custom') {
-                    let val = prompt("NHẬP PnL THỰC TẾ (USD):\n- Gõ số dương nếu Lãi (VD: 50.5)\n- Gõ số âm nếu Lỗ (VD: -20)", "0");
+                if (selectElement.value === 'edit_custom') {
+                    let defaultVal = history[itemIndex].status === 'custom' ? history[itemIndex].actualPnL : "0";
+                    let val = prompt("NHẬP PnL THỰC TẾ (USD):\n- Gõ số dương nếu Lãi (VD: 50.5)\n- Gõ số âm nếu Lỗ (VD: -20)", defaultVal);
                     if (val === null) {
-                        renderHistory(); 
+                        renderHistory(); // Revert ui if cancelled
                         return; 
                     }
-                    history[itemIndex].actualPnL = parseFloat(val) || 0;
+                    history[itemIndex].actualPnL = parseFloat(val.replace(/,/g, '.')) || 0;
+                    history[itemIndex].status = 'custom';
+                } else {
+                    history[itemIndex].status = selectElement.value;
                 }
                 
-                history[itemIndex].status = selectElement.value;
                 localStorage.setItem('tradeLogs', JSON.stringify(history));
                 renderHistory(); 
             }
@@ -873,7 +885,7 @@
             history.forEach(log => {
                 let badgeClass = log.type === 'LONG' ? 'bg-emerald-900/50 text-emerald-400 border-emerald-700' : 'bg-rose-900/50 text-rose-400 border-rose-700';
                 
-                const symText = log.symbol || '-';
+                const symValue = log.symbol && log.symbol !== '-' ? log.symbol : '';
                 const riskAmntText = log.riskAmount && log.riskAmount !== "N/A" ? `$${parseFloat(log.riskAmount).toFixed(1)}` : 'N/A';
                 const rrText = log.rr && log.rr !== "SAI" && log.rr !== "N/A" ? `1:${log.rr}` : 'N/A';
                 const profitText = log.profit && log.profit !== "N/A" ? parseFloat(log.profit).toFixed(2) : '0.00';
@@ -884,11 +896,18 @@
                 else if (log.status === 'loss') selectClass = 'bg-rose-900/30 text-rose-400 border-rose-800';
                 else if (log.status === 'custom') selectClass = (log.actualPnL >= 0) ? 'bg-emerald-900/30 text-emerald-400 border-emerald-800' : 'bg-rose-900/30 text-rose-400 border-rose-800';
 
+                // Render option PnL tuỳ chỉnh nếu đang ở trạng thái này
+                let customOption = log.status === 'custom' 
+                    ? `<option value="custom" selected hidden>Thực tế: ${log.actualPnL >= 0 ? '+' : ''}$${log.actualPnL}</option>` 
+                    : '';
+
                 let tr = document.createElement('tr');
                 tr.className = "border-b border-slate-700/50 hover:bg-slate-700/30 transition-colors";
                 tr.innerHTML = `
                     <td class="py-3 text-xs text-slate-400">${log.date}</td>
-                    <td class="py-3 font-bold text-blue-200 pl-2 uppercase text-xs">${symText}</td>
+                    <td class="py-2 pl-2">
+                        <input type="text" list="crypto-pairs" class="bg-transparent border-b border-transparent focus:border-blue-500 hover:border-slate-600 outline-none w-20 text-blue-200 font-bold uppercase text-xs transition-colors" value="${symValue}" placeholder="Mã..." onchange="updateLogSymbol(${log.id}, this.value)" onfocus="this.select()">
+                    </td>
                     <td class="py-3 text-center"><span class="text-[10px] font-bold px-2 py-1 rounded border ${badgeClass}">${log.type}</span></td>
                     <td class="py-3 text-right font-semibold text-slate-300">${log.risk !== "N/A" ? log.risk + '%' : ''} <span class="text-xs font-normal text-slate-500">(${riskAmntText})</span></td>
                     <td class="py-3 text-right font-bold text-blue-400">${log.sizeUsd !== "N/A" ? '$' + log.sizeUsd : 'N/A'}</td>
@@ -897,13 +916,12 @@
                     <td class="py-3 text-right font-semibold text-rose-400">${log.sl}</td>
                     <td class="py-3 text-right font-semibold text-emerald-400">${log.tp}</td>
                     <td class="py-2 text-right pl-4 pr-2">
-                        <select class="text-xs font-bold rounded ${selectClass} cursor-pointer min-w-[140px]" onchange="updateLogStatus(${log.id}, this)">
+                        <select class="text-xs font-bold rounded ${selectClass} cursor-pointer min-w-[140px] p-1" onchange="updateLogStatus(${log.id}, this)">
+                            ${customOption}
                             <option value="pending" ${log.status === 'pending' ? 'selected' : ''}>Đang mở</option>
                             <option value="win" ${log.status === 'win' ? 'selected' : ''}>Chốt Lãi (+$${profitText})</option>
                             <option value="loss" ${log.status === 'loss' ? 'selected' : ''}>Cắt Lỗ (-$${lossText})</option>
-                            <option value="custom" ${log.status === 'custom' ? 'selected' : ''}>
-                                ${log.status === 'custom' ? `Thực tế: ${log.actualPnL >= 0 ? '+' : ''}$${log.actualPnL}` : 'Tùy chỉnh PnL...'}
-                            </option>
+                            <option value="edit_custom">✎ Nhập/Sửa PnL...</option>
                         </select>
                     </td>
                 `;
