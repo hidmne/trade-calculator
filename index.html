@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculator Pro v3.4</title>
+    <title>Calculator Pro v3.5</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧮</text></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -42,7 +42,7 @@
         .modal-backdrop { backdrop-filter: blur(5px); }
     </style>
 </head>
-<body class="p-2 md:p-6 flex flex-col items-center min-h-screen relative">
+<body class="p-2 sm:p-6 flex flex-col items-center min-h-screen relative">
 
     <datalist id="crypto-pairs">
         <option value="BTCUSDT"></option>
@@ -50,41 +50,43 @@
         <option value="SOLUSDT"></option>
         <option value="BNBUSDT"></option>
         <option value="XRPUSDT"></option>
-        <option value="XAUUSDT"></option> <option value="XAGUSDT"></option> <option value="ADAUSDT"></option>
+        <option value="XAUUSDT"></option>
+        <option value="XAGUSDT"></option>
+        <option value="ADAUSDT"></option>
         <option value="DOGEUSDT"></option>
         <option value="AVAXUSDT"></option>
         <option value="LINKUSDT"></option>
         <option value="DOTUSDT"></option>
     </datalist>
 
-    <div class="max-w-5xl w-full flex justify-between items-center mb-4 px-2">
-        <h2 class="text-2xl font-bold text-blue-400 flex items-center gap-2">🧮 Calculator Pro <span class="text-xs bg-blue-600 text-white px-2 py-0.5 rounded-full ml-2">v3.4</span></h2>
-        <button onclick="toggleHistory()" class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-colors">
+    <div class="max-w-5xl w-full flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 px-2">
+        <h2 class="text-2xl font-bold text-blue-400 flex items-center gap-2">🧮 Calculator Pro <span class="text-xs bg-blue-600 text-white px-2 py-0.5 rounded-full ml-1">v3.5</span></h2>
+        <button onclick="toggleHistory()" class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-colors w-full sm:w-auto justify-center">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z" /></svg>
             Nhật ký & Thống kê
         </button>
     </div>
 
-    <div class="max-w-5xl w-full grid md:grid-cols-2 gap-6 items-stretch relative">
+    <div class="max-w-5xl w-full grid md:grid-cols-2 gap-4 sm:gap-6 items-stretch relative">
         
-        <div class="bg-slate-800 rounded-2xl shadow-2xl p-6 border border-slate-700 h-full flex flex-col relative z-10">
+        <div class="bg-slate-800 rounded-2xl shadow-2xl p-4 sm:p-6 border border-slate-700 h-full flex flex-col relative z-10">
             
-            <div class="flex gap-3 mb-6 items-end">
-                <div class="w-1/3">
-                    <label class="block text-xs text-slate-400 mb-1 ml-1 uppercase font-bold tracking-wider">Mã Giao Dịch</label>
-                    <input type="text" id="symbol" list="crypto-pairs" placeholder="VD: BTCUSDT" class="w-full p-2 bg-slate-900 rounded-lg font-bold text-blue-300 border focus:border-blue-500 uppercase transition-colors" onfocus="this.select()" oninput="handleInput()">
+            <div class="flex flex-col sm:flex-row gap-3 mb-5">
+                <div class="w-full sm:w-2/5">
+                    <label class="block text-[11px] text-slate-400 mb-1 uppercase font-bold tracking-wider">Mã Giao Dịch</label>
+                    <input type="text" id="symbol" list="crypto-pairs" placeholder="Mã..." class="w-full h-11 p-2 bg-slate-900 rounded-lg font-bold text-blue-300 border border-transparent focus:border-blue-500 uppercase transition-colors placeholder:text-slate-600 placeholder:font-normal placeholder:text-sm" onfocus="this.select()" oninput="handleInput()">
                 </div>
-                <div class="flex-1 flex gap-1 bg-slate-900 p-1 rounded-lg border border-slate-700 h-[42px]">
+                <div class="w-full sm:flex-1 flex gap-1 bg-slate-900 p-1 rounded-lg border border-slate-700 h-11">
                     <button id="btnLong" onclick="setType('LONG')" class="flex-1 flex items-center justify-center h-full rounded-md font-bold tracking-wider transition-all duration-200">LONG</button>
                     <button id="btnShort" onclick="setType('SHORT')" class="flex-1 flex items-center justify-center h-full rounded-md font-bold tracking-wider transition-all duration-200">SHORT</button>
                 </div>
             </div>
 
-            <div class="grid grid-cols-2 gap-4 mb-6">
+            <div class="grid grid-cols-2 gap-3 mb-5">
                 <div>
                     <label class="block text-sm text-slate-400 mb-1">Vốn ($)</label>
                     <div class="relative w-full">
-                        <input type="text" inputmode="decimal" autocomplete="off" id="capital" value="800" class="w-full p-2 pr-[40px] bg-slate-700/50 rounded-lg font-semibold text-lg" onfocus="this.select()" oninput="handleInput()">
+                        <input type="text" inputmode="decimal" autocomplete="off" id="capital" value="800" class="w-full h-11 p-2 pr-[40px] bg-slate-700/50 rounded-lg font-semibold text-base sm:text-lg focus:border focus:border-blue-500 transition-colors" onfocus="this.select()" oninput="handleInput()">
                         <div class="absolute right-1 top-1/2 -translate-y-1/2 flex items-center">
                             <button class="icon-action popover-trigger font-bold text-xl p-1" data-popover="pop-capital">±</button>
                         </div>
@@ -105,22 +107,22 @@
                     </div>
                 </div>
                 
-                <div class="flex flex-col">
+                <div class="flex flex-col relative">
                     <label class="block text-sm text-slate-400 mb-1">Rủi ro (%)</label>
                     <div class="relative w-full">
-                        <input type="text" inputmode="decimal" autocomplete="off" id="risk" value="1" class="w-full p-2 pr-8 bg-slate-700/50 rounded-lg font-semibold text-lg border border-transparent focus:border-blue-500 transition-colors" onfocus="this.select()" oninput="selectedRiskPlan = null; handleInput()">
+                        <input type="text" inputmode="decimal" autocomplete="off" id="risk" value="1" class="w-full h-11 p-2 pr-8 bg-slate-700/50 rounded-lg font-semibold text-base sm:text-lg border border-transparent focus:border-blue-500 transition-colors" onfocus="this.select()" oninput="selectedRiskPlan = null; handleInput()">
                         <div class="absolute right-2 top-1/2 -translate-y-1/2 flex flex-col gap-[2px]">
                             <svg onclick="adjustRisk('risk', 0.25)" class="tri-btn w-3 h-3" viewBox="0 0 24 24"><path d="M24 22h-24l12-20z"/></svg>
                             <svg onclick="adjustRisk('risk', -0.25)" class="tri-btn w-3 h-3 rotate-180" viewBox="0 0 24 24"><path d="M24 22h-24l12-20z"/></svg>
                         </div>
                     </div>
-                    <div class="text-[11px] text-slate-400 mt-1 ml-1 tracking-tight">/2 Tài khoản sau: <span id="out-dd" class="text-orange-400 font-bold">0</span> lệnh thua</div>
+                    <div class="text-[10px] sm:text-[11px] text-slate-400 mt-1 ml-1 tracking-tight leading-none absolute -bottom-4 left-0">/2 Tài khoản sau: <span id="out-dd" class="text-orange-400 font-bold">0</span> lệnh thua</div>
                 </div>
 
-                <div>
+                <div class="mt-2 sm:mt-0">
                     <label class="block text-sm text-slate-400 mb-1">Đòn bẩy Max</label>
                     <div class="relative w-full">
-                        <input type="text" inputmode="decimal" autocomplete="off" id="maxLev" value="150" class="w-full p-2 pr-[40px] bg-slate-700/50 rounded-lg font-semibold" onfocus="this.select()" oninput="handleInput()">
+                        <input type="text" inputmode="decimal" autocomplete="off" id="maxLev" value="150" class="w-full h-11 p-2 pr-[40px] bg-slate-700/50 rounded-lg font-semibold text-base focus:border focus:border-blue-500 transition-colors" onfocus="this.select()" oninput="handleInput()">
                         <div class="absolute right-1 top-1/2 -translate-y-1/2 flex items-center">
                             <button class="icon-action popover-trigger font-bold text-xl p-1" data-popover="pop-maxlev">±</button>
                         </div>
@@ -141,17 +143,17 @@
                     </div>
                 </div>
                 
-                <div>
+                <div class="mt-2 sm:mt-0">
                     <div class="group relative inline-block mb-1 w-full">
                         <label class="flex items-center text-sm text-slate-400 cursor-help">
                             Đệm Liq. <span class="ml-1 text-blue-500 text-xs">ℹ️</span>
                         </label>
-                        <div class="absolute bottom-full left-0 mb-2 hidden group-hover:block w-48 p-2 bg-slate-700 text-xs text-white rounded shadow-lg z-10 border border-slate-600">
+                        <div class="absolute bottom-full right-0 sm:left-0 sm:right-auto mb-2 hidden group-hover:block w-48 p-2 bg-slate-700 text-xs text-white rounded shadow-lg z-10 border border-slate-600">
                             Khoảng cách an toàn từ Stop Loss đến Giá Thanh Lý tính bằng %.
                         </div>
                     </div>
                     <div class="relative w-full">
-                        <input type="text" inputmode="decimal" autocomplete="off" id="safeBuffer" value="0.25" class="w-full p-2 pr-8 bg-slate-700/50 rounded-lg font-semibold" onfocus="this.select()" oninput="handleInput()">
+                        <input type="text" inputmode="decimal" autocomplete="off" id="safeBuffer" value="0.25" class="w-full h-11 p-2 pr-8 bg-slate-700/50 rounded-lg font-semibold text-base focus:border focus:border-blue-500 transition-colors" onfocus="this.select()" oninput="handleInput()">
                         <div class="absolute right-2 top-1/2 -translate-y-1/2 flex flex-col gap-[2px]">
                             <svg onclick="adjustRisk('safeBuffer', 0.05)" class="tri-btn w-3 h-3" viewBox="0 0 24 24"><path d="M24 22h-24l12-20z"/></svg>
                             <svg onclick="adjustRisk('safeBuffer', -0.05)" class="tri-btn w-3 h-3 rotate-180" viewBox="0 0 24 24"><path d="M24 22h-24l12-20z"/></svg>
@@ -160,11 +162,11 @@
                 </div>
             </div>
 
-            <div class="pt-4 border-t border-slate-700 flex-grow flex flex-col gap-5">
+            <div class="pt-4 mt-2 border-t border-slate-700 flex-grow flex flex-col gap-4">
                 <div>
                     <label class="block text-sm text-slate-400 mb-1">Giá Vào (Entry)</label>
                     <div class="relative w-full">
-                        <input type="text" inputmode="decimal" autocomplete="off" id="entry" value="65900" class="w-full p-3 pr-[60px] bg-slate-900 rounded-lg text-white font-bold text-xl focus:ring-0 focus:outline-none border-blue-900/50 focus:border-blue-500 shadow-inner" onfocus="this.select()" oninput="handleInput()">
+                        <input type="text" inputmode="decimal" autocomplete="off" id="entry" value="65900" class="w-full h-12 p-2 pl-3 pr-[60px] bg-slate-900 rounded-lg text-white font-bold text-lg sm:text-xl focus:ring-0 focus:outline-none border border-transparent focus:border-blue-500 shadow-inner transition-colors" onfocus="this.select()" oninput="handleInput()">
                         <div class="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-2">
                             <button class="icon-action popover-trigger font-bold text-2xl p-1" data-popover="pop-entry">±</button>
                             <button id="btnCopyEntry" onclick="copyValue('entry', 'btnCopyEntry')" class="icon-action bg-slate-700 p-2 rounded hover:bg-slate-600" title="Copy">
@@ -190,18 +192,18 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block text-sm text-slate-400 mb-1">Stop Loss</label>
                         <div class="relative w-full">
-                            <input type="text" inputmode="decimal" autocomplete="off" id="sl" value="64000" class="w-full p-2 pr-[60px] bg-slate-700/50 rounded-lg text-red-400 font-semibold focus:ring-0 focus:outline-none border-transparent focus:border-red-500" onfocus="this.select()" oninput="handleInput()">
-                            <div class="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-1">
+                            <input type="text" inputmode="decimal" autocomplete="off" id="sl" value="64000" class="w-full h-11 p-2 pl-3 pr-[50px] bg-slate-700/50 rounded-lg text-red-400 font-semibold text-sm sm:text-base focus:ring-0 focus:outline-none border border-transparent focus:border-red-500 transition-colors" onfocus="this.select()" oninput="handleInput()">
+                            <div class="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-0.5 sm:gap-1">
                                 <button class="icon-action popover-trigger font-bold text-xl p-1" data-popover="pop-sl">±</button>
                                 <button id="btnCopySL" onclick="copyValue('sl', 'btnCopySL')" class="icon-action p-1" title="Copy">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" /></svg>
                                 </button>
                             </div>
-                            <div id="pop-sl" class="stepper-popover hidden absolute top-full mt-2 right-0 bg-slate-800 border border-slate-600 rounded-lg shadow-2xl z-50 p-2 w-32">
+                            <div id="pop-sl" class="stepper-popover hidden absolute top-full mt-2 left-0 sm:left-auto sm:right-0 bg-slate-800 border border-slate-600 rounded-lg shadow-2xl z-50 p-2 w-32">
                                 <div class="flex justify-between gap-2">
                                     <div class="flex flex-col gap-1 w-1/2">
                                         <button data-adjust="sl, 0.1" class="bg-slate-700 hover:bg-slate-600 rounded text-sm py-1 font-semibold text-slate-200">+0.1</button>
@@ -223,11 +225,11 @@
                     <div>
                         <div class="flex justify-between items-center mb-1">
                             <label class="block text-sm text-slate-400">Take Profit</label>
-                            <button onclick="toggleDCAModal()" class="text-[10px] bg-slate-700 hover:bg-emerald-600 text-white px-2 py-0.5 rounded transition-colors" title="Chốt lời từng phần">DCA Out</button>
+                            <button onclick="toggleDCAModal()" class="text-[9px] sm:text-[10px] bg-slate-700 hover:bg-emerald-600 text-white px-1.5 sm:px-2 py-0.5 rounded transition-colors" title="Chốt lời từng phần">DCA Out</button>
                         </div>
                         <div class="relative w-full">
-                            <input type="text" inputmode="decimal" autocomplete="off" id="tp" value="80000" class="w-full p-2 pr-[60px] bg-slate-700/50 rounded-lg text-green-400 font-semibold focus:ring-0 focus:outline-none border-transparent focus:border-green-500" onfocus="this.select()" oninput="handleInput()">
-                            <div class="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-1">
+                            <input type="text" inputmode="decimal" autocomplete="off" id="tp" value="80000" class="w-full h-11 p-2 pl-3 pr-[50px] bg-slate-700/50 rounded-lg text-green-400 font-semibold text-sm sm:text-base focus:ring-0 focus:outline-none border border-transparent focus:border-green-500 transition-colors" onfocus="this.select()" oninput="handleInput()">
+                            <div class="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-0.5 sm:gap-1">
                                 <button class="icon-action popover-trigger font-bold text-xl p-1" data-popover="pop-tp">±</button>
                                 <button id="btnCopyTP" onclick="copyValue('tp', 'btnCopyTP')" class="icon-action p-1" title="Copy">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" /></svg>
@@ -259,7 +261,7 @@
             </div>
         </div>
 
-        <div class="bg-slate-900 rounded-2xl shadow-2xl p-6 border border-slate-700 flex flex-col justify-between h-full space-y-4">
+        <div class="bg-slate-900 rounded-2xl shadow-2xl p-4 sm:p-6 border border-slate-700 flex flex-col justify-between h-full space-y-4">
             
             <div class="flex justify-between items-center pb-3 border-b border-slate-800">
                 <span class="text-slate-400">Mất tối đa (Risk Amount):</span>
@@ -269,11 +271,11 @@
             <div id="size-box" class="bg-blue-900/20 p-4 rounded-xl border border-blue-800/50 hover:bg-blue-900/30 transition-all duration-300">
                 <div class="flex justify-between items-center mb-1">
                     <span class="text-blue-300 font-semibold">KL Giao dịch (USD):</span>
-                    <span id="out-size-usd" class="text-3xl font-black text-blue-400 tracking-tight transition-all duration-300">$0.00</span>
+                    <span id="out-size-usd" class="text-2xl sm:text-3xl font-black text-blue-400 tracking-tight transition-all duration-300">$0.00</span>
                 </div>
                 <div class="flex justify-between items-center">
                     <span class="text-slate-500 text-sm">KL Giao dịch (Units):</span>
-                    <span id="out-size-units" class="text-md font-medium text-slate-400">0.00</span>
+                    <span id="out-size-units" class="text-sm sm:text-md font-medium text-slate-400">0.00</span>
                 </div>
             </div>
 
@@ -289,41 +291,41 @@
             <div class="grid grid-cols-2 gap-4 py-3 border-y border-slate-800">
                 <div>
                     <span class="block text-slate-400 text-sm mb-1">Đòn bẩy an toàn:</span>
-                    <span id="out-leverage" class="text-2xl font-bold text-white">1x</span>
+                    <span id="out-leverage" class="text-xl sm:text-2xl font-bold text-white">1x</span>
                 </div>
                 <div class="text-right">
                     <span class="block text-slate-400 text-sm mb-1">Vốn ký quỹ (Margin):</span>
-                    <span id="out-margin" class="text-2xl font-bold text-white">$0.00</span>
+                    <span id="out-margin" class="text-xl sm:text-2xl font-bold text-white">$0.00</span>
                 </div>
             </div>
 
             <div class="flex flex-col pt-1 relative">
                 <div class="flex justify-between items-center">
                     <span class="text-slate-400">Giá thanh lý (Liq Price):</span>
-                    <span id="out-liq" class="text-xl font-bold text-orange-400 hover:text-orange-300 transition-colors">0.00</span>
+                    <span id="out-liq" class="text-lg sm:text-xl font-bold text-orange-400 hover:text-orange-300 transition-colors">0.00</span>
                 </div>
-                <div id="liq-warning" class="text-sm text-red-500 font-bold hidden text-right animate-pulse mt-1">⚠️ CẢNH BÁO: Thanh lý xảy ra trước khi dính Stop Loss!</div>
+                <div id="liq-warning" class="text-xs sm:text-sm text-red-500 font-bold hidden text-right animate-pulse mt-1">⚠️ CẢNH BÁO: Thanh lý xảy ra trước khi dính Stop Loss!</div>
             </div>
 
             <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 mt-2 space-y-2">
                 <div class="flex justify-between items-center">
                     <span class="text-slate-400">Tỷ lệ R:R:</span>
-                    <span id="out-rr" class="font-bold text-white text-lg transition-all duration-300">1 : 0.00</span>
+                    <span id="out-rr" class="font-bold text-white text-base sm:text-lg transition-all duration-300">1 : 0.00</span>
                 </div>
                 <div class="flex justify-between items-center">
                     <span class="text-slate-400">Tiền lãi dự kiến:</span>
-                    <span id="out-profit" class="font-bold text-green-400 text-lg transition-all duration-300">+$0.00</span>
+                    <span id="out-profit" class="font-bold text-green-400 text-base sm:text-lg transition-all duration-300">+$0.00</span>
                 </div>
                 <div class="flex justify-between items-center pt-2 border-t border-slate-700/50">
                     <span class="text-slate-400 font-medium">Lợi nhuận ròng (ROE):</span>
-                    <span id="out-roe" class="font-black text-green-400 text-xl">0%</span>
+                    <span id="out-roe" class="font-black text-green-400 text-lg sm:text-xl">0%</span>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="max-w-5xl w-full bg-slate-800 rounded-2xl shadow-2xl p-6 border border-slate-700 mt-6 mb-10 relative">
-        <h3 class="text-lg font-bold mb-4 text-slate-300">Bảng Khối lượng & Ký quỹ theo % Rủi ro <span class="text-xs text-slate-500 font-normal ml-2">(Click vào 1 dòng để áp dụng nhanh)</span></h3>
+    <div class="max-w-5xl w-full bg-slate-800 rounded-2xl shadow-2xl p-4 sm:p-6 border border-slate-700 mt-4 sm:mt-6 mb-10 relative">
+        <h3 class="text-base sm:text-lg font-bold mb-4 text-slate-300">Bảng Khối lượng & Ký quỹ theo % Rủi ro <span class="text-xs text-slate-500 font-normal ml-1 sm:ml-2 block sm:inline">(Click vào 1 dòng để áp dụng nhanh)</span></h3>
         <div class="table-container">
             <table id="referenceTable" class="select-none">
                 <thead>
@@ -354,20 +356,20 @@
                     <span>Mức Giá (Price)</span>
                     <span>% Khối lượng</span>
                 </div>
-                <div class="flex gap-3 items-center">
+                <div class="flex gap-2 sm:gap-3 items-center">
                     <span class="text-sm font-bold text-slate-500 w-8">TP 1</span>
-                    <input type="text" id="dca-p1" class="w-full p-2 bg-slate-900 rounded text-sm font-semibold" placeholder="Giá..." oninput="calcDCA()">
-                    <input type="text" id="dca-v1" value="50" class="w-16 p-2 bg-slate-900 rounded text-sm text-center font-semibold text-emerald-400" oninput="autoDCA('v1')">%
+                    <input type="text" id="dca-p1" class="w-full p-2 bg-slate-900 rounded text-sm font-semibold focus:border-blue-500" placeholder="Giá..." oninput="calcDCA()">
+                    <input type="text" id="dca-v1" value="50" class="w-14 sm:w-16 p-2 bg-slate-900 rounded text-sm text-center font-semibold text-emerald-400 focus:border-blue-500" oninput="autoDCA('v1')">%
                 </div>
-                <div class="flex gap-3 items-center">
+                <div class="flex gap-2 sm:gap-3 items-center">
                     <span class="text-sm font-bold text-slate-500 w-8">TP 2</span>
-                    <input type="text" id="dca-p2" class="w-full p-2 bg-slate-900 rounded text-sm font-semibold" placeholder="Giá..." oninput="calcDCA()">
-                    <input type="text" id="dca-v2" value="30" class="w-16 p-2 bg-slate-900 rounded text-sm text-center font-semibold text-emerald-400" oninput="autoDCA('v2')">%
+                    <input type="text" id="dca-p2" class="w-full p-2 bg-slate-900 rounded text-sm font-semibold focus:border-blue-500" placeholder="Giá..." oninput="calcDCA()">
+                    <input type="text" id="dca-v2" value="30" class="w-14 sm:w-16 p-2 bg-slate-900 rounded text-sm text-center font-semibold text-emerald-400 focus:border-blue-500" oninput="autoDCA('v2')">%
                 </div>
-                <div class="flex gap-3 items-center">
+                <div class="flex gap-2 sm:gap-3 items-center">
                     <span class="text-sm font-bold text-slate-500 w-8">TP 3</span>
-                    <input type="text" id="dca-p3" class="w-full p-2 bg-slate-900 rounded text-sm font-semibold" placeholder="Giá..." oninput="calcDCA()">
-                    <input type="text" id="dca-v3" value="20" class="w-16 p-2 bg-slate-900 rounded text-sm text-center font-semibold text-emerald-400" oninput="autoDCA('v3')">%
+                    <input type="text" id="dca-p3" class="w-full p-2 bg-slate-900 rounded text-sm font-semibold focus:border-blue-500" placeholder="Giá..." oninput="calcDCA()">
+                    <input type="text" id="dca-v3" value="20" class="w-14 sm:w-16 p-2 bg-slate-900 rounded text-sm text-center font-semibold text-emerald-400 focus:border-blue-500" oninput="autoDCA('v3')">%
                 </div>
                 
                 <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-700 mt-2">
@@ -386,46 +388,46 @@
 
     <input type="file" id="importFile" accept=".json" class="hidden" onchange="importBackup(event)">
 
-    <div id="historyModal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 modal-backdrop bg-slate-950/80">
-        <div class="bg-slate-800 rounded-2xl border border-slate-700 shadow-2xl max-w-7xl w-full max-h-[90vh] flex flex-col" onclick="event.stopPropagation()">
-            <div class="p-5 border-b border-slate-700 flex justify-between items-center bg-slate-900 rounded-t-2xl">
-                <h3 class="text-lg font-bold text-slate-200">Dashboard Phân Tích & Lịch Sử Giao Dịch</h3>
+    <div id="historyModal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-2 sm:p-4 modal-backdrop bg-slate-950/80">
+        <div class="bg-slate-800 rounded-2xl border border-slate-700 shadow-2xl max-w-7xl w-full max-h-[95vh] flex flex-col" onclick="event.stopPropagation()">
+            <div class="p-4 sm:p-5 border-b border-slate-700 flex justify-between items-center bg-slate-900 rounded-t-2xl">
+                <h3 class="text-base sm:text-lg font-bold text-slate-200">Dashboard Phân Tích & Lịch Sử Giao Dịch</h3>
                 <button onclick="toggleHistory()" class="text-slate-400 hover:text-white font-bold text-2xl transition-colors">&times;</button>
             </div>
             
-            <div class="p-5 bg-slate-800/50 grid grid-cols-2 md:grid-cols-4 gap-4 border-b border-slate-700">
+            <div class="p-4 sm:p-5 bg-slate-800/50 grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 border-b border-slate-700">
                 <div class="bg-slate-900 p-3 rounded-lg border border-slate-700">
-                    <div class="text-xs text-slate-400 mb-1">Tổng Số Lệnh</div>
-                    <div id="stat-total" class="text-2xl font-black text-white">0</div>
+                    <div class="text-[10px] sm:text-xs text-slate-400 mb-1 truncate">Tổng Số Lệnh</div>
+                    <div id="stat-total" class="text-xl sm:text-2xl font-black text-white">0</div>
                 </div>
                 <div class="bg-slate-900 p-3 rounded-lg border border-slate-700">
-                    <div class="text-xs text-slate-400 mb-1">Tỷ Lệ Thắng (Win Rate)</div>
-                    <div id="stat-winrate" class="text-2xl font-black text-blue-400">0%</div>
+                    <div class="text-[10px] sm:text-xs text-slate-400 mb-1 truncate">Tỷ Lệ Thắng (Win Rate)</div>
+                    <div id="stat-winrate" class="text-xl sm:text-2xl font-black text-blue-400">0%</div>
                 </div>
                 <div class="bg-slate-900 p-3 rounded-lg border border-slate-700">
-                    <div class="text-xs text-slate-400 mb-1">Lợi Nhuận Thực Tế (PnL)</div>
-                    <div id="stat-pnl" class="text-2xl font-black text-green-400">$0.00</div>
+                    <div class="text-[10px] sm:text-xs text-slate-400 mb-1 truncate">Lợi Nhuận Thực Tế (PnL)</div>
+                    <div id="stat-pnl" class="text-xl sm:text-2xl font-black text-green-400">$0.00</div>
                 </div>
                 <div class="bg-slate-900 p-3 rounded-lg border border-slate-700">
-                    <div class="text-xs text-slate-400 mb-1">R:R Trung Bình Lên Plan</div>
-                    <div id="stat-avg-rr" class="text-2xl font-black text-purple-400">0.00</div>
+                    <div class="text-[10px] sm:text-xs text-slate-400 mb-1 truncate">R:R Trung Bình Lên Plan</div>
+                    <div id="stat-avg-rr" class="text-xl sm:text-2xl font-black text-purple-400">0.00</div>
                 </div>
             </div>
 
-            <div class="p-5 overflow-y-auto flex-grow table-container">
+            <div class="p-0 sm:p-5 overflow-y-auto flex-grow table-container">
                 <table id="historyTable" class="w-full text-left text-sm whitespace-nowrap">
                     <thead>
                         <tr>
-                            <th class="pb-3 text-slate-400 font-normal">Thời gian</th>
-                            <th class="pb-3 text-slate-400 font-normal pl-2">Mã</th>
-                            <th class="pb-3 text-slate-400 font-normal text-center">Lệnh</th>
-                            <th class="pb-3 text-slate-400 font-normal text-right">Rủi ro</th>
-                            <th class="pb-3 text-slate-400 font-normal text-right">KL (USD)</th>
-                            <th class="pb-3 text-slate-400 font-normal text-right">R:R</th>
-                            <th class="pb-3 text-slate-400 font-normal text-right pl-4">Entry</th>
-                            <th class="pb-3 text-slate-400 font-normal text-right text-red-400">SL</th>
-                            <th class="pb-3 text-slate-400 font-normal text-right text-green-400">TP</th>
-                            <th class="pb-3 text-slate-400 font-normal text-right pr-4">Trạng Thái / PnL</th>
+                            <th class="py-3 px-2 sm:px-0 text-slate-400 font-normal">Thời gian</th>
+                            <th class="py-3 pl-2 text-slate-400 font-normal">Mã</th>
+                            <th class="py-3 text-slate-400 font-normal text-center">Lệnh</th>
+                            <th class="py-3 text-slate-400 font-normal text-right">Rủi ro</th>
+                            <th class="py-3 text-slate-400 font-normal text-right">KL (USD)</th>
+                            <th class="py-3 text-slate-400 font-normal text-right">R:R</th>
+                            <th class="py-3 text-slate-400 font-normal text-right pl-4">Entry</th>
+                            <th class="py-3 text-slate-400 font-normal text-right text-red-400">SL</th>
+                            <th class="py-3 text-slate-400 font-normal text-right text-green-400">TP</th>
+                            <th class="py-3 text-slate-400 font-normal text-right pr-4">Trạng Thái / PnL</th>
                         </tr>
                     </thead>
                     <tbody class="text-slate-300" id="historyBody">
@@ -434,72 +436,72 @@
                 <div id="emptyHistory" class="text-center text-slate-500 py-10 hidden">Chưa có dữ liệu lịch sử lệnh nào.</div>
             </div>
             
-            <div class="p-4 border-t border-slate-700 flex flex-col md:flex-row justify-between items-center gap-4 bg-slate-900 rounded-b-2xl">
-                <div class="flex gap-2">
-                    <button onclick="toggleManualModal()" class="text-blue-400 hover:text-blue-300 px-4 py-2 bg-blue-950/30 border border-blue-900 rounded text-sm font-semibold transition-colors whitespace-nowrap">+ Thêm Lệnh</button>
-                    <button onclick="exportCSV()" class="text-emerald-400 hover:text-emerald-300 px-4 py-2 bg-emerald-950/30 border border-emerald-900 rounded text-sm font-semibold transition-colors flex items-center gap-1" title="Tải file xem trên Excel">
+            <div class="p-4 border-t border-slate-700 flex flex-col lg:flex-row justify-between gap-3 sm:gap-4 bg-slate-900 rounded-b-2xl">
+                <div class="grid grid-cols-2 lg:flex gap-2 w-full lg:w-auto">
+                    <button onclick="toggleManualModal()" class="text-blue-400 hover:text-blue-300 px-4 py-2 bg-blue-950/30 border border-blue-900 rounded text-sm font-semibold transition-colors flex items-center justify-center whitespace-nowrap">+ Thêm Lệnh</button>
+                    <button onclick="exportCSV()" class="text-emerald-400 hover:text-emerald-300 px-4 py-2 bg-emerald-950/30 border border-emerald-900 rounded text-sm font-semibold transition-colors flex items-center justify-center gap-1" title="Tải file xem trên Excel">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m6.75 12-3-3m0 0-3 3m3-3v6m-1.5-15H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" /></svg>
                         Xuất Excel
                     </button>
                 </div>
-                <div class="flex gap-2">
-                    <button onclick="document.getElementById('importFile').click()" class="text-slate-300 hover:text-white px-4 py-2 bg-slate-700 rounded text-sm font-semibold transition-colors" title="Khôi phục dữ liệu từ máy khác">Import JSON</button>
-                    <button onclick="exportBackupJSON()" class="text-slate-300 hover:text-white px-4 py-2 bg-slate-700 rounded text-sm font-semibold transition-colors" title="Tải file dữ liệu gốc để chuyển máy">Export JSON</button>
-                    <button onclick="clearHistory()" class="text-rose-500 hover:text-rose-400 px-4 py-2 bg-rose-950/30 rounded text-sm font-semibold transition-colors ml-4">Xóa dữ liệu</button>
+                <div class="grid grid-cols-2 lg:flex gap-2 w-full lg:w-auto">
+                    <button onclick="document.getElementById('importFile').click()" class="text-slate-300 hover:text-white px-4 py-2 bg-slate-700 rounded text-sm font-semibold transition-colors flex items-center justify-center">Import JSON</button>
+                    <button onclick="exportBackupJSON()" class="text-slate-300 hover:text-white px-4 py-2 bg-slate-700 rounded text-sm font-semibold transition-colors flex items-center justify-center">Export JSON</button>
                 </div>
+                <button onclick="clearHistory()" class="w-full lg:w-auto text-rose-500 hover:text-rose-400 px-4 py-2 bg-rose-950/30 rounded text-sm font-semibold transition-colors lg:ml-4 flex items-center justify-center">Xóa dữ liệu</button>
             </div>
         </div>
     </div>
 
     <div id="manualModal" class="hidden fixed inset-0 z-[120] flex items-center justify-center p-4 modal-backdrop bg-slate-950/80">
-        <div class="bg-slate-800 rounded-2xl border border-slate-700 shadow-2xl w-full max-w-md" onclick="event.stopPropagation()">
-            <div class="p-4 border-b border-slate-700 bg-slate-900 rounded-t-2xl flex justify-between items-center">
+        <div class="bg-slate-800 rounded-2xl border border-slate-700 shadow-2xl w-full max-w-md flex flex-col max-h-[90vh]" onclick="event.stopPropagation()">
+            <div class="p-4 border-b border-slate-700 bg-slate-900 rounded-t-2xl flex justify-between items-center shrink-0">
                 <h3 class="text-lg font-bold text-white">Ghi Chép Lệnh Đã Chốt</h3>
                 <button onclick="toggleManualModal()" class="text-slate-400 hover:text-white font-bold text-xl">&times;</button>
             </div>
-            <div class="p-5 max-h-[70vh] overflow-y-auto">
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="col-span-2 md:col-span-1">
+            <div class="p-5 overflow-y-auto">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
                         <label class="block text-sm text-slate-400 mb-1">Mã (Symbol)</label>
-                        <input type="text" id="man-symbol" list="crypto-pairs" class="w-full p-2 bg-slate-900 rounded font-semibold border border-slate-700 focus:border-blue-500 uppercase" placeholder="VD: BTCUSDT" onfocus="this.select()">
+                        <input type="text" id="man-symbol" list="crypto-pairs" class="w-full h-11 p-2 bg-slate-900 rounded font-semibold border border-slate-700 focus:border-blue-500 uppercase" placeholder="VD: BTCUSDT" onfocus="this.select()">
                     </div>
-                    <div class="col-span-2 md:col-span-1">
+                    <div>
                         <label class="block text-sm text-slate-400 mb-1">Loại Lệnh</label>
-                        <select id="man-type" class="w-full p-2 bg-slate-900 rounded font-bold border border-slate-700 focus:border-blue-500">
+                        <select id="man-type" class="w-full h-11 p-2 bg-slate-900 rounded font-bold border border-slate-700 focus:border-blue-500">
                             <option value="LONG" class="text-emerald-400">LONG</option>
                             <option value="SHORT" class="text-rose-400">SHORT</option>
                         </select>
                     </div>
 
-                    <div class="col-span-2 md:col-span-1">
+                    <div>
                         <label class="block text-sm text-slate-400 mb-1">Giá Vào (Entry)</label>
-                        <input type="text" inputmode="decimal" id="man-entry" class="w-full p-2 bg-slate-900 rounded font-semibold border border-slate-700 focus:border-blue-500 text-slate-300" placeholder="Tùy chọn">
+                        <input type="text" inputmode="decimal" id="man-entry" class="w-full h-11 p-2 bg-slate-900 rounded font-semibold border border-slate-700 focus:border-blue-500 text-slate-300" placeholder="Tùy chọn">
                     </div>
-                    <div class="col-span-2 md:col-span-1">
+                    <div>
                         <label class="block text-sm text-slate-400 mb-1">KL Giao Dịch (Size USD)</label>
-                        <input type="text" inputmode="decimal" id="man-size" class="w-full p-2 bg-slate-900 rounded font-semibold border border-slate-700 focus:border-blue-500 text-blue-400" placeholder="Tùy chọn">
+                        <input type="text" inputmode="decimal" id="man-size" class="w-full h-11 p-2 bg-slate-900 rounded font-semibold border border-slate-700 focus:border-blue-500 text-blue-400" placeholder="Tùy chọn">
                     </div>
 
-                    <div class="col-span-2 md:col-span-1">
+                    <div>
                         <label class="block text-sm text-slate-400 mb-1">Stop Loss (SL)</label>
-                        <input type="text" inputmode="decimal" id="man-sl" class="w-full p-2 bg-slate-900 rounded font-semibold border border-slate-700 focus:border-red-500 text-rose-400" placeholder="Tùy chọn">
+                        <input type="text" inputmode="decimal" id="man-sl" class="w-full h-11 p-2 bg-slate-900 rounded font-semibold border border-slate-700 focus:border-red-500 text-rose-400" placeholder="Tùy chọn">
                     </div>
-                    <div class="col-span-2 md:col-span-1">
+                    <div>
                         <label class="block text-sm text-slate-400 mb-1">Take Profit (TP)</label>
-                        <input type="text" inputmode="decimal" id="man-tp" class="w-full p-2 bg-slate-900 rounded font-semibold border border-slate-700 focus:border-green-500 text-emerald-400" placeholder="Tùy chọn">
+                        <input type="text" inputmode="decimal" id="man-tp" class="w-full h-11 p-2 bg-slate-900 rounded font-semibold border border-slate-700 focus:border-green-500 text-emerald-400" placeholder="Tùy chọn">
                     </div>
                     
-                    <div class="col-span-2 md:col-span-1">
+                    <div>
                         <label class="block text-sm text-slate-400 mb-1">Rủi ro (Risk USD) <span class="text-rose-500">*</span></label>
-                        <input type="text" inputmode="decimal" id="man-risk" class="w-full p-2 bg-slate-900 rounded font-semibold border border-rose-500 focus:ring-1 focus:ring-rose-500 text-white" placeholder="Bắt buộc">
+                        <input type="text" inputmode="decimal" id="man-risk" class="w-full h-11 p-2 bg-slate-900 rounded font-semibold border border-rose-500 focus:ring-1 focus:ring-rose-500 text-white" placeholder="Bắt buộc">
                     </div>
-                    <div class="col-span-2 md:col-span-1">
+                    <div>
                         <label class="block text-sm text-slate-400 mb-1">Lãi / Lỗ Thực (PnL USD) <span class="text-rose-500">*</span></label>
-                        <input type="text" inputmode="decimal" id="man-pnl" class="w-full p-2 bg-slate-900 rounded font-semibold border border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-white" placeholder="VD: 25.5 hoặc -10">
+                        <input type="text" inputmode="decimal" id="man-pnl" class="w-full h-11 p-2 bg-slate-900 rounded font-semibold border border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-white" placeholder="Bắt buộc (Lãi ghi dương, Lỗ ghi âm)">
                     </div>
                 </div>
             </div>
-            <div class="p-4 border-t border-slate-700 flex justify-end gap-2 bg-slate-900 rounded-b-2xl">
+            <div class="p-4 border-t border-slate-700 flex justify-end gap-2 bg-slate-900 rounded-b-2xl shrink-0">
                 <button onclick="toggleManualModal()" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded text-sm font-bold text-white">Hủy</button>
                 <button onclick="saveManualTrade()" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded text-sm font-bold text-white">Lưu Lệnh</button>
             </div>
@@ -804,7 +806,6 @@
             URL.revokeObjectURL(url);
         }
 
-        // Cập nhật giá trị Mã trực tiếp từ bảng
         function updateLogSymbol(id, val) {
             let history = JSON.parse(localStorage.getItem('tradeLogs') || '[]');
             let itemIndex = history.findIndex(h => h.id === id);
@@ -823,7 +824,7 @@
                     let defaultVal = history[itemIndex].status === 'custom' ? history[itemIndex].actualPnL : "0";
                     let val = prompt("NHẬP PnL THỰC TẾ (USD):\n- Gõ số dương nếu Lãi (VD: 50.5)\n- Gõ số âm nếu Lỗ (VD: -20)", defaultVal);
                     if (val === null) {
-                        renderHistory(); // Revert ui if cancelled
+                        renderHistory(); 
                         return; 
                     }
                     history[itemIndex].actualPnL = parseFloat(val.replace(/,/g, '.')) || 0;
@@ -863,9 +864,9 @@
             document.getElementById('stat-avg-rr').innerText = avgRR > 0 ? `1:${avgRR}` : '0';
             
             let pnlEl = document.getElementById('stat-pnl');
-            if (totalPnL > 0) { pnlEl.innerText = '+$' + totalPnL.toFixed(2); pnlEl.className = "text-2xl font-black text-green-400"; }
-            else if (totalPnL < 0) { pnlEl.innerText = '-$' + Math.abs(totalPnL).toFixed(2); pnlEl.className = "text-2xl font-black text-rose-400"; }
-            else { pnlEl.innerText = '$0.00'; pnlEl.className = "text-2xl font-black text-slate-400"; }
+            if (totalPnL > 0) { pnlEl.innerText = '+$' + totalPnL.toFixed(2); pnlEl.className = "text-xl sm:text-2xl font-black text-green-400"; }
+            else if (totalPnL < 0) { pnlEl.innerText = '-$' + Math.abs(totalPnL).toFixed(2); pnlEl.className = "text-xl sm:text-2xl font-black text-rose-400"; }
+            else { pnlEl.innerText = '$0.00'; pnlEl.className = "text-xl sm:text-2xl font-black text-slate-400"; }
         }
 
         function renderHistory() {
@@ -896,7 +897,6 @@
                 else if (log.status === 'loss') selectClass = 'bg-rose-900/30 text-rose-400 border-rose-800';
                 else if (log.status === 'custom') selectClass = (log.actualPnL >= 0) ? 'bg-emerald-900/30 text-emerald-400 border-emerald-800' : 'bg-rose-900/30 text-rose-400 border-rose-800';
 
-                // Render option PnL tuỳ chỉnh nếu đang ở trạng thái này
                 let customOption = log.status === 'custom' 
                     ? `<option value="custom" selected hidden>Thực tế: ${log.actualPnL >= 0 ? '+' : ''}$${log.actualPnL}</option>` 
                     : '';
@@ -904,19 +904,19 @@
                 let tr = document.createElement('tr');
                 tr.className = "border-b border-slate-700/50 hover:bg-slate-700/30 transition-colors";
                 tr.innerHTML = `
-                    <td class="py-3 text-xs text-slate-400">${log.date}</td>
+                    <td class="py-3 px-2 sm:px-0 text-[11px] sm:text-xs text-slate-400">${log.date}</td>
                     <td class="py-2 pl-2">
-                        <input type="text" list="crypto-pairs" class="bg-transparent border-b border-transparent focus:border-blue-500 hover:border-slate-600 outline-none w-20 text-blue-200 font-bold uppercase text-xs transition-colors" value="${symValue}" placeholder="Mã..." onchange="updateLogSymbol(${log.id}, this.value)" onfocus="this.select()">
+                        <input type="text" list="crypto-pairs" class="bg-transparent border-b border-transparent focus:border-blue-500 hover:border-slate-600 outline-none w-16 sm:w-20 text-blue-200 font-bold uppercase text-[10px] sm:text-xs transition-colors" value="${symValue}" placeholder="Mã..." onchange="updateLogSymbol(${log.id}, this.value)" onfocus="this.select()">
                     </td>
-                    <td class="py-3 text-center"><span class="text-[10px] font-bold px-2 py-1 rounded border ${badgeClass}">${log.type}</span></td>
-                    <td class="py-3 text-right font-semibold text-slate-300">${log.risk !== "N/A" ? log.risk + '%' : ''} <span class="text-xs font-normal text-slate-500">(${riskAmntText})</span></td>
-                    <td class="py-3 text-right font-bold text-blue-400">${log.sizeUsd !== "N/A" ? '$' + log.sizeUsd : 'N/A'}</td>
-                    <td class="py-3 text-right text-purple-400 font-semibold text-xs">${rrText}</td>
-                    <td class="py-3 text-right font-semibold text-white pl-4">${log.entry}</td>
-                    <td class="py-3 text-right font-semibold text-rose-400">${log.sl}</td>
-                    <td class="py-3 text-right font-semibold text-emerald-400">${log.tp}</td>
-                    <td class="py-2 text-right pl-4 pr-2">
-                        <select class="text-xs font-bold rounded ${selectClass} cursor-pointer min-w-[140px] p-1" onchange="updateLogStatus(${log.id}, this)">
+                    <td class="py-3 text-center"><span class="text-[10px] font-bold px-1.5 sm:px-2 py-1 rounded border ${badgeClass}">${log.type}</span></td>
+                    <td class="py-3 text-right font-semibold text-slate-300 text-xs sm:text-sm">${log.risk !== "N/A" ? log.risk + '%' : ''} <span class="text-[10px] sm:text-xs font-normal text-slate-500">(${riskAmntText})</span></td>
+                    <td class="py-3 text-right font-bold text-blue-400 text-xs sm:text-sm">${log.sizeUsd !== "N/A" ? '$' + log.sizeUsd : 'N/A'}</td>
+                    <td class="py-3 text-right text-purple-400 font-semibold text-[11px] sm:text-xs">${rrText}</td>
+                    <td class="py-3 text-right font-semibold text-white pl-4 text-xs sm:text-sm">${log.entry}</td>
+                    <td class="py-3 text-right font-semibold text-rose-400 text-xs sm:text-sm">${log.sl}</td>
+                    <td class="py-3 text-right font-semibold text-emerald-400 text-xs sm:text-sm">${log.tp}</td>
+                    <td class="py-2 text-right pl-2 pr-2 sm:pl-4">
+                        <select class="text-[10px] sm:text-xs font-bold rounded ${selectClass} cursor-pointer min-w-[120px] sm:min-w-[140px] p-1" onchange="updateLogStatus(${log.id}, this)">
                             ${customOption}
                             <option value="pending" ${log.status === 'pending' ? 'selected' : ''}>Đang mở</option>
                             <option value="win" ${log.status === 'win' ? 'selected' : ''}>Chốt Lãi (+$${profitText})</option>
@@ -947,7 +947,7 @@
             let pnlInput = document.getElementById('man-pnl').value;
 
             if (!riskInput || !pnlInput) {
-                alert("Vui lòng điền tối thiểu 2 ô: Rủi ro (Risk USD) và Lãi/Lỗ Thực (PnL)!");
+                alert("Vui lòng điền tối thiểu 2 ô có dấu *: Rủi ro (Risk USD) và Lãi/Lỗ Thực (PnL)!");
                 return;
             }
 
