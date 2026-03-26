@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculator Pro</title>
+    <title>Calculator Pro v3</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧮</text></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -16,39 +16,39 @@
         th { color: #94a3b8; font-weight: normal; font-size: 0.875rem; }
         td { font-size: 0.95rem; }
         input[type="checkbox"] { width: 1.25rem; height: 1.25rem; accent-color: #3b82f6; cursor: pointer; }
+        select { background-color: #1e293b; color: #fff; border: 1px solid #334155; padding: 4px 8px; border-radius: 4px; outline: none; }
         
-        /* Chỉnh hover icon action */
         .icon-action { color: #94a3b8; transition: all 0.2s; cursor: pointer; display: flex; align-items: center; justify-content: center; }
         .icon-action:hover { transform: scale(1.15); color: #fff; }
         .tri-btn { fill: #94a3b8; cursor: pointer; transition: fill 0.2s; }
         .tri-btn:hover { fill: #fff; }
         
-        /* Style Visualizer */
+        /* Style Visualizer - Tăng Opacity Fill */
         .vis-container { position: relative; height: 160px; width: 100%; margin-top: 10px; border-radius: 8px; background: linear-gradient(180deg, rgba(30,41,59,0.7) 0%, rgba(15,23,42,0.8) 100%); overflow: hidden; border: 1px solid #334155; }
         .vis-line { position: absolute; width: 100%; display: flex; align-items: center; transition: top 0.4s ease-in-out, z-index 0.2s; transform: translateY(-50%); z-index: 5; }
         .vis-line::before { content: ''; flex-grow: 1; border-top: 1px dashed currentColor; opacity: 0.5; margin-right: 8px; }
         .vis-label { background: #0f172a; padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: 700; margin-right: 8px; border: 1px solid currentColor; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.5); white-space: nowrap; cursor: default; transition: transform 0.2s; }
-        .vis-fill { position: absolute; width: 100%; opacity: 0.15; transition: all 0.4s ease-in-out; z-index: 1; }
+        .vis-fill { position: absolute; width: 100%; opacity: 0.4; transition: all 0.4s ease-in-out; z-index: 1; } /* Opacity tăng từ 0.15 lên 0.4 */
         
         .vis-line:hover { z-index: 50; }
         .vis-line:hover .vis-label { transform: scale(1.15); box-shadow: 0 0 10px rgba(0,0,0,0.8); }
 
-        #historyModal { backdrop-filter: blur(5px); }
+        .modal-backdrop { backdrop-filter: blur(5px); }
     </style>
 </head>
 <body class="p-2 md:p-6 flex flex-col items-center min-h-screen relative">
 
     <div class="max-w-5xl w-full flex justify-between items-center mb-4 px-2">
-        <h2 class="text-2xl font-bold text-blue-400 flex items-center gap-2">🧮 Calculator Pro</h2>
+        <h2 class="text-2xl font-bold text-blue-400 flex items-center gap-2">🧮 Calculator Pro <span class="text-xs bg-blue-600 text-white px-2 py-0.5 rounded-full ml-2">v3</span></h2>
         <button onclick="toggleHistory()" class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
-            Nhật ký
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z" /></svg>
+            Nhật ký & Thống kê
         </button>
     </div>
 
     <div class="max-w-5xl w-full grid md:grid-cols-2 gap-6 items-stretch relative">
         
-        <div class="bg-slate-800 rounded-2xl shadow-2xl p-6 border border-slate-700 h-full flex flex-col">
+        <div class="bg-slate-800 rounded-2xl shadow-2xl p-6 border border-slate-700 h-full flex flex-col relative z-10">
             
             <div class="flex gap-1 bg-slate-900 p-1 rounded-lg border border-slate-700 mb-6">
                 <button id="btnLong" onclick="setType('LONG')" class="flex-1 py-2 rounded-md font-bold text-center tracking-wider transition-all duration-200">LONG</button>
@@ -61,7 +61,7 @@
                     <div class="relative w-full">
                         <input type="text" inputmode="decimal" autocomplete="off" id="capital" value="800" class="w-full p-2 pr-[40px] bg-slate-700/50 rounded-lg font-semibold text-lg" onfocus="this.select()" oninput="handleInput()">
                         <div class="absolute right-1 top-1/2 -translate-y-1/2 flex items-center">
-                            <button class="icon-action popover-trigger font-bold text-xl p-1" data-popover="pop-capital" title="Điều chỉnh">±</button>
+                            <button class="icon-action popover-trigger font-bold text-xl p-1" data-popover="pop-capital">±</button>
                         </div>
                         <div id="pop-capital" class="stepper-popover hidden absolute top-full mt-2 right-0 bg-slate-800 border border-slate-600 rounded-lg shadow-2xl z-50 p-2 w-32">
                             <div class="flex justify-between gap-2">
@@ -80,15 +80,16 @@
                     </div>
                 </div>
                 
-                <div>
+                <div class="flex flex-col">
                     <label class="block text-sm text-slate-400 mb-1">Rủi ro (%)</label>
                     <div class="relative w-full">
-                        <input type="text" inputmode="decimal" autocomplete="off" id="risk" value="1" class="w-full p-2 pr-8 bg-slate-700/50 rounded-lg font-semibold text-lg" onfocus="this.select()" oninput="handleInput()">
+                        <input type="text" inputmode="decimal" autocomplete="off" id="risk" value="1" class="w-full p-2 pr-8 bg-slate-700/50 rounded-lg font-semibold text-lg border focus:border-blue-500 transition-colors" onfocus="this.select()" oninput="handleInput()">
                         <div class="absolute right-2 top-1/2 -translate-y-1/2 flex flex-col gap-[2px]">
                             <svg onclick="adjustRisk('risk', 0.25)" class="tri-btn w-3 h-3" viewBox="0 0 24 24"><path d="M24 22h-24l12-20z"/></svg>
                             <svg onclick="adjustRisk('risk', -0.25)" class="tri-btn w-3 h-3 rotate-180" viewBox="0 0 24 24"><path d="M24 22h-24l12-20z"/></svg>
                         </div>
                     </div>
+                    <div class="text-[11px] text-slate-400 mt-1 ml-1 tracking-tight">/2 Tài khoản sau: <span id="out-dd" class="text-orange-400 font-bold">0</span> lệnh thua</div>
                 </div>
 
                 <div>
@@ -168,7 +169,7 @@
                     <div>
                         <label class="block text-sm text-slate-400 mb-1">Stop Loss</label>
                         <div class="relative w-full">
-                            <input type="text" inputmode="decimal" autocomplete="off" id="sl" value="64000" class="w-full p-2 pr-[60px] bg-slate-700/50 rounded-lg text-red-400 font-semibold focus:ring-0 focus:outline-none" onfocus="this.select()" oninput="handleInput()">
+                            <input type="text" inputmode="decimal" autocomplete="off" id="sl" value="64000" class="w-full p-2 pr-[60px] bg-slate-700/50 rounded-lg text-red-400 font-semibold focus:ring-0 focus:outline-none border-transparent focus:border-red-500" onfocus="this.select()" oninput="handleInput()">
                             <div class="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-1">
                                 <button class="icon-action popover-trigger font-bold text-xl p-1" data-popover="pop-sl">±</button>
                                 <button id="btnCopySL" onclick="copyValue('sl', 'btnCopySL')" class="icon-action p-1" title="Copy">
@@ -195,9 +196,12 @@
                     </div>
 
                     <div>
-                        <label class="block text-sm text-slate-400 mb-1">Take Profit</label>
+                        <div class="flex justify-between items-center mb-1">
+                            <label class="block text-sm text-slate-400">Take Profit</label>
+                            <button onclick="toggleDCAModal()" class="text-[10px] bg-slate-700 hover:bg-emerald-600 text-white px-2 py-0.5 rounded transition-colors" title="Chốt lời từng phần">DCA Out</button>
+                        </div>
                         <div class="relative w-full">
-                            <input type="text" inputmode="decimal" autocomplete="off" id="tp" value="80000" class="w-full p-2 pr-[60px] bg-slate-700/50 rounded-lg text-green-400 font-semibold focus:ring-0 focus:outline-none" onfocus="this.select()" oninput="handleInput()">
+                            <input type="text" inputmode="decimal" autocomplete="off" id="tp" value="80000" class="w-full p-2 pr-[60px] bg-slate-700/50 rounded-lg text-green-400 font-semibold focus:ring-0 focus:outline-none border-transparent focus:border-green-500" onfocus="this.select()" oninput="handleInput()">
                             <div class="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-1">
                                 <button class="icon-action popover-trigger font-bold text-xl p-1" data-popover="pop-tp">±</button>
                                 <button id="btnCopyTP" onclick="copyValue('tp', 'btnCopyTP')" class="icon-action p-1" title="Copy">
@@ -237,10 +241,10 @@
                 <span id="out-risk-amount" class="text-xl font-bold text-red-400">$8.00</span>
             </div>
             
-            <div class="bg-blue-900/20 p-4 rounded-xl border border-blue-800/50 hover:bg-blue-900/30 transition-colors">
+            <div id="size-box" class="bg-blue-900/20 p-4 rounded-xl border border-blue-800/50 hover:bg-blue-900/30 transition-all duration-300">
                 <div class="flex justify-between items-center mb-1">
                     <span class="text-blue-300 font-semibold">KL Giao dịch (USD):</span>
-                    <span id="out-size-usd" class="text-3xl font-black text-blue-400 tracking-tight">$0.00</span>
+                    <span id="out-size-usd" class="text-3xl font-black text-blue-400 tracking-tight transition-all duration-300">$0.00</span>
                 </div>
                 <div class="flex justify-between items-center">
                     <span class="text-slate-500 text-sm">KL Giao dịch (Units):</span>
@@ -249,12 +253,12 @@
             </div>
 
             <div class="vis-container" id="visualizerBox">
-                <div id="vis-fill-sl" class="vis-fill bg-rose-500/20"></div>
-                <div id="vis-fill-tp" class="vis-fill bg-emerald-500/20"></div>
+                <div id="vis-fill-sl" class="vis-fill bg-rose-500/40"></div>
+                <div id="vis-fill-tp" class="vis-fill bg-emerald-500/40"></div>
                 
-                <div id="vis-line-sl" class="vis-line text-rose-500"><span id="vis-label-sl" class="vis-label text-rose-400">SL</span></div>
-                <div id="vis-line-entry" class="vis-line text-blue-400"><span id="vis-label-entry" class="vis-label text-blue-300">ENTRY</span></div>
-                <div id="vis-line-tp" class="vis-line text-emerald-500"><span id="vis-label-tp" class="vis-label text-emerald-400">TP</span></div>
+                <div id="vis-line-sl" class="vis-line text-rose-500"><span id="vis-label-sl" class="vis-label text-rose-300">SL</span></div>
+                <div id="vis-line-entry" class="vis-line text-blue-400"><span id="vis-label-entry" class="vis-label text-blue-200">ENTRY</span></div>
+                <div id="vis-line-tp" class="vis-line text-emerald-500"><span id="vis-label-tp" class="vis-label text-emerald-300">TP</span></div>
             </div>
 
             <div class="grid grid-cols-2 gap-4 py-3 border-y border-slate-800">
@@ -279,11 +283,11 @@
             <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 mt-2 space-y-2">
                 <div class="flex justify-between items-center">
                     <span class="text-slate-400">Tỷ lệ R:R:</span>
-                    <span id="out-rr" class="font-bold text-white text-lg">1 : 0.00</span>
+                    <span id="out-rr" class="font-bold text-white text-lg transition-all duration-300">1 : 0.00</span>
                 </div>
                 <div class="flex justify-between items-center">
                     <span class="text-slate-400">Tiền lãi dự kiến:</span>
-                    <span id="out-profit" class="font-bold text-green-400 text-lg">+$0.00</span>
+                    <span id="out-profit" class="font-bold text-green-400 text-lg transition-all duration-300">+$0.00</span>
                 </div>
                 <div class="flex justify-between items-center pt-2 border-t border-slate-700/50">
                     <span class="text-slate-400 font-medium">Lợi nhuận ròng (ROE):</span>
@@ -294,9 +298,9 @@
     </div>
 
     <div class="max-w-5xl w-full bg-slate-800 rounded-2xl shadow-2xl p-6 border border-slate-700 mt-6 mb-10 relative">
-        <h3 class="text-lg font-bold mb-4 text-slate-300">Bảng Khối lượng & Ký quỹ theo % Rủi ro</h3>
+        <h3 class="text-lg font-bold mb-4 text-slate-300">Bảng Khối lượng & Ký quỹ theo % Rủi ro <span class="text-xs text-slate-500 font-normal ml-2">(Click vào 1 dòng để áp dụng nhanh)</span></h3>
         <div class="table-container">
-            <table id="referenceTable">
+            <table id="referenceTable" class="select-none">
                 <thead>
                     <tr>
                         <th class="text-left">Rủi ro (%)</th>
@@ -314,12 +318,73 @@
         </div>
     </div>
 
-    <div id="historyModal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-950/80">
-        <div class="bg-slate-800 rounded-2xl border border-slate-700 shadow-2xl max-w-5xl w-full max-h-[80vh] flex flex-col" onclick="event.stopPropagation()">
-            <div class="p-5 border-b border-slate-700 flex justify-between items-center">
-                <h3 class="text-lg font-bold text-slate-200">Nhật ký Lệnh (Lưu cục bộ)</h3>
+    <div id="dcaModal" class="hidden fixed inset-0 z-[110] flex items-center justify-center p-4 modal-backdrop bg-slate-950/80">
+        <div class="bg-slate-800 rounded-2xl border border-slate-700 shadow-2xl w-full max-w-sm flex flex-col" onclick="event.stopPropagation()">
+            <div class="p-4 border-b border-slate-700 flex justify-between items-center bg-slate-900 rounded-t-2xl">
+                <h3 class="text-md font-bold text-slate-200">Chia chiến lược Chốt Lời (DCA Out)</h3>
+                <button onclick="toggleDCAModal()" class="text-slate-400 hover:text-white font-bold text-xl">&times;</button>
+            </div>
+            <div class="p-5 space-y-4">
+                <div class="flex justify-between text-xs text-slate-400 mb-1 px-1">
+                    <span>Mức Giá (Price)</span>
+                    <span>% Khối lượng</span>
+                </div>
+                <div class="flex gap-3 items-center">
+                    <span class="text-sm font-bold text-slate-500 w-8">TP 1</span>
+                    <input type="text" id="dca-p1" class="w-full p-2 bg-slate-900 rounded text-sm font-semibold" placeholder="Giá...">
+                    <input type="text" id="dca-v1" value="50" class="w-16 p-2 bg-slate-900 rounded text-sm text-center font-semibold text-emerald-400">%
+                </div>
+                <div class="flex gap-3 items-center">
+                    <span class="text-sm font-bold text-slate-500 w-8">TP 2</span>
+                    <input type="text" id="dca-p2" class="w-full p-2 bg-slate-900 rounded text-sm font-semibold" placeholder="Giá...">
+                    <input type="text" id="dca-v2" value="30" class="w-16 p-2 bg-slate-900 rounded text-sm text-center font-semibold text-emerald-400">%
+                </div>
+                <div class="flex gap-3 items-center">
+                    <span class="text-sm font-bold text-slate-500 w-8">TP 3</span>
+                    <input type="text" id="dca-p3" class="w-full p-2 bg-slate-900 rounded text-sm font-semibold" placeholder="Giá...">
+                    <input type="text" id="dca-v3" value="20" class="w-16 p-2 bg-slate-900 rounded text-sm text-center font-semibold text-emerald-400">%
+                </div>
+                
+                <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-700 mt-2">
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-slate-400">Giá TP Trung Bình:</span>
+                        <span id="dca-result" class="text-lg font-bold text-emerald-400">0.00</span>
+                    </div>
+                </div>
+            </div>
+            <div class="p-4 border-t border-slate-700 flex justify-end gap-2">
+                <button onclick="calcDCA()" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded text-sm font-bold text-white transition-colors">Tính Toán</button>
+                <button onclick="applyDCA()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 rounded text-sm font-bold text-white transition-colors">Áp Dụng</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="historyModal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 modal-backdrop bg-slate-950/80">
+        <div class="bg-slate-800 rounded-2xl border border-slate-700 shadow-2xl max-w-6xl w-full max-h-[90vh] flex flex-col" onclick="event.stopPropagation()">
+            <div class="p-5 border-b border-slate-700 flex justify-between items-center bg-slate-900 rounded-t-2xl">
+                <h3 class="text-lg font-bold text-slate-200">Dashboard Phân Tích & Lịch Sử Giao Dịch</h3>
                 <button onclick="toggleHistory()" class="text-slate-400 hover:text-white font-bold text-2xl transition-colors">&times;</button>
             </div>
+            
+            <div class="p-5 bg-slate-800/50 grid grid-cols-2 md:grid-cols-4 gap-4 border-b border-slate-700">
+                <div class="bg-slate-900 p-3 rounded-lg border border-slate-700">
+                    <div class="text-xs text-slate-400 mb-1">Tổng Số Lệnh</div>
+                    <div id="stat-total" class="text-2xl font-black text-white">0</div>
+                </div>
+                <div class="bg-slate-900 p-3 rounded-lg border border-slate-700">
+                    <div class="text-xs text-slate-400 mb-1">Tỷ Lệ Thắng (Win Rate)</div>
+                    <div id="stat-winrate" class="text-2xl font-black text-blue-400">0%</div>
+                </div>
+                <div class="bg-slate-900 p-3 rounded-lg border border-slate-700">
+                    <div class="text-xs text-slate-400 mb-1">Lợi Nhuận Thực Tế (PnL)</div>
+                    <div id="stat-pnl" class="text-2xl font-black text-green-400">$0.00</div>
+                </div>
+                <div class="bg-slate-900 p-3 rounded-lg border border-slate-700">
+                    <div class="text-xs text-slate-400 mb-1">R:R Trung Bình Lên Plan</div>
+                    <div id="stat-avg-rr" class="text-2xl font-black text-purple-400">0.00</div>
+                </div>
+            </div>
+
             <div class="p-5 overflow-y-auto flex-grow table-container">
                 <table id="historyTable" class="w-full text-left text-sm whitespace-nowrap">
                     <thead>
@@ -328,11 +393,11 @@
                             <th class="pb-3 text-slate-400 font-normal text-center">Lệnh</th>
                             <th class="pb-3 text-slate-400 font-normal text-right">Rủi ro</th>
                             <th class="pb-3 text-slate-400 font-normal text-right">KL (USD)</th>
-                            <th class="pb-3 text-slate-400 font-normal text-right text-green-400">Lãi</th>
-                            <th class="pb-3 text-slate-400 font-normal text-right">Đòn bẩy</th>
+                            <th class="pb-3 text-slate-400 font-normal text-right">R:R</th>
                             <th class="pb-3 text-slate-400 font-normal text-right pl-4">Entry</th>
                             <th class="pb-3 text-slate-400 font-normal text-right text-red-400">SL</th>
                             <th class="pb-3 text-slate-400 font-normal text-right text-green-400">TP</th>
+                            <th class="pb-3 text-slate-400 font-normal text-center bg-slate-900 rounded-t">Trạng Thái Thực Tế</th>
                         </tr>
                     </thead>
                     <tbody class="text-slate-300" id="historyBody">
@@ -340,8 +405,9 @@
                 </table>
                 <div id="emptyHistory" class="text-center text-slate-500 py-10 hidden">Chưa có dữ liệu lịch sử lệnh nào.</div>
             </div>
-            <div class="p-4 border-t border-slate-700 flex justify-end">
-                <button onclick="clearHistory()" class="text-rose-500 hover:text-rose-400 px-4 py-2 bg-rose-950/30 rounded text-sm font-semibold transition-colors">Xóa toàn bộ lịch sử</button>
+            <div class="p-4 border-t border-slate-700 flex justify-between items-center bg-slate-900 rounded-b-2xl">
+                <span class="text-xs text-slate-500 italic">Mẹo: Cập nhật "Trạng thái" để Dashboard tính toán Win Rate & PnL chính xác.</span>
+                <button onclick="clearHistory()" class="text-rose-500 hover:text-rose-400 px-4 py-2 bg-rose-950/30 rounded text-sm font-semibold transition-colors">Xóa dữ liệu</button>
             </div>
         </div>
     </div>
@@ -360,8 +426,8 @@
                 const data = JSON.parse(savedData);
                 document.getElementById('capital').value = data.capital || 800;
                 document.getElementById('risk').value = data.risk || 1;
-                document.getElementById('maxLev').value = data.maxLev || 100;
-                document.getElementById('safeBuffer').value = data.safeBuffer || 0.3;
+                document.getElementById('maxLev').value = data.maxLev || 150;
+                document.getElementById('safeBuffer').value = data.safeBuffer || 0.25;
                 positionType = data.type || 'SHORT';
                 document.getElementById('entry').value = data.entry || '';
                 document.getElementById('sl').value = data.sl || '';
@@ -372,7 +438,6 @@
             calculate();
         });
 
-        // Đóng các popover stepper khi click ra ngoài
         document.addEventListener('click', function(e) {
             if (e.target.closest('.popover-trigger')) {
                 e.stopPropagation();
@@ -390,27 +455,22 @@
                 adjustValue(inputId, parseFloat(amount));
                 return;
             }
-            if (!e.target.closest('.stepper-popover') && !e.target.closest('#historyModal > div')) {
+            if (!e.target.closest('.stepper-popover') && !e.target.closest('.modal-backdrop > div')) {
                 document.querySelectorAll('.stepper-popover').forEach(el => el.classList.add('hidden'));
             }
         });
 
-        // Đóng History Modal khi bấm ESC
         document.addEventListener('keydown', function(event) {
             if (event.key === "Escape") {
-                const modal = document.getElementById('historyModal');
-                if (!modal.classList.contains('hidden')) {
-                    toggleHistory(); 
-                }
+                const hModal = document.getElementById('historyModal');
+                const dModal = document.getElementById('dcaModal');
+                if (!hModal.classList.contains('hidden')) toggleHistory(); 
+                if (!dModal.classList.contains('hidden')) toggleDCAModal(); 
             }
         });
 
-        // Đóng History Modal khi click vào phần backdrop đen mờ
-        document.getElementById('historyModal').addEventListener('click', function(event) {
-            if (event.target === this) {
-                toggleHistory();
-            }
-        });
+        document.getElementById('historyModal').addEventListener('click', function(event) { if (event.target === this) toggleHistory(); });
+        document.getElementById('dcaModal').addEventListener('click', function(event) { if (event.target === this) toggleDCAModal(); });
 
         function getNum(id) {
             const val = document.getElementById(id).value;
@@ -485,11 +545,8 @@
             let textToCopy = "";
             if (isMobile) {
                 let numVal = getNum(inputId);
-                if (numVal >= 10) {
-                    textToCopy = Math.trunc(numVal).toString(); 
-                } else {
-                    textToCopy = val.replace(/,/g, '.'); 
-                }
+                if (numVal >= 10) { textToCopy = Math.trunc(numVal).toString(); } 
+                else { textToCopy = val.replace(/,/g, '.'); }
             } else {
                 let cleanVal = val.replace(/[^0-9.,]/g, '');
                 textToCopy = cleanVal.replace(/\./g, ','); 
@@ -498,15 +555,30 @@
             copyToClipboard(textToCopy, btnElement, false);
         }
 
-        function copyRawValue(rawValue, riskValue, btnElement) {
+        function copyRawValue(rawValue, btnElement, event) {
+            if(event) event.stopPropagation();
             copyToClipboard(rawValue.toString(), btnElement, true);
-            selectedRiskPlan = riskValue;
-            saveData(); calculate(); 
         }
 
         function handleInput() {
+            saveData(); calculate();
+        }
+
+        // TÍNH NĂNG 2: Interactive Table Row Click
+        function applyRiskFromTable(riskValue, checkboxEl) {
+            // Flash effect for UI feedback
+            const sizeBox = document.getElementById('size-box');
+            sizeBox.classList.add('bg-blue-600/40');
+            setTimeout(() => sizeBox.classList.remove('bg-blue-600/40'), 200);
+
+            if (selectedRiskPlan === riskValue) {
+                selectedRiskPlan = null; 
+            } else {
+                selectedRiskPlan = riskValue; 
+                document.getElementById('risk').value = riskValue;
+            }
             saveData();
-            calculate();
+            calculate(); 
         }
 
         function saveData() {
@@ -535,12 +607,15 @@
                 sl: currentCalculatedData.sl,
                 tp: currentCalculatedData.tp,
                 risk: currentCalculatedData.risk,
+                riskAmount: currentCalculatedData.riskAmount,
                 sizeUsd: currentCalculatedData.sizeUsd,
                 profit: currentCalculatedData.profit,
-                leverage: currentCalculatedData.leverage
+                rr: currentCalculatedData.rr,
+                leverage: currentCalculatedData.leverage,
+                status: 'pending' // Thêm status cho Analytics
             };
             history.unshift(logEntry); 
-            if(history.length > 50) history.pop(); 
+            if(history.length > 100) history.pop(); // Lưu max 100 lệnh
             localStorage.setItem('tradeLogs', JSON.stringify(history));
             
             const btn = event.target;
@@ -550,6 +625,7 @@
             setTimeout(() => { btn.innerText = originalText; btn.classList.remove("bg-emerald-600"); }, 1500);
         }
 
+        // TÍNH NĂNG B: Quản lý Analytics & History
         function toggleHistory() {
             const modal = document.getElementById('historyModal');
             if(modal.classList.contains('hidden')) {
@@ -561,10 +637,58 @@
         }
 
         function clearHistory() {
-            if(confirm("Bạn có chắc chắn muốn xóa toàn bộ lịch sử lệnh không?")) {
+            if(confirm("Bạn có chắc chắn muốn xóa toàn bộ lịch sử lệnh và dữ liệu thống kê không?")) {
                 localStorage.removeItem('tradeLogs');
                 renderHistory();
             }
+        }
+
+        function updateLogStatus(id, selectElement) {
+            let history = JSON.parse(localStorage.getItem('tradeLogs') || '[]');
+            let itemIndex = history.findIndex(h => h.id === id);
+            if(itemIndex !== -1) {
+                history[itemIndex].status = selectElement.value;
+                localStorage.setItem('tradeLogs', JSON.stringify(history));
+                updateAnalyticsConfig(selectElement);
+                renderAnalytics(history); // Update dashboard real-time
+            }
+        }
+
+        function updateAnalyticsConfig(selectElement) {
+            selectElement.className = "text-xs font-bold " + 
+                (selectElement.value === 'win' ? 'bg-emerald-900/50 text-emerald-400 border-emerald-700' : 
+                 selectElement.value === 'loss' ? 'bg-rose-900/50 text-rose-400 border-rose-700' : 
+                 'bg-slate-700 text-slate-300 border-slate-600');
+        }
+
+        function renderAnalytics(history) {
+            let total = history.length;
+            let wins = history.filter(h => h.status === 'win').length;
+            let losses = history.filter(h => h.status === 'loss').length;
+            let resolved = wins + losses;
+            
+            let winRate = resolved > 0 ? ((wins / resolved) * 100).toFixed(1) : 0;
+            
+            let totalPnL = 0;
+            let totalRR = 0;
+            let rrCount = 0;
+
+            history.forEach(h => {
+                if(h.status === 'win') totalPnL += parseFloat(h.profit);
+                if(h.status === 'loss') totalPnL -= parseFloat(h.riskAmount);
+                if(h.rr && h.rr !== "SAI") { totalRR += parseFloat(h.rr); rrCount++; }
+            });
+
+            let avgRR = rrCount > 0 ? (totalRR / rrCount).toFixed(2) : 0;
+
+            document.getElementById('stat-total').innerText = total;
+            document.getElementById('stat-winrate').innerText = winRate + '%';
+            document.getElementById('stat-avg-rr').innerText = avgRR > 0 ? `1:${avgRR}` : '0';
+            
+            let pnlEl = document.getElementById('stat-pnl');
+            if (totalPnL > 0) { pnlEl.innerText = '+$' + totalPnL.toFixed(2); pnlEl.className = "text-2xl font-black text-green-400"; }
+            else if (totalPnL < 0) { pnlEl.innerText = '-$' + Math.abs(totalPnL).toFixed(2); pnlEl.className = "text-2xl font-black text-red-400"; }
+            else { pnlEl.innerText = '$0.00'; pnlEl.className = "text-2xl font-black text-slate-400"; }
         }
 
         function renderHistory() {
@@ -573,6 +697,8 @@
             const emptyState = document.getElementById('emptyHistory');
             tbody.innerHTML = '';
             
+            renderAnalytics(history);
+
             if(history.length === 0) {
                 emptyState.classList.remove('hidden');
                 return;
@@ -581,31 +707,67 @@
             
             history.forEach(log => {
                 let badgeClass = log.type === 'LONG' ? 'bg-emerald-900/50 text-emerald-400 border-emerald-700' : 'bg-rose-900/50 text-rose-400 border-rose-700';
+                
+                let selectClass = log.status === 'win' ? 'bg-emerald-900/50 text-emerald-400 border-emerald-700' : 
+                                  log.status === 'loss' ? 'bg-rose-900/50 text-rose-400 border-rose-700' : 
+                                  'bg-slate-700 text-slate-300 border-slate-600';
+
                 let tr = document.createElement('tr');
                 tr.className = "border-b border-slate-700/50 hover:bg-slate-700/30 transition-colors";
                 tr.innerHTML = `
                     <td class="py-3 text-xs text-slate-400">${log.date}</td>
                     <td class="py-3 text-center"><span class="text-[10px] font-bold px-2 py-1 rounded border ${badgeClass}">${log.type}</span></td>
-                    <td class="py-3 text-right font-semibold text-slate-300">${log.risk}%</td>
+                    <td class="py-3 text-right font-semibold text-slate-300">${log.risk}% <span class="text-xs font-normal text-slate-500">($${parseFloat(log.riskAmount).toFixed(1)})</span></td>
                     <td class="py-3 text-right font-bold text-blue-400">$${log.sizeUsd}</td>
-                    <td class="py-3 text-right font-semibold text-green-400">+$${log.profit}</td>
-                    <td class="py-3 text-right text-slate-300">${log.leverage}x</td>
+                    <td class="py-3 text-right text-purple-400 font-semibold text-xs">1:${log.rr}</td>
                     <td class="py-3 text-right font-semibold text-white pl-4">${log.entry}</td>
                     <td class="py-3 text-right font-semibold text-rose-400">${log.sl}</td>
                     <td class="py-3 text-right font-semibold text-emerald-400">${log.tp}</td>
+                    <td class="py-2 text-center bg-slate-800/50 border-l border-slate-700">
+                        <select class="text-xs font-bold ${selectClass} cursor-pointer w-full text-center" onchange="updateLogStatus(${log.id}, this)">
+                            <option value="pending" ${log.status === 'pending' ? 'selected' : ''}>⏳ Đang chạy</option>
+                            <option value="win" ${log.status === 'win' ? 'selected' : ''}>✅ WIN (+$${log.profit})</option>
+                            <option value="loss" ${log.status === 'loss' ? 'selected' : ''}>❌ LOSS (-$${log.riskAmount})</option>
+                        </select>
+                    </td>
                 `;
                 tbody.appendChild(tr);
             });
         }
 
-        function handleCheck(riskValue) {
-            if (selectedRiskPlan === riskValue) {
-                selectedRiskPlan = null; 
+        // TÍNH NĂNG A: DCA Out (Tính TP Trung Bình)
+        let calculatedAvgTP = 0;
+        function toggleDCAModal() {
+            const modal = document.getElementById('dcaModal');
+            modal.classList.toggle('hidden');
+        }
+
+        function calcDCA() {
+            const p1 = getNum('dca-p1'); const v1 = getNum('dca-v1');
+            const p2 = getNum('dca-p2'); const v2 = getNum('dca-v2');
+            const p3 = getNum('dca-p3'); const v3 = getNum('dca-v3');
+            
+            let totalVolume = 0;
+            let sumPriceVol = 0;
+
+            if(p1 > 0 && v1 > 0) { totalVolume += v1; sumPriceVol += p1 * v1; }
+            if(p2 > 0 && v2 > 0) { totalVolume += v2; sumPriceVol += p2 * v2; }
+            if(p3 > 0 && v3 > 0) { totalVolume += v3; sumPriceVol += p3 * v3; }
+
+            if(totalVolume > 0) {
+                calculatedAvgTP = sumPriceVol / totalVolume;
+                document.getElementById('dca-result').innerText = calculatedAvgTP.toFixed(2);
             } else {
-                selectedRiskPlan = riskValue; 
+                document.getElementById('dca-result').innerText = "0.00";
             }
-            saveData();
-            calculate(); 
+        }
+
+        function applyDCA() {
+            if(calculatedAvgTP > 0) {
+                document.getElementById('tp').value = calculatedAvgTP.toFixed(4);
+                toggleDCAModal();
+                handleInput();
+            }
         }
 
         function updateVisualizer(entry, sl, tp, type) {
@@ -694,10 +856,21 @@
             currentCalculatedData = {
                 entry: entry, sl: sl, tp: tp, 
                 risk: activeRisk.toFixed(2),
+                riskAmount: activeRiskAmount.toFixed(2),
                 sizeUsd: activeSizeUsd.toFixed(2), 
                 profit: activeProfit.toFixed(2),
+                rr: rr.toFixed(2),
                 leverage: leverage
             };
+
+            // TÍNH NĂNG D: Drawdown Math (Lãi kép)
+            let ddTrades = 0;
+            if (activeRisk > 0 && activeRisk < 100) {
+                ddTrades = Math.ceil(Math.log(0.5) / Math.log(1 - (activeRisk / 100)));
+                document.getElementById('out-dd').innerText = ddTrades;
+            } else {
+                document.getElementById('out-dd').innerText = "∞";
+            }
 
             let liqPrice = 0;
             let isLiqDangerous = false;
@@ -765,17 +938,20 @@
                 let rowClass = '';
                 let textRiskColor = 'text-red-400/80';
                 if (isChecked) {
-                    rowClass = 'bg-blue-900/30 border-l-4 border-blue-500 font-bold'; 
+                    rowClass = 'bg-blue-900/40 border-l-4 border-blue-500 font-bold'; 
                     textRiskColor = 'text-red-400';
                 } else if (isCurrentInput) {
-                    rowClass = 'bg-slate-700/50'; 
+                    rowClass = 'bg-slate-700/60'; 
                 }
 
                 let roundedUsd = Math.round(sUsd);
-                let copyBtn = `<button onclick="copyRawValue(${roundedUsd}, ${r}, this)" class="icon-action ml-2 flex items-center justify-center" title="Copy số nguyên USD">${clipboardIcon}</button>`;
+                // Bọc event stop để khi click icon copy không trigger event click row
+                let copyBtn = `<button onclick="copyRawValue(${roundedUsd}, this, event)" class="icon-action ml-2 flex items-center justify-center bg-slate-800 p-1 rounded hover:bg-slate-600" title="Copy số nguyên USD">${clipboardIcon}</button>`;
 
                 let tr = document.createElement('tr');
-                tr.className = `hover:bg-slate-700/30 transition-colors ${rowClass}`;
+                tr.className = `cursor-pointer hover:bg-slate-700/80 transition-all duration-200 ${rowClass}`;
+                tr.setAttribute('onclick', `applyRiskFromTable(${r}, this)`); // Tính năng Click cả dòng
+                
                 tr.innerHTML = `
                     <td class="text-left font-semibold text-slate-300">${r.toFixed(1)}%</td>
                     <td class="${textRiskColor}">$${rAmount.toFixed(2)}</td>
@@ -789,8 +965,8 @@
                     <td class="text-white">$${margin.toFixed(2)}</td>
                     <td class="text-green-400 font-semibold">+$${prof.toFixed(2)}</td>
                     <td class="text-center p-0">
-                        <div class="flex items-center justify-center w-full h-full pt-1">
-                            <input type="checkbox" ${isChecked ? 'checked' : ''} onclick="handleCheck(${r})">
+                        <div class="flex items-center justify-center w-full h-full pt-1 pointer-events-none">
+                            <input type="checkbox" ${isChecked ? 'checked' : ''}>
                         </div>
                     </td>
                 `;
