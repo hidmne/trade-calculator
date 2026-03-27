@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculator Pro v3.9</title>
+    <title>Calculator Pro v3.10</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧮</text></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -60,7 +60,7 @@
     </datalist>
 
     <div class="max-w-5xl w-full flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 px-2">
-        <h2 class="text-2xl font-bold text-blue-400 flex items-center gap-2">🧮 Calculator Pro <span class="text-xs bg-blue-600 text-white px-2 py-0.5 rounded-full ml-1">v3.9</span></h2>
+        <h2 class="text-2xl font-bold text-blue-400 flex items-center gap-2">🧮 Calculator Pro <span class="text-xs bg-blue-600 text-white px-2 py-0.5 rounded-full ml-1">v3.10</span></h2>
         <button onclick="toggleHistory()" class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-colors w-full sm:w-auto justify-center">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z" /></svg>
             Nhật ký & Thống kê
@@ -71,7 +71,7 @@
         
         <div class="bg-slate-800 rounded-2xl shadow-2xl p-4 sm:p-6 border border-slate-700 h-full flex flex-col relative z-10">
             
-            <div class="flex flex-col sm:flex-row sm:items-end gap-3 mb-6 sm:mb-8">
+            <div class="flex flex-col sm:flex-row sm:items-end gap-3 mb-5">
                 <div class="w-full sm:w-2/5">
                     <label class="block text-[11px] text-slate-400 mb-1 uppercase font-bold tracking-wider">Mã Giao Dịch</label>
                     <input type="text" id="symbol" list="crypto-pairs" placeholder="Mã..." class="w-full h-11 p-2 bg-slate-900 rounded-lg font-bold text-blue-300 border border-transparent focus:border-blue-500 uppercase transition-colors placeholder:text-slate-600 placeholder:font-normal placeholder:text-sm" onfocus="this.select()" oninput="handleInput()">
@@ -271,10 +271,15 @@
                 <span id="out-risk-amount" class="text-xl font-bold text-red-400">$8.00</span>
             </div>
             
-            <div id="size-box" class="bg-blue-900/20 p-4 rounded-xl border border-blue-800/50 hover:bg-blue-900/30 transition-all duration-300">
+            <div id="size-box" class="bg-blue-900/20 p-4 rounded-xl border border-blue-800/50 hover:bg-blue-900/30 transition-all duration-300 group">
                 <div class="flex justify-between items-center mb-1">
                     <span class="text-blue-300 font-semibold">KL Giao dịch (USD):</span>
-                    <span id="out-size-usd" class="text-2xl sm:text-3xl font-black text-blue-400 tracking-tight transition-all duration-300">$0.00</span>
+                    <div class="flex items-center gap-2">
+                        <span id="out-size-usd" class="text-2xl sm:text-3xl font-black text-blue-400 tracking-tight transition-all duration-300">$0.00</span>
+                        <button id="btnCopyMainSize" onclick="copyMainSize(this, event)" class="icon-action bg-blue-900/50 p-1.5 rounded hover:bg-blue-700 transition-colors opacity-80 hover:opacity-100" title="Copy số nguyên USD">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-blue-300"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" /></svg>
+                        </button>
+                    </div>
                 </div>
                 <div class="flex justify-between items-center">
                     <span class="text-slate-500 text-sm">KL Giao dịch (Units):</span>
@@ -663,6 +668,19 @@
             if(event) event.stopPropagation();
             copyToClipboard(rawValue.toString(), btnElement, true);
             applyRiskFromTable(riskValue); 
+        }
+
+        // TÍNH NĂNG MỚI: Copy KL Giao Dịch Chính
+        function copyMainSize(btnElement, event) {
+            if(event) event.stopPropagation();
+            if(!currentCalculatedData.sizeUsd) return;
+            
+            // Lấy số liệu gốc, parse sang float và làm tròn thành số nguyên
+            const rawValue = parseFloat(currentCalculatedData.sizeUsd);
+            if(isNaN(rawValue)) return;
+            
+            const roundedSize = Math.round(rawValue);
+            copyToClipboard(roundedSize.toString(), btnElement, true);
         }
 
         function handleInput() {
